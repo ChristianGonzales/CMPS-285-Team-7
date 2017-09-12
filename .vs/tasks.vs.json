@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-CMPS-285-Team-7",
+      "appliesTo": "/",
+      "type": "launch"
+    }
+  ]
+}
