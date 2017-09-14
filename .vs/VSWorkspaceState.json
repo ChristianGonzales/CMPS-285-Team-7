@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\WebSite1"
+    "\\WebSite1",
+    "\\WebSite1\\Bin"
   ],
-  "SelectedNode": "\\WebSite1\\GamePage.html",
+  "SelectedNode": "\\WebSite1\\CharacterClass.js",
   "PreviewInSolutionExplorer": false
 }
