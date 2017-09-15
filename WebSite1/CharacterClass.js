@@ -18,6 +18,7 @@ function setCharacterType(characterType) {
     this.characterType = characterType;
 }
 function getCharacterType() {
+
     return this.characterType;
 }
 function setHP(HP) {
@@ -55,4 +56,7 @@ function setUltimateAttackName(ultimateAttackName) {
 }
 function getUltimateAttackName() {
     return this.ultimateAttackName;
+}
+function createcharacter(charcterType) {
+
 }
