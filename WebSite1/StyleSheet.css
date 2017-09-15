@@ -1,10 +1,9 @@
-﻿html{
+﻿html {
     /*Background scaling (will probably have to play around with*/
-    background: url(http://www.spriteland.com/sprites/downloads/green-forest-and-hills-background_PNG.png) no-repeat center center fixed;
-    background-size: 100%;
-    -webkit-background-size: 100%;
-    -moz-background-size: 100%;
-    -o-background-size: 100%;
+    position: relative;
+    background-image: url("http://www.spriteland.com/sprites/downloads/green-forest-and-hills-background_PNG.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100vh;
 }
 @font-face{
     font-family: ringbearer;
@@ -49,9 +48,8 @@
     top: 4px;
 }
 h1 {
-    position: fixed;
-    left: 660px;
-    top: 200px;
+    position: relative;
+    left: 460px;
     font-family: ringbearer;
     font-size: 70px;
     font-weight: bold;
@@ -59,17 +57,17 @@ h1 {
     text-shadow: 0 0 3px #FF0000;
 }
 h2{
-    position: fixed;
-    left: 850px;
-    top: 550px;
+    position: relative;
+    top: 250px;
+    left: 650px;
     line-height: 100%;
     font-family: ringbearer;
     font-size: 32px;
 }
 ul{
-    position: fixed;
-    left: 840px;
-    top: 590px;
+    position: relative;
+    top: 180px;
+    left: 640px;
     line-height: 100%;
     font-family: ringbearer;
     font-size: 30px;
