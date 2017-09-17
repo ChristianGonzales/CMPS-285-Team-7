@@ -74,8 +74,14 @@ function createCharacter(charcterType) {
     var tankSprite = new Image();
     var wizardSprite = new Image();
     var elfSprite = new Image();
-    //Coordinates (Work in progress)
-
+    //Sprite dimensions (Work in progress)
+    var spriteWidth = 100,
+        spriteHeight = 100,
+        pixelsLeft = 170,
+        pixelsTop = 10,
+        //Where the sprite will be drawn
+        canvasPosX = 20,
+        canvasPosY = 20;
     window.addEventListener("resize", resizeCanvas, false); //resize to fill browser window
 
     function resizeCanvas() {
@@ -84,7 +90,7 @@ function createCharacter(charcterType) {
     }
 
     if (characterType == 1) {
-        tankSprite.scr = "3_knight_";
-        context.drawImage(tankSprite);
+        tankSprite.scr = "3_KNIGHT.scml";
+        context.drawImage(tankSprite, pixelsLeft, pixelsTop, spriteWidth, spriteHeight, canvasPosX, canvasPosY);
     }
 }
