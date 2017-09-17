@@ -2,39 +2,48 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="StyleSheet.css">
+
+    <!--<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-theme.min.css" rel="stylesheet" /> -->
+    <link href="StyleSheet.css" rel="stylesheet" type="text/css">
+
+    <script src="../Scripts/bootstrap.min.js"></script>
+    <script src="../Scripts/jquery-1.9.1.min.js"></script>
+
     <title></title>
 </head>
 <body>
     <audio controls autoplay>   <!--Tried to add audio could not figure it out yet-->
         <source src= " https://opengameart.org/content/heroic-demise-updated-version" type= "audio/mp3" />
     </audio>
-    <h1>Spell and Blade</h1>
-    <button id="startButton">Start</button>
-    <!-- Pop-up window -->
-    <div id="popUpWindow" class="popUpWindow">
-        <!-- Pop-up window content -->
-        <div class="popUpWindow-content">
-            <span class="close">&times;</span>
-            <p>Please select a character type that best fits your play style.
-               The character type you choose will be the character you control!
-            </p>
-            <div id="characterButtons">
-                <button class="tank" onclick="setCharacterType(1)">Tank</button>
-                <button class="wizard" onclick="setCharacterType(2)">Wizard</button>
-                <button class="elf" onclick="setCharacterType(3)">Elf</button>
+    <canvas id="characterCanvas"></canvas>
+    <div id="startScreen">
+        <h1>Spell and Blade</h1>
+        <button id="startButton">Start</button>
+        <!-- Pop-up window -->
+        <div id="popUpWindow" class="popUpWindow">
+            <!-- Pop-up window content -->
+            <div class="popUpWindow-content">
+                <span class="close">&times;</span>
+                <p>Please select a character type that best fits your play style.
+                   The character type you choose will be the character you control!
+                </p>
+                <div id="characterButtons">
+                    <button class="tank" onclick="createCharacter(1)">Tank</button>
+                    <button class="wizard" onclick="createCharacter(2)">Wizard</button>
+                    <button class="elf" onclick="createCharacter(3)">Elf</button>
+                </div>
             </div>
         </div>
+        <h2>Developed by:</h2>>
+        <ul>
+            <li>Dustin Branch</li>
+            <li>Christopher Coats</li>
+            <li>Sara Williams</li>
+            <li>Dylan Alfonso</li>
+            <li>Ryan DeBlanc</li>
+        </ul>
     </div>
-    <h2>Developed by:</h2>>
-    <ul>
-        <li>Dustin Branch</li>
-        <li>Christopher Coats</li>
-        <li>Sara Williams</li>
-        <li>Dylan Alfonso</li>
-        <li>Ryan DeBlanc</li>
-    </ul>
-    <canvas id="characterCanvas"></canvas>
     <script src="CharacterClass.js"></script>
     <script src="ButtonProperties.js"></script>
 </body>

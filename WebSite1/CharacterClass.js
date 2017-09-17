@@ -14,20 +14,6 @@ function setCharacterName(characterName) {
 function getCharacterName() {
     return this.characterName;
 }
-function setCharacterType(characterType) {
-    if (characterType == 1) {
-        this.characterType = characterType;
-        createCharacter(characterType);
-    }
-    else if (characterType == 2) {
-        this.characterType = characterType;
-        createCharacter(characterType);
-    }
-    else {
-        this.characterType = characterType;
-        createCharacter(characterType);
-    }
-}
 function getCharacterType() {
     return this.characterType;
 }
@@ -67,13 +53,18 @@ function setUltimateAttackName(ultimateAttackName) {
 function getUltimateAttackName() {
     return this.ultimateAttackName;
 }
-function createCharacter(charcterType) {
+function createCharacter(characterType) {
+    var startScreen = document.getElementById("startScreen");
+    startScreen.style.display = "none";
     var characterCanvas = document.getElementById("characterCanvas");
-    var context = characterCanvas.getContext("2d");
+    var ctx = characterCanvas.getContext("2d");
+    
+    characterCanvas.width = window.innerWidth;
+    characterCanvas.height = window.innerHeight;
     //Character sprite placeholders
     var tankSprite = new Image();
-    var wizardSprite = new Image();
-    var elfSprite = new Image();
+    //var wizardSprite = new Image();
+    //var elfSprite = new Image();
     //Sprite dimensions (Work in progress)
     var spriteWidth = 100,
         spriteHeight = 100,
@@ -82,15 +73,18 @@ function createCharacter(charcterType) {
         //Where the sprite will be drawn
         canvasPosX = 20,
         canvasPosY = 20;
-    window.addEventListener("resize", resizeCanvas, false); //resize to fill browser window
+    //window.addEventListener("resize", resizeCanvas, false); //resize to fill browser window
 
-    function resizeCanvas() {
-        characterCanvas.width = window.innerWidth;
-        characterCanvas.height = window.innerHeight;
-    }
+    //function resizeCanvas() {
+    //    characterCanvas.width = window.innerWidth;
+    //    characterCanvas.height = window.innerHeight;
+    //}
 
     if (characterType == 1) {
-        tankSprite.scr = "3_KNIGHT.scml";
-        context.drawImage(tankSprite, pixelsLeft, pixelsTop, spriteWidth, spriteHeight, canvasPosX, canvasPosY);
+        //tankSprite.src = "3_knight_.png";
+        ctx.rect(20, 20, 150, 100);
+        ctx.stroke();
+        ctx.drawImage("3_knight_.png", 50, 50);
+        //ctx.drawImage("craftpix - 062999- 2d- fantasy - knight - free - sprite - sheets / _PNG / 3_KNIGHT/ _IDLE / _IDLE_000.png", pixelsLeft, pixelsTop, spriteWidth, spriteHeight, canvasPosX, canvasPosY);
     }
 }

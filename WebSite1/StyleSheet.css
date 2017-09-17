@@ -1,4 +1,5 @@
-﻿html{
+﻿
+html{
     /*Background scaling (will probably have to play around with*/
     position: relative;
     background-image: url("http://www.spriteland.com/sprites/downloads/green-forest-and-hills-background_PNG.png");
@@ -11,13 +12,13 @@
 }
 @font-face{
     font-family: diagoth;
-    src: url("diagoth")
+    src: url("diagoth");
 }
 h1{
     position: relative;
     left: 460px;
     font-family: ringbearer;
-    font-size: 70px;
+    font-size: 50px;
     font-weight: bold;
     text-transform: uppercase;
     text-shadow: 0 0 3px #FF0000;
@@ -76,7 +77,9 @@ ul{
     position: fixed;
     top: 4px;
 }
-#characterButtons{
+.tank,
+.wizard,
+.elf {
     width: 150px;
     height: 100px;
     display: inline-block;
@@ -107,7 +110,7 @@ ul{
     position: relative;
     top: 4px;
 }
-    .popUpWindow{
+.popUpWindow{
     display: none;
     position: fixed;
     z-index: 1;
