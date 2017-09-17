@@ -15,10 +15,20 @@ function getCharacterName() {
     return this.characterName;
 }
 function setCharacterType(characterType) {
-    this.characterType = characterType;
+    if (characterType == 1) {
+        this.characterType = characterType;
+        createCharacter(characterType);
+    }
+    else if (characterType == 2) {
+        this.characterType = characterType;
+        createCharacter(characterType);
+    }
+    else {
+        this.characterType = characterType;
+        createCharacter(characterType);
+    }
 }
 function getCharacterType() {
-
     return this.characterType;
 }
 function setHP(HP) {
@@ -57,6 +67,24 @@ function setUltimateAttackName(ultimateAttackName) {
 function getUltimateAttackName() {
     return this.ultimateAttackName;
 }
-function createcharacter(charcterType) {
+function createCharacter(charcterType) {
+    var characterCanvas = document.getElementById("characterCanvas");
+    var context = characterCanvas.getContext("2d");
+    //Character sprite placeholders
+    var tankSprite = new Image();
+    var wizardSprite = new Image();
+    var elfSprite = new Image();
+    //Coordinates (Work in progress)
 
+    window.addEventListener("resize", resizeCanvas, false); //resize to fill browser window
+
+    function resizeCanvas() {
+        characterCanvas.width = window.innerWidth;
+        characterCanvas.height = window.innerHeight;
+    }
+
+    if (characterType == 1) {
+        tankSprite.scr = "3_knight_";
+        context.drawImage(tankSprite);
+    }
 }

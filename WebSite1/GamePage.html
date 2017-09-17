@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="StyleSheet.css">
-    <script src="CharacterClass.js"></script>
     <title></title>
 </head>
 <body>
@@ -11,47 +10,22 @@
         <source src= " https://opengameart.org/content/heroic-demise-updated-version" type= "audio/mp3" />
     </audio>
     <h1>Spell and Blade</h1>
-    <button id="myBtn">Start</button>
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
+    <button id="startButton">Start</button>
+    <!-- Pop-up window -->
+    <div id="popUpWindow" class="popUpWindow">
+        <!-- Pop-up window content -->
+        <div class="popUpWindow-content">
             <span class="close">&times;</span>
-            <p>Select Charcter Class</p>
+            <p>Please select a character type that best fits your play style.
+               The character type you choose will be the character you control!
+            </p>
+            <div id="characterButtons">
+                <button class="tank" onclick="setCharacterType(1)">Tank</button>
+                <button class="wizard" onclick="setCharacterType(2)">Wizard</button>
+                <button class="elf" onclick="setCharacterType(3)">Elf</button>
+            </div>
         </div>
-
     </div>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById('myModal');
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal
-        btn.onclick = function () {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-
     <h2>Developed by:</h2>>
     <ul>
         <li>Dustin Branch</li>
@@ -60,6 +34,8 @@
         <li>Dylan Alfonso</li>
         <li>Ryan DeBlanc</li>
     </ul>
-    
+    <canvas id="characterCanvas"></canvas>
+    <script src="CharacterClass.js"></script>
+    <script src="ButtonProperties.js"></script>
 </body>
 </html>
