@@ -40,7 +40,10 @@ ul{
     font-family: ringbearer;
     font-size: 30px;
 }
-#characterCanvas{
+#landscapeCanvas {
+
+}
+#characterCanvas {
     display: block;
 }
 #startButton{

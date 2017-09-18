@@ -1,4 +1,8 @@
-﻿var character = {
+﻿/*
+    This javascript file is mainly for the character object, but also
+    contains methods pertaining to the canvas and also the landscape
+*/
+var character = {
     characterName: "",
     characterType: "",
     HP: 100,
@@ -53,38 +57,54 @@ function setUltimateAttackName(ultimateAttackName) {
 function getUltimateAttackName() {
     return this.ultimateAttackName;
 }
-function createCharacter(characterType) {
+(function createCanvas(characterType) {
     var startScreen = document.getElementById("startScreen");
-    startScreen.style.display = "none";
-    var characterCanvas = document.getElementById("characterCanvas");
+    startScreen.style.display = "none"; //Hides the start screen once canvas gets created
+
+    var landscapeCanvas = document.getElementById("landscapeCanvas"); //Creates a canvas for our landscape
+    var ctx = landscape.getContext("2d");
+
+    var characterCanvas = document.getElementById("characterCanvas"); //Creates a canvas for our player
     var ctx = characterCanvas.getContext("2d");
-    
-    characterCanvas.width = window.innerWidth;
-    characterCanvas.height = window.innerHeight;
-    //Character sprite placeholders
-    var tankSprite = new Image();
-    //var wizardSprite = new Image();
-    //var elfSprite = new Image();
-    //Sprite dimensions (Work in progress)
-    var spriteWidth = 100,
-        spriteHeight = 100,
-        pixelsLeft = 170,
-        pixelsTop = 10,
-        //Where the sprite will be drawn
-        canvasPosX = 20,
-        canvasPosY = 20;
-    //window.addEventListener("resize", resizeCanvas, false); //resize to fill browser window
 
-    //function resizeCanvas() {
-    //    characterCanvas.width = window.innerWidth;
-    //    characterCanvas.height = window.innerHeight;
-    //}
+    window.addeventlistener("resize", resizecanvas, false); //resize to fill browser window
 
-    if (characterType == 1) {
-        //tankSprite.src = "3_knight_.png";
-        ctx.rect(20, 20, 150, 100);
-        ctx.stroke();
-        ctx.drawImage("3_knight_.png", 50, 50);
-        //ctx.drawImage("craftpix - 062999- 2d- fantasy - knight - free - sprite - sheets / _PNG / 3_KNIGHT/ _IDLE / _IDLE_000.png", pixelsLeft, pixelsTop, spriteWidth, spriteHeight, canvasPosX, canvasPosY);
+    function resizeCanvas() {
+        landscapeCanvas.width = window.innerWidth;
+        landscapeCanvas.height = window.innerHeight;
+
+        charactercanvas.width = window.innerwidth;
+        charactercanvas.height = window.innerheight;
+
+        /**
+            * Your drawings need to be inside this function otherwise they will be reset when 
+            * you resize the browser window and the canvas goes will be cleared.
+       */
+
+        createLandscape();
+        createCharacter(characterType);
     }
-}
+    resizeCanvas();
+
+    function createLandscape() {
+        var mageCity = new Image("http://localhost:55331/WebSite1/mountain_landscape.png");
+        ctx.drawImage(mageCity, landscape.width, landscape.height)
+    }
+    function createCharacter(characterType) {
+        //Character sprite placeholders
+        var characterSprite = new Image();
+        //Sprite dimensions (Work in progress)
+        var spriteWidth = 100,
+            spriteHeight = 100,
+            pixelsLeft = 170,
+            pixelsTop = 10,
+            //Where the sprite will be drawn
+            canvasPosX = 20,
+            canvasPosY = 20;
+        if (characterType == 1) {
+            characterSprite.src = "3_knight_.png";
+            ctx.drawImage(characterSprite, spriteWidth, spriteHeight);
+        }
+    }
+
+})();
