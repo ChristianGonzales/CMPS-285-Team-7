@@ -57,7 +57,7 @@ function setUltimateAttackName(ultimateAttackName) {
 function getUltimateAttackName() {
     return this.ultimateAttackName;
 }
-(function createCanvas(characterType) {
+function createCanvas(characterType) {
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none"; //Hides the start screen once canvas gets created
 
@@ -107,4 +107,4 @@ function getUltimateAttackName() {
         }
     }
 
-})();
+}
