@@ -2,22 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8" />
-
-    <!--<link href="../Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="../Content/bootstrap-theme.min.css" rel="stylesheet" /> -->
+    
     <link href="StyleSheet.css" rel="stylesheet" type="text/css">
-
-    <script src="../Scripts/bootstrap.min.js"></script>
-    <script src="../Scripts/jquery-1.9.1.min.js"></script>
-
+    
     <title></title>
 </head>
 <body>
     <audio controls autoplay>   <!--Tried to add audio could not figure it out yet-->
         <source src= " https://opengameart.org/content/heroic-demise-updated-version" type= "audio/mp3" />
     </audio>
-    <canvas id="landscapeCanvas"></canvas>
-    <canvas id="characterCanvas"></canvas>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div id="startScreen">
         <h1>Spell and Blade</h1>
         <button id="startButton">Start</button>
@@ -30,9 +24,9 @@
                    The character type you choose will be the character you control!
                 </p>
                 <div id="characterButtons">
-                    <button class="tank" onclick="createCharacter(1)">Tank</button>
-                    <button class="wizard" onclick="createCharacter(2)">Wizard</button>
-                    <button class="elf" onclick="createCharacter(3)">Elf</button>
+                    <button class="tank" onclick="createCanvas(1)">Tank</button>
+                    <button class="wizard" onclick="createCanvas(2)">Wizard</button>
+                    <button class="elf" onclick="createCanvas(3)">Elf</button>
                 </div>
             </div>
         </div>
@@ -41,7 +35,6 @@
             <li>Dustin Branch</li>
             <li>Christopher Coats</li>
             <li>Sara Williams</li>
-            <li>Dylan Alfonso</li>
             <li>Ryan DeBlanc</li>
         </ul>
     </div>

@@ -34,17 +34,15 @@ h2{
 
 ul{
     position: relative;
-    top: 180px;
+    top: 200px;
     left: 640px;
     line-height: 100%;
     font-family: ringbearer;
     font-size: 30px;
 }
-#landscapeCanvas {
-
-}
-#characterCanvas {
-    display: block;
+#gameCanvas {
+    position: relative;
+    display: none;
 }
 #startButton{
     width: 300px;
