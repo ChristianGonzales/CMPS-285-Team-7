@@ -10,10 +10,8 @@ function createCanvas(characterType) {
     var ctx = gameCanvas.getContext("2d");
 
     resizeCanvas(characterType, ctx);
-    createLandscape(ctx);
-    createCharacter(characterType, ctx);
 
-    window.addeventlistener("resize", resizeCanvas(characterType, ctx), false); //resize to fill browser window
+    window.addEventListener("resize", resizeCanvas(characterType, ctx), false); //resize to fill browser window
 }
 function resizeCanvas(characterType, ctx) {
     gameCanvas.width = window.innerWidth;
@@ -36,10 +34,12 @@ function createLandscape(ctx) {
 function createCharacter(characterType, ctx) {
     //Character sprite placeholders
     var characterSprite = new Image();
+    var spriteWidth = 20;
+    var spriteHeight = 20;
     
     if (characterType == 1) {
         characterSprite.onload = function () {
-            ctx.drawImage(characterSprite, 20, 20);
+            ctx.drawImage(characterSprite, spriteWidth, spriteHeight);
         }
         characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
     }
