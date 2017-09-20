@@ -6,6 +6,11 @@
     <link href="StyleSheet.css" rel="stylesheet" type="text/css">
     
     <title></title>
+    <script>
+        function openWin() {
+            window.open("GameWindow.html")
+        }
+    </script>
 </head>
 <body>
     <audio controls autoplay>   <!--Tried to add audio could not figure it out yet-->
@@ -24,9 +29,9 @@
                    The character type you choose will be the character you control!
                 </p>
                 <div id="characterButtons">
-                    <button class="tank" onclick="createCanvas(1)">Tank</button>
-                    <button class="wizard" onclick="createCanvas(2)">Wizard</button>
-                    <button class="elf" onclick="createCanvas(3)">Elf</button>
+                    <button class="tank" onclick="createCanvas(1);openWin()">Tank</button>
+                    <button class="wizard" onclick="createCanvas(2);openWin()">Wizard</button>
+                    <button class="elf" onclick="createCanvas(3);openWin()">Elf</button>
                 </div>
             </div>
         </div>
