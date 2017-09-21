@@ -43,7 +43,8 @@ function createCharacter(characterType, gameCanvas, ctx) {
         characterSprite.onload = function () {
             ctx.drawImage(characterSprite, xPos, yPos, spriteWidth, spriteHeight);
         }
-        characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
+        //characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
+        characterSprite.src = "E:\CMPS-285-Team-7\WebSite1/3_knight_.png";
     }
     else if(characterType == 2){
         characterSprite.onload = function () {
