@@ -34,13 +34,11 @@ function createLandscape(ctx) {
 function createCharacter(characterType, ctx) {
     //Character sprite placeholders
     var characterSprite = new Image();
-    var spriteWidth = 20;
-    var spriteHeight = 20;
     
     if (characterType == 1) {
         characterSprite.onload = function () {
-            ctx.drawImage(characterSprite, spriteWidth, spriteHeight);
+            ctx.drawImage(characterSprite, characterSprite.width, characterSprite.height);
         }
-        characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
+        characterSprite.src = "http://localhost:55331/WebSite1/3_knight_resized.png";
     }
 }
