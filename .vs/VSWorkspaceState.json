@@ -3,10 +3,9 @@
     "",
     "\\WebSite1",
     "\\WebSite1\\Bin",
-    "\\WebSite1\\craftpix-062999-2d-fantasy-knight-free-sprite-sheets",
-    "\\WebSite1\\craftpix-062999-2d-fantasy-knight-free-sprite-sheets\\__SCML",
-    "\\WebSite1\\craftpix-062999-2d-fantasy-knight-free-sprite-sheets\\__SCML\\3_KNIGHT"
+    "\\WebSite1\\WizardSprite",
+    "\\WebSite1\\WizardSprite\\SCML",
+    "\\WebSite1\\WizardSprite\\SCML\\1"
   ],
-  "SelectedNode": "\\WebSite1\\3_knight_resized.png",
   "PreviewInSolutionExplorer": false
 }

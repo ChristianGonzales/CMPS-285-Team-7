@@ -22,23 +22,39 @@ function resizeCanvas(characterType, ctx) {
         * you resize the browser window and the canvas goes will be cleared.
    */
 
-    createLandscape(ctx);
-    createCharacter(characterType, ctx);
+    createLandscape(gameCanvas, ctx);
+    createCharacter(characterType, gameCanvas, ctx);
 }
-function createLandscape(ctx) {
+function createLandscape(gameCanvas, ctx) {
     var mageCity = new Image("http://localhost:55331/WebSite1/magecity.png");
     mageCity.onload = function () {
-        ctx.drawImage(mageCity, gameCanvas.width, gameCanvas.height)
+        ctx.drawImage(mageCity, 0, 0, gameCanvas.width, gameCanvas.height)
     }
 }
-function createCharacter(characterType, ctx) {
+function createCharacter(characterType, gameCanvas, ctx) {
     //Character sprite placeholders
     var characterSprite = new Image();
+    var xPos = 200;
+    var yPos = 600;
+    var spriteHeight = 150;
+    var spriteWidth = 150;
     
     if (characterType == 1) {
         characterSprite.onload = function () {
-            ctx.drawImage(characterSprite, characterSprite.width, characterSprite.height);
+            ctx.drawImage(characterSprite, xPos, yPos, spriteWidth, spriteHeight);
         }
-        characterSprite.src = "http://localhost:55331/WebSite1/3_knight_resized.png";
+        characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
+    }
+    else if(characterType == 2){
+        characterSprite.onload = function () {
+            ctx.drawImage(characterSprite, (xPos - 10), (yPos - 10), spriteWidth, spriteHeight);
+        }
+        characterSprite.src = "http://localhost:55331/WebSite1/WizardSprite/SCML/1/1_wizard_.png";
+    }
+    else {
+        characterSprite.onload = function () {
+            ctx.drawImage(characterSprite, (xPos - 10), (yPos - 10), spriteWidth, spriteHeight);
+        }
+        characterSprite.src = "http://localhost:55331/WebSite1/craftpix-392011-2d-fantasy-elf-free-sprite-sheets/_PNG/1/1_IDLE_000.png";
     }
 }
