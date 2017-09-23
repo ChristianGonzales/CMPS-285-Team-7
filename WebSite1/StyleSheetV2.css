@@ -17,17 +17,18 @@
 }
 
 h1 {
-    position: fixed;
+    position: static;
     left: 460px;
+    //text-align: center;
     font-family: ringbearer;
-    font-size: 50px;
+    font-size: 55px;
     font-weight: bold;
     text-transform: uppercase;
     text-shadow: 0 0 3px #FF0000;
 }
 
 h2 {
-    position: fixed;
+    position: static;
     top: 300px;
     left: 200px;
     line-height: 100%;
@@ -36,23 +37,23 @@ h2 {
 }
 
 ul {
-    position: fixed;
-    top: 100px;
+    position: static;
+    top: 320px;
     left: 300px;
     line-height: 100%;
     font-family: ringbearer;
-    font-size: 30px;
+    font-size: 28px;
+    font-weight:normal;
 }
 
 #gameCanvas {
-    position: relative;
+    position: static;
     display: none;
 }
 
 #startButton {
-    width: 300px;
     height: 100px;
-    position: fixed;
+    position: static;
     margin: auto;
     left: 0;
     right: 0;
@@ -81,7 +82,7 @@ ul {
         -webkit-box-shadow: 0px 2px 0px #d35400;
         -moz-box-shadow: 0px 2px 0px #d35400;
         box-shadow: 0px 2px 0px #d35400;
-        position: fixed;
+        position: static;
         top: 4px;
     }
 
@@ -122,7 +123,7 @@ ul {
 
 .popUpWindow {
     display: none;
-    position: fixed;
+    position: static;
     z-index: 1;
     padding-top: 100px;
     left: 0;
