@@ -32,6 +32,9 @@ function createLandscape(gameCanvas, ctx) {
     }
 }
 function createCharacter(characterType, gameCanvas, ctx) {
+    //Get root context
+    //var rootContext = document.body.getAttribute("data-root");
+    //rootContext = $(rootContext);
     //Character sprite placeholders
     var characterSprite = new Image();
     var xPos = 200;
@@ -43,19 +46,19 @@ function createCharacter(characterType, gameCanvas, ctx) {
         characterSprite.onload = function () {
             ctx.drawImage(characterSprite, xPos, yPos, spriteWidth, spriteHeight);
         }
-        //characterSprite.src = "http://localhost:55331/WebSite1/3_knight_.png";
-        characterSprite.src = "E:\CMPS-285-Team-7\WebSite1/3_knight_.png";
+        characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
+        //characterSprite.src = "../../craftpix-062999-2d-fantasy-knight-free-sprite-sheets\__SCML\3_KNIGHT/3_knight_.png";
     }
     else if(characterType == 2){
         characterSprite.onload = function () {
             ctx.drawImage(characterSprite, (xPos - 10), (yPos - 10), spriteWidth, spriteHeight);
         }
-        characterSprite.src = "http://localhost:55331/WebSite1/WizardSprite/SCML/1/1_wizard_.png";
+        characterSprite.src = "../WebSite1/WizardSprite/SCML/1/1_wizard_.png";
     }
     else {
         characterSprite.onload = function () {
             ctx.drawImage(characterSprite, (xPos - 10), (yPos - 10), spriteWidth, spriteHeight);
         }
-        characterSprite.src = "http://localhost:55331/WebSite1/craftpix-392011-2d-fantasy-elf-free-sprite-sheets/_PNG/1/1_IDLE_000.png";
+        characterSprite.src = "../WebSite1/ElfSprite/_PNG/1/1_IDLE_000.png";
     }
 }
