@@ -10,19 +10,22 @@
         function openWin() {
             window.location.replace("GameWindow.html")
         }
+        function myFunction() {
+            document.getElementById("popUpWindow").style.zIndex = "1";
+        }
     </script>
 </head>
 <body data-root="$(rootContext)">
-    <audio autoplay>
+    <audio autoplay loop>
         <source src="HeroicDemise.mp3" type="audio/mp3">
         Your browser does not support the audio element
     </audio>
     <canvas id="gameCanvas" width="3000" height="3000"></canvas>
     <div id="startScreen">
         <h1>Spell and Blade</h1>
-        <button id="startButton">Start</button>
+        <button id="startButton" onclick="myFunction()">Start</button>
         <!-- Pop-up window -->
-        <div id="popUpWindow" class="popUpWindow">
+        <div id="popUpWindow" class="popUpWindow" >
             <!-- Pop-up window content -->
             <div class="popUpWindow-content">
                 <span class="close">&times;</span>
