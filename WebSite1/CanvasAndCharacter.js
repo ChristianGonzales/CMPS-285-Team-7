@@ -2,59 +2,119 @@
     This javascript file is mainly for the character object, but also
     contains methods pertaining to the canvas and also the landscape
 */
-var player = {
-    characterSprite = new Image(),
-    spriteHeight = 150,
-    spriteWidth = 150,
-    playerPosX = 200,
-    playerPosY = 600,
-    playerSpeedX = 0,
-    playerSpeedY = 0,
-    darwingUpdate = function () {
-        ctx.drawImage(player.characterSprite, player.xPos, player.yPos, player.spriteWidth, player.spriteHeight);
-
+var gameArea = {
+    canvas: document.createElement("canvas"),
+    //context: this.canvas.getContext("2d"),
+    //Sets width and height to whole screen
+    create: function () {
+        this.canvas.display = "initial";
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     },
-    newPosition = function () {
-        playerPosX += playerSpeedX;
-        playerPosY += playerSpeedY;
-
+    clear: function () {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    //When needed to test if something is not drawing on the canvas
+    test : function () {
+        ctx = this.context; 
+        ctx.fillRect(300, -300, 50, 50);
     }
-
 };
-function createCanvas(characterType) {
+var key = {
+    _pressed: {},
+    UP: 87,
+    DOWN: 83,
+    LEFT: 65,
+    RIGHT: 68,
+    isDown: function (keyCode) {
+        return this._pressed[keyCode];
+    },
+    onKeydown: function (event) {
+        console.log("KEYDOWN: " + event.keyCode);
+        this._pressed[event.keyCode] = true;
+        console.log(this._pressed[event.keyCode]);
+    },
+    onKeyup: function (event) {
+        delete this._pressed[event.keyCode];
+    }
+};
+function startGame(characterType) {
+    var player = new Character(100, -50);
+    var interval;
+    //window.addEventListener("keydown", keyDownHandler, false);
+    //window.addEventListener("keyup", keyUpHandler, false);
+    //Test
+    window.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
+    window.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
+    window.requestAnimationFrame(function (event) { updateGameArea(new Character()); });
+    createCanvas();
+    player.update();
+    //createCharacter(characterType);
+}
+function createCanvas() {
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none"; //Hides the start screen once canvas gets created
 
-    var gameCanvas = document.getElementById("gameCanvas"); //Creates a canvas for our player
-    var ctx = gameCanvas.getContext("2d");
-
-    resizeCanvas(characterType, ctx);
-
-    window.addEventListener("resize", resizeCanvas(characterType, ctx), false); //resize to fill browser window
-    return gameCanvas, ctx;
+    gameArea.create();
 }
-function resizeCanvas(characterType, ctx) {
-    gameCanvas.width = window.innerWidth;
-    gameCanvas.height = window.innerHeight;
-    gameCanvas.style.display = "block";
-    /**
-        * Your drawings need to be inside this function otherwise they will be reset when 
-        * you resize the browser window and the canvas goes will be cleared.
-   */
-
-    createLandscape(gameCanvas, ctx);
-    createCharacter(characterType, gameCanvas, ctx);
-}
-function createLandscape(gameCanvas, ctx) {
-    var mageCity = new Image("http://localhost:55331/WebSite1/magecity.png");
-    mageCity.onload = function () {
-        ctx.drawImage(mageCity, 0, 0, gameCanvas.width, gameCanvas.height)
+function Character(xPos, yPos) {
+    this.characterSprite = new Image();
+    this.isMoving = false;
+    this.width = 150;
+    this.height = 150;
+    this.movementSpeed = 0;
+    this.xPos = xPos;
+    this.yPos = yPos;
+    this.update = function () {
+        if (key.isDown(key.UP)) {
+            console.log("here");
+            this.moveUp();
+        }
+        if (key.isDown(key.LEFT)) {
+            this.moveLeft();
+        }
+        if (key.isDown(key.DOWN)) {
+            this.moveDown();
+        }
+        if (key.isDown(key.RIGHT)) {
+            this.moveRight();
+        }
+        ctx = gameArea.context;
+        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+    }
+     this.moveUp = function() {
+        movementSpeed = 1;
+        this.yPos += movementSpeed;
+    }
+    this.moveDown = function () {
+        movementSpeed = -1;
+        this.yPos += movementSpeed;
+    }
+    this.moveLeft = function () {
+        movementSpeed = -1;
+        this.xPos += movementSpeed;
+    }
+    this.moveRight = function () {
+        movementSpeed = 1;
+        this.xPos += movementSpeed;
+    }
+    this.stopMoving = function () {
+        movementSpeed = 0;
     }
 }
-function createCharacter(characterType, gameCanvas, ctx) {
+//function createLandscape() {
+//    var mageCity = new Image("http://localhost:55331/WebSite1/magecity.png");
+//    mageCity.onload = function () {
+//        ctx.drawImage(mageCity, 0, 0, gameCanvas.width, gameCanvas.height)
+//    }
+//}
+function createCharacter(characterType) {
     if (characterType == 1) {
+        var player = new character(100, -100);
         player.characterSprite.onload = function () {
-            ctx.drawImage(player.characterSprite, player.xPos, player.yPos, player.spriteWidth, player.spriteHeight);
+            player.ctx.drawImage(player.characterSprite, player.xPos, player.yPos, player.width, player.height);
         }
         player.characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
     }
@@ -71,24 +131,8 @@ function createCharacter(characterType, gameCanvas, ctx) {
         player.characterSprite.src = "../WebSite1/ElfSprite/_PNG/1/1_IDLE_000.png";
     }
 }
-function updateGameCanvas() {
-    gameCanvas.clear();
-    player.newPosition();
-    player.darwingUpdate();
-}
-function moveUp() {
-    player.playerSpeedY -= 1;
-}
-function moveDown() {
-    player.palyerSpeedY += 1;
-}
-function moveLeft() {
-    player.playerSpeedX -= 1;
-}
-function moveRight() {
-    player.playerSpeedY += 1;
-}
-function stopMoving() {
-    player.playerSpeedX = 0;
-    player.playerSpeedY = 0;
+function updateGameArea(player) {
+    gameArea.clear();
+    console.log(player);
+    player.update();
 }

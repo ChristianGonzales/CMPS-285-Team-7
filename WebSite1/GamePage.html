@@ -6,18 +6,12 @@
     <link href="StyleSheetV2.css" rel="stylesheet" type="text/css">
 
     <title></title>
-    <script>
-        function openWin() {
-            window.location.replace("GameWindow.html")
-        }
-    </script>
 </head>
-<body data-root="$(rootContext)">
+<body>
     <audio autoplay>
         <source src="HeroicDemise.mp3" type="audio/mp3">
         Your browser does not support the audio element
     </audio>
-    <canvas id="gameCanvas" width="3000" height="3000"></canvas>
     <div id="startScreen">
         <h1>Spell and Blade</h1>
         <button id="startButton">Start</button>
@@ -31,9 +25,9 @@
                     The character type you choose will be the character you control!
                 </p>
                 <div id="characterButtons">
-                    <button class="tank" onclick="openWin();createCanvas(1)">Tank</button>
-                    <button class="wizard" onclick="openWin();createCanvas(2)">Wizard</button>
-                    <button class="elf" onclick="openWin();createCanvas(3)">Elf</button>
+                    <button class="tank" onclick="startGame(1)">Tank</button>
+                    <button class="wizard" onclick="startGame(2)">Wizard</button>
+                    <button class="elf" onclick="startGame(3)">Elf</button>
                 </div>
             </div>
         </div>
@@ -47,7 +41,7 @@
             <li>Sara Williams</li>
         </ul>
     </div>
-    <script src="CharacterClass.js"></script>
+    <script src="CanvasAndCharacter.js"></script>
     <script src="ButtonProperties.js"></script>
 </body>
 </html>
