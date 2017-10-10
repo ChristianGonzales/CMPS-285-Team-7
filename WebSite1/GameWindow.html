@@ -25,6 +25,10 @@
 
         function startGame() {
             myGamePiece = new component(100, 100, "white", 400, 300);
+            myUpBtn = new component(30, 30, "black", 100, 10);
+            myDownBtn = new component(30, 30, "black", 100, 70);
+            myLeftBtn = new component(30, 30, "black", 70, 40);
+            myRightBtn = new component(30, 30, "black", 130, 40);
             myGameArea.start();
         }
         var myGameArea = {
@@ -35,11 +39,21 @@
                 this.context = this.canvas.getContext("2d");
                 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                 this.interval = setInterval(updateGameArea, 20);
-                window.addEventListener('keydown', function (e) {
-                    myGameArea.key = e.keyCode;
+                window.addEventListener('mousedown', function (e) {
+                    myGameArea.x = e.pageX;
+                    myGameArea.y = e.pageY;
                 })
-                window.addEventListener('keyup', function (e) {
-                    myGameArea.key = false;
+                window.addEventListener('mouseup', function (e) {
+                    myGameArea.x = false;
+                    myGameArea.y = false;
+                })
+                window.addEventListener('touchstart', function (e) {
+                    myGameArea.x = e.pageX;
+                    myGameArea.y = e.pageY;
+                })
+                window.addEventListener('touchend', function (e) {
+                    myGameArea.x = false;
+                    myGameArea.y = false;
                 })
             },
             clear: function () {
@@ -59,21 +73,39 @@
                 ctx.fillStyle = color;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
             }
-            this.newPos = function () {
-                this.x += this.speedX;
-                this.y += this.speedY;
+            this.clicked = function () {
+                var myleft = this.x;
+                var myright = this.x + (this.width);
+                var mytop = this.y;
+                var mybottom = this.y + (this.height);
+                var clicked = true;
+                if ((mybottom < myGameArea.y) || (mytop > myGameArea.y) || (myright < myGameArea.x) || (myleft > myGameArea.x)) {
+                    clicked = false;
+                }
+                return clicked;
             }
         }
 
         function updateGameArea() {
             myGameArea.clear();
-            myGamePiece.speedX = 0;
-            myGamePiece.speedY = 0;
-            if (myGameArea.key && myGameArea.key == 37) { myGamePiece.speedX = -1; }
-            if (myGameArea.key && myGameArea.key == 39) { myGamePiece.speedX = 1; }
-            if (myGameArea.key && myGameArea.key == 38) { myGamePiece.speedY = -1; }
-            if (myGameArea.key && myGameArea.key == 40) { myGamePiece.speedY = 1; }
-            myGamePiece.newPos();
+            if (myGameArea.x && myGameArea.y) {
+                if (myUpBtn.clicked()) {
+                    myGamePiece.y -= 1;
+                }
+                if (myDownBtn.clicked()) {
+                    myGamePiece.y += 1;
+                }
+                if (myLeftBtn.clicked()) {
+                    myGamePiece.x += -1;
+                }
+                if (myRightBtn.clicked()) {
+                    myGamePiece.x += 1;
+                }
+            }
+            myUpBtn.update();
+            myDownBtn.update();
+            myLeftBtn.update();
+            myRightBtn.update();
             myGamePiece.update();
         }
 
