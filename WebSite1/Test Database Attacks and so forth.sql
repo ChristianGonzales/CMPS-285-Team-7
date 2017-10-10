@@ -25,8 +25,7 @@ GO
     --ID int IDENTITY(1,1), -- how to auto increment 
 	--DBCC CHECKIDENT (Stat, RESEED, 0) To reset the auto increment to start at 0.
 	--Should make sure there is nothing above what you specify, so if you start at 0, next will be 1 and start at 10 next will be 11.
-	
-	/*
+
 	--Creation of the Stats table
 	CREATE TABLE Stat (
 	ID INT IDENTITY(1,1),
@@ -87,41 +86,46 @@ GO
 	FOREIGN KEY(ArmorID) REFERENCES Armor(ID),
 	FOREIGN KEY(StatID) REFERENCES Stat(ID),
 );
-*/
 
 
--- Third iteration of the tables
+-- Testing By adding Values To Stat table, These should be final values for Stat table.
+INSERT dbo.Stat
+	VALUES (10)
+	GO
 
---Making a new data type
+INSERT dbo.Stat
+	VALUES (20)
+	GO
 
---Creation of the Armor Table
-	CREATE TABLE Armor(
-	ID INT IDENTITY(1,1) NOT NULL,
-	Name VARCHAR(256) NOT NULL,
-	Stats INT NOT NULL, -- There would be a multiplier in the main code.
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
-	
---Creation of the Spell and Attack table. Added together for simplicity will go into detail later.
-	CREATE TABLE SPELLS(
-	ID INT IDENTITY(1,1) NOT NULL,
-	Name VARCHAR(256) NOT NULL,
-	Stats INT NOT NULL,
-	TYPE VARCHAR(2) NOT NULL, 
-	--Type would be what it is, ATM AttackSpell would be AS, Attack would be A, Healing spell would be HS, And so on.
-	--We could add code in the front end to read this and do with it what it wants
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
+INSERT dbo.Stat
+	VALUES (30)
+	GO
 
---Creation of the Item table
-	CREATE TABLE Items(
-	ID INT IDENTITY(1,1) NOT NULL,
-	Name VARCHAR(256) NOT NULL,
-	Stats INT NOT NULL,
-	TYPE VARCHAR(2) NOT NULL,
-	--Consumeable-C, Healing Potion-HP ...
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
+INSERT dbo.Stat
+	VALUES (40)
+	GO
+
+INSERT dbo.Stat
+	VALUES (50)
+	GO
+
+INSERT dbo.Stat
+	VALUES (60)
+	GO
+
+INSERT dbo.Stat
+	VALUES (70)
+	GO
+
+INSERT dbo.Stat
+	VALUES (80)
+	GO
+
+INSERT dbo.Stat
+	VALUES (90)
+	GO
+
+INSERT dbo.Stat
+	VALUES (100)
+	GO
+--May add more all depends on what you guys want and when you tell me.
