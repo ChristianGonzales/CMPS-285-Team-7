@@ -8,10 +8,10 @@
     <title></title>
 </head>
 <body>
-    <audio autoplay>
+    <!--<audio autoplay>
         <source src="HeroicDemise.mp3" type="audio/mp3">
         Your browser does not support the audio element
-    </audio>
+    </audio>-->
     <div id="startScreen">
         <h1>Spell and Blade</h1>
         <button id="startButton">Start</button>
@@ -25,9 +25,9 @@
                     The character type you choose will be the character you control!
                 </p>
                 <div id="characterButtons">
-                    <button class="tank" onclick="startGame(1)">Tank</button>
-                    <button class="wizard" onclick="startGame(2)">Wizard</button>
-                    <button class="elf" onclick="startGame(3)">Elf</button>
+                    <button id="tank" onclick="startGame(1)">Tank</button>
+                    <button id="wizard" onclick="startGame(2)">Wizard</button>
+                    <button id="elf" onclick="startGame(3)">Elf</button>
                 </div>
             </div>
         </div>
@@ -41,7 +41,8 @@
             <li>Sara Williams</li>
         </ul>
     </div>
-    <script src="CanvasAndCharacter.js"></script>
+    <!--<script src="CanvasAndCharacter.js"></script>-->
+    <script src="Game.js"></script>
     <script src="ButtonProperties.js"></script>
 </body>
 </html>

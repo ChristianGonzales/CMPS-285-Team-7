@@ -2,25 +2,57 @@
     This javascript file is mainly for the character object, but also
     contains methods pertaining to the canvas and also the landscape
 */
+//      console.log("");  useful copy and paste code
+//Animation code for FPS
+var vendors = ['webkit', 'moz'];
+for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+}
 var gameArea = {
     canvas: document.createElement("canvas"),
-    //context: this.canvas.getContext("2d"),
+    lastTime: (new Date()).getTime(),
+    currentTime: 0, 
+    delta: 0,
     //Sets width and height to whole screen
-    create: function () {
+    create: function (player) {
+        console.log("inside gameArea.create");
+        console.log(player);
         this.canvas.display = "initial";
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        //document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        //Test
+        window.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
+        window.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
+        //Animation Frame Test code
+        window.requestAnimationFrame = (function () {
+            //Animation frames for multiple browsers.
+            return window.requestAnimationFrame || //Chrome
+                window.mozRequestAnimationFrame || //Mozilla Firefox
+                window.msRequestAnimationFrame || //Exploer
+                null;
+
+        })();
+        this.animationLoop();
+        console.log(player);
+        console.log("end of gameArea.create");
     },
-    clear: function () {
+    animationLoop: function () {
+        requestAnimationFrame(gameArea.animationLoop);
+    },
+    update: function (player) {
+        console.log("Here inside update(player) inside gameArea");
+        console.log(player);
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-    //When needed to test if something is not drawing on the canvas
-    test : function () {
-        ctx = this.context; 
-        ctx.fillRect(300, -300, 50, 50);
-    }
+        console.log("before draw function");
+        console.log(player);
+        player.draw();
+        console.log("Outside draw function");
+        player.update();
+    }, 
+
 };
 var key = {
     _pressed: {},
@@ -32,33 +64,12 @@ var key = {
         return this._pressed[keyCode];
     },
     onKeydown: function (event) {
-        console.log("KEYDOWN: " + event.keyCode);
         this._pressed[event.keyCode] = true;
-        console.log(this._pressed[event.keyCode]);
     },
     onKeyup: function (event) {
         delete this._pressed[event.keyCode];
     }
 };
-function startGame(characterType) {
-    var player = new Character(100, -50);
-    var interval;
-    //window.addEventListener("keydown", keyDownHandler, false);
-    //window.addEventListener("keyup", keyUpHandler, false);
-    //Test
-    window.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
-    window.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
-    window.requestAnimationFrame(function (event) { updateGameArea(new Character()); });
-    createCanvas();
-    player.update();
-    //createCharacter(characterType);
-}
-function createCanvas() {
-    var startScreen = document.getElementById("startScreen");
-    startScreen.style.display = "none"; //Hides the start screen once canvas gets created
-
-    gameArea.create();
-}
 function Character(xPos, yPos) {
     this.characterSprite = new Image();
     this.isMoving = false;
@@ -67,9 +78,21 @@ function Character(xPos, yPos) {
     this.movementSpeed = 0;
     this.xPos = xPos;
     this.yPos = yPos;
+    this.draw = function () {
+        console.log("Inside draw function");
+        console.log(this);
+        ctx = gameArea.context;
+        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+		console.log(this);
+        console.log("end of draw function");
+    }
     this.update = function () {
+        console.log("in player.update");
+        ctx = gameArea.context;
+        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+        console.log(this);
+        console.log("after the ctx code");
         if (key.isDown(key.UP)) {
-            console.log("here");
             this.moveUp();
         }
         if (key.isDown(key.LEFT)) {
@@ -81,10 +104,9 @@ function Character(xPos, yPos) {
         if (key.isDown(key.RIGHT)) {
             this.moveRight();
         }
-        ctx = gameArea.context;
         ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
     }
-     this.moveUp = function() {
+    this.moveUp = function () {
         movementSpeed = 1;
         this.yPos += movementSpeed;
     }
@@ -104,35 +126,65 @@ function Character(xPos, yPos) {
         movementSpeed = 0;
     }
 }
+function startGame(characterType) {
+    var player = new Character(50, -100);
+    console.log(player);
+    createCanvas(player);
+    console.log("Here after createCanvas()");
+    console.log(player);
+    console.log("HERE before gameLoop(player)");
+    gameLoop(player);
+    
+    //createCharacter(characterType);
+}
+function createCanvas(player) {
+    var startScreen = document.getElementById("startScreen");
+    startScreen.style.display = "none"; //Hides the start screen once canvas gets created
+    console.log(player);
+    gameArea.create(player);
+}
+function updateGameArea(player) {
+    console.log("Here at start of update gameArea");
+    console.log(player);
+    gameArea.currentTime = (new Date()).getTime();
+    gameArea.delta = (gameArea.currentTime - gameArea.lastTime) / 1000;
+    console.log("Here before gameArea.update(player)");
+    console.log(player);
+    gameArea.update(player);
+    
+}
+function gameLoop(player) {
+    console.log("Here before updateGameArea");
+    console.log(player);
+    updateGameArea(player);
+}
+
+
+
+
 //function createLandscape() {
 //    var mageCity = new Image("http://localhost:55331/WebSite1/magecity.png");
 //    mageCity.onload = function () {
 //        ctx.drawImage(mageCity, 0, 0, gameCanvas.width, gameCanvas.height)
 //    }
 //}
-function createCharacter(characterType) {
-    if (characterType == 1) {
-        var player = new character(100, -100);
-        player.characterSprite.onload = function () {
-            player.ctx.drawImage(player.characterSprite, player.xPos, player.yPos, player.width, player.height);
-        }
-        player.characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
-    }
-    else if(characterType == 2){
-        player.characterSprite.onload = function () {
-            ctx.drawImage(player.characterSprite, (player.xPos - 10), (player.yPos - 10), player.spriteWidth, player.spriteHeight);
-        }
-        player.characterSprite.src = "../WebSite1/WizardSprite/SCML/1/1_wizard_.png";
-    }
-    else {
-        player.characterSprite.onload = function () {
-            ctx.drawImage(player.characterSprite, (player.xPos - 10), (player.yPos - 10), player.spriteWidth, player.spriteHeight);
-        }
-        player.characterSprite.src = "../WebSite1/ElfSprite/_PNG/1/1_IDLE_000.png";
-    }
-}
-function updateGameArea(player) {
-    gameArea.clear();
-    console.log(player);
-    player.update();
-}
+//function createCharacter(characterType) {
+//    if (characterType == 1) {
+//        var player = new character(100, -100);
+//        player.characterSprite.onload = function () {
+//            player.ctx.drawImage(player.characterSprite, player.xPos, player.yPos, player.width, player.height);
+//        }
+//        player.characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
+//    }
+//    else if (characterType == 2) {
+//        player.characterSprite.onload = function () {
+//            ctx.drawImage(player.characterSprite, (player.xPos - 10), (player.yPos - 10), player.spriteWidth, player.spriteHeight);
+//        }
+//        player.characterSprite.src = "../WebSite1/WizardSprite/SCML/1/1_wizard_.png";
+//    }
+//    else {
+//        player.characterSprite.onload = function () {
+//            ctx.drawImage(player.characterSprite, (player.xPos - 10), (player.yPos - 10), player.spriteWidth, player.spriteHeight);
+//        }
+//        player.characterSprite.src = "../WebSite1/ElfSprite/_PNG/1/1_IDLE_000.png";
+//    }
