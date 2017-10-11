@@ -19,113 +19,64 @@ SELECT ASA_ID,Attack_Name,Descriptions,Item_Stats
 	FROM dbo.Attacks_Spells_Armor
 GO
 --If you want to grab a specific column you just put that column in the select command
-	--This was what was left after the change of tables, leaving it so we can understand how to do tables.
 
 
-    --ID int IDENTITY(1,1), -- how to auto increment 
-	--DBCC CHECKIDENT (Stat, RESEED, 0) To reset the auto increment to start at 0.
-	--Should make sure there is nothing above what you specify, so if you start at 0, next will be 1 and start at 10 next will be 11.
+--Adding a couple more adds for testing purposes and s&g
+INSERT dbo.Attacks_Spells_Armor
+	Values (2,'Attack 2','This is the attack Description',0)
+GO
 
-	--Creation of the Stats table
-	CREATE TABLE Stat (
-	ID INT IDENTITY(1,1),
-	Value INT,
-	PRIMARY KEY (ID),
-);	
+INSERT dbo.Attacks_Spells_Armor
+	Values (3,'Attack 3','This is the attack Description',0)
+GO
 
-	--Creation of the Attack table
-	CREATE TABLE Attack (
-	ID INT IDENTITY(1,1),
-	Name VARCHAR(256),
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
+INSERT dbo.Attacks_Spells_Armor
+	Values (4,'Attack 4','This is the attack Description',0)
+GO
 
-	--Creation of the Attacks Stats table
-	CREATE TABLE Attack_Stats(
-	ID INT IDENTITY(1,1),
-	AttackID INT NOT NULL,
-	StatID INT NOT NULL,
-	PRIMARY KEY(ID),
-	FOREIGN KEY(StatID) REFERENCES Stat(ID), --Referencing Stats Table
-	FOREIGN KEY(AttackID) REFERENCES Attack(ID),
-);
-
-	--Cration of the Spell Table
-	CREATE TABLE Spell(
-	ID INT IDENTITY(1,1),
-	Name VARCHAR(256),
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
-
-	--Creation of the Spell Stats Table
-	CREATE TABLE Spell_Stats(
-	ID INT IDENTITY(1,1),
-	SpellID INT NOT NULL,
-	StatID INT NOT NULL,
-	PRIMARY KEY(ID),
-	FOREIGN KEY(StatID) REFERENCES Stat(ID),
-	FOREIGN KEY(SpellID) REFERENCES Spell(ID),
-);
-
-	--Creation of the Armor Table
-	CREATE TABLE Armor(
-	ID INT IDENTITY(1,1),
-	Name VARCHAR(256),
-	Description VARCHAR(256),
-	PRIMARY KEY(ID),
-);
-
-	--Creation of the Armor Stats Table
-	CREATE TABLE Armor_Stats(
-	ID INT IDENTITY(1,1),
-	ArmorID INT NOT NULL,
-	StatID INT NOT NULL,
-	PRIMARY KEY(ID),
-	FOREIGN KEY(ArmorID) REFERENCES Armor(ID),
-	FOREIGN KEY(StatID) REFERENCES Stat(ID),
-);
+INSERT dbo.Attacks_Spells_Armor
+	Values (5,'Attack 5','This is the attack Description',0)
+GO
 
 
--- Testing By adding Values To Stat table, These should be final values for Stat table.
-INSERT dbo.Stat
-	VALUES (10)
-	GO
+--Adding some Spells ... More s&g
+INSERT dbo.Attacks_Spells_Armor
+	Values (6,'Spell 1','This is the Spell Description',10)
+GO
 
-INSERT dbo.Stat
-	VALUES (20)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (7,'Spell 2','This is the Spell Description',10)
+GO
 
-INSERT dbo.Stat
-	VALUES (30)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (8,'Spell 3','This is the Spell Description',10)
+GO
 
-INSERT dbo.Stat
-	VALUES (40)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (9,'Spell 4','This is the Spell Description',10)
+GO
 
-INSERT dbo.Stat
-	VALUES (50)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (10,'Spell 5','This is the Spell Description',10)
+GO
 
-INSERT dbo.Stat
-	VALUES (60)
-	GO
+--Adding some Armor ... Again s&g
+INSERT dbo.Attacks_Spells_Armor
+	Values (11,'Armor 1','This is the Armor Description',.5)
+GO
 
-INSERT dbo.Stat
-	VALUES (70)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (12,'Armor 2','This is the Armor Description',.5)
+GO
 
-INSERT dbo.Stat
-	VALUES (80)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (13,'Armor 3','This is the Armor Description',.5)
+GO
 
-INSERT dbo.Stat
-	VALUES (90)
-	GO
+INSERT dbo.Attacks_Spells_Armor
+	Values (14,'Armor 4','This is the Armor Description',.5)
+GO
 
-INSERT dbo.Stat
-	VALUES (100)
-	GO
---May add more all depends on what you guys want and when you tell me.
+INSERT dbo.Attacks_Spells_Armor
+	Values (15,'Armor 5','This is the Armor Description',.5)
+GO
