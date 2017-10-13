@@ -15,7 +15,7 @@ function startGame(characterType) {
         yPos: 0,
         movementSpeed: 5,
         draw: function () {
-            ctx.fillRect(this.xPos, this.yPos, 150, 150);
+            ctx.fillRect(this.xPos, this.yPos, 100, 100);
         }
     };
     //Key handlers
@@ -29,6 +29,7 @@ function startGame(characterType) {
         DOWN: 83,
         LEFT: 65,
         RIGHT: 68,
+        BATTLE: 69,
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -92,6 +93,7 @@ function startGame(characterType) {
     //Test update used for moving
     var update = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        resize();
         if (key.isDown(key.UP)) {
             player.yPos -= player.movementSpeed
         }
@@ -104,6 +106,14 @@ function startGame(characterType) {
         if (key.isDown(key.RIGHT)) {
             player.xPos += player.movementSpeed
         }
+        if (key.isDown(key.BATTLE)) {
+            battleLoop(); 
+        }
+    }
+    //Reszie canvas to broswer no matter what
+    var resize = function () {
+        canvas.width = w.innerWidth;
+        canvas.height = w.innerHeight;
     }
     //Drawing everything
     var render = function () {
@@ -114,8 +124,21 @@ function startGame(characterType) {
         //    ctx.drawImage(player.characterSprite, player.xPos, player.yPos);
         //}
         player.draw();
+        //enemy.draw();
     }
-    //Main game loop
+    //When player is in battle
+    var battleLoop = function () {
+        console.log("In battleLoop");
+        var enemy = {
+            xPos: 200,
+            yPos: -200,
+            draw: function () {
+                ctx.fillStyle = "brown";
+                ctx.fillRect(this.xPos, this.yPos, 100, 100);
+            }
+        };
+    }
+    //Player walking around map
     var mainGameLoop = function () {
         var currentTime = Date.now();
         var delta = currentTime - lastTime;
