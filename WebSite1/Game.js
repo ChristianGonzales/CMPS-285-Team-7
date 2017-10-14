@@ -19,10 +19,15 @@ function startGame(characterType) {
         }
     };
     var projectile = {
-        projectileImage: new Image(),
-        projectileReady: false,
+        //projectileImage: new Image(),
+        //projectileReady: false,
+        color: "red",
         projectileWidth: 20,
-        projectileHeight: 10
+        projectileHeight: 10,
+        draw: function () {
+            ctx.fillStyle = this.color;
+            ctx.arc(200, -75, 50, 0, (2 * Math.PI));
+        }
     };
     //Key handlersS
     var key = {
@@ -76,10 +81,10 @@ function startGame(characterType) {
         player.characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
     }
     //Projectile sprite
-    projectile.projectileImage.onload = function () {
-        projectile.projectileReady = true;
-    }
-    projectile.projectileImage.src = ("../WebSite1/ElfSprite/_SCML/1/arrow.png");
+    //projectile.projectileImage.onload = function () {
+    //    projectile.projectileReady = true;
+    //}
+    //projectile.projectileImage.src = ("../WebSite1/ElfSprite/_SCML/1/arrow.png");
     //When everything gets redrawn on canvas
     var update = function () {
         //Variables for sides of the canvas
@@ -133,11 +138,12 @@ function startGame(characterType) {
         //if (characterSpriteReady) {
         //    ctx.drawImage(player.characterSprite, player.xPos, player.yPos);
         //}
-        if (projectile.projectileReady) {
-            ctx.drawImage(projectile.projectileImage, 500, -200, projectile.projectileWidth, projectile.projectileHeight);
-            console.log("Here");
-        }
+        //if (projectile.projectileReady) {
+        //    ctx.drawImage(projectile.projectileImage, 500, -200, projectile.projectileWidth, projectile.projectileHeight);
+        //    console.log("Here");
+        //}
         player.draw();
+        projectile.draw();
         //enemy.draw();
     }
     //When player is in battle
