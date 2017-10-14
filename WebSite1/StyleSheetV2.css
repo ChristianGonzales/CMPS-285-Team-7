@@ -88,9 +88,9 @@ ul {
         text-align: center;
     }
 
-.tank,
-.wizard,
-.elf {
+#tank,
+#wizard,
+#elf {
     width: 150px;
     height: 100px;
     display: inline-block;
@@ -113,9 +113,9 @@ ul {
     box-shadow: 0px 6px 0px #d35400;
 }
 
-    .tank:active,
-    .wizard:active,
-    .elf:active {
+    #tank:active,
+    #wizard:active,
+    #elf:active {
         -webkit-box-shadow: 0px 2px 0px #d35400;
         -moz-box-shadow: 0px 2px 0px #d35400;
         box-shadow: 0px 2px 0px #d35400;
