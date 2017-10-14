@@ -1,4 +1,5 @@
 ﻿
+
 --Creating the Attack tables and more (Tell me if you want any other columns added to the table)
 CREATE TABLE Attacks_Spells_Armor (
 	ASA_ID INT NOT NULL,
@@ -99,9 +100,25 @@ GO
 	ID INT IDENTITY(1,1) NOT NULL,
 	Name VARCHAR(256) NOT NULL,
 	Stats INT NOT NULL, -- There would be a multiplier in the main code.
+	Type VARCHAR(2),
 	Description VARCHAR(256),
 	PRIMARY KEY(ID),
 );
+
+INSERT dbo.Armor
+	VALUES('Leather Boots', 5, 'LP', 'This is a pair of Leather boots')
+	GO
+
+--Inserting all the armor values.
+INSERT INTO Armor (Name, Stats,Type,Description) 
+VALUES ('Chain Mail',20,'BP','This is a chain mail Shirt'),
+('Cloth',10,'BP','This is a normal piece of clothing like a robe'),
+('Studded Leahter',15,'BP','This is leather with studds in it'),
+('Nothing Head',0,'HP','Nothing on head'),
+('Hood',5,'HP','This is like a robe hood very light'),
+('Cowl',8,'HP','Move covering than the Hood, Still very light'),
+('Nothing Body',0,'BP','Nothing on the body'),
+('Nothing Legs',0,'LP','Nothing on the legs');
 	
 --Creation of the Spell and Attack table. Added together for simplicity will go into detail later.
 	CREATE TABLE SPELLS(
@@ -115,6 +132,18 @@ GO
 	PRIMARY KEY(ID),
 );
 
+--Inserting all the Spell and attack values.
+INSERT INTO SPELLS (Name,Stats,TYPE,Description)
+VALUES ('Sword Slash',15,'TA','Your sword slashes into the enemy'),
+('Raise Defence',10,'PA','Your valor is so strong you and your party get a boost of defence'),
+('Cleave',35,'TU','Your sword cleaves through the enemy and hits everyone on the field'),
+('Pale Fire Strike',30,'WA','You shoot a ball of energy out of your staff to hit the enemy'),
+('Heal',25,'PA','You heal you and your party members'),
+('Fireball',45,'WU','You shoot a huge fireball out of your staff'),
+('Aim Shot',20,'EA','You aim your shot and hit right in their soft spot'),
+('Raise Attack',10,'PA','You raise the attack of you and your allies'),
+('Rapid Shot',25,'EU','You fire multiple arrows at your enemy each of them hitting their mark');
+
 --Creation of the Item table
 	CREATE TABLE Items(
 	ID INT IDENTITY(1,1) NOT NULL,
@@ -125,3 +154,4 @@ GO
 	Description VARCHAR(256),
 	PRIMARY KEY(ID),
 );
+-- too be added at a later date.

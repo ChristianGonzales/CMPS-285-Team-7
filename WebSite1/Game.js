@@ -29,6 +29,7 @@ function startGame(characterType) {
         DOWN: 83,
         LEFT: 65,
         RIGHT: 68,
+        BATTLE: 13,
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -104,6 +105,9 @@ function startGame(characterType) {
         if (key.isDown(key.RIGHT)) {
             player.xPos += player.movementSpeed
         }
+        if (key.isDown(key.BATTLE)) {
+            battle();
+        }
     }
     //Drawing everything
     var render = function () {
@@ -115,7 +119,11 @@ function startGame(characterType) {
         //}
         player.draw();
     }
-    //Main game loop
+    //When player is in battle
+    var battleLoop = function () {
+
+    }
+    //Player walking around map
     var mainGameLoop = function () {
         var currentTime = Date.now();
         var delta = currentTime - lastTime;
