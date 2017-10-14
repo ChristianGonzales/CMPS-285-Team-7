@@ -17,8 +17,8 @@
 }
 
 h1 {
-    position: static;
-    left: 460px;
+    position: fixed;
+    left: 29%;
     text-align: center;
     font-family: ringbearer;
     font-size: 55px;
@@ -28,18 +28,20 @@ h1 {
 }
 
 h2 {
-    position: static;
-    top: 300px;
-    left: 200px;
+    position: fixed;
+    text-align: center;
+    top: 350px;
+    left: 40%;
     line-height: 100%;
     font-family: ringbearer;
     font-size: 32px;
 }
 
 ul {
-    position: static;
-    top: 320px;
-    left: 300px;
+    position: fixed;
+    text-align: center;
+    top: 380px;
+    left: 40%;
     line-height: 100%;
     font-family: ringbearer;
     font-size: 28px;
@@ -53,13 +55,11 @@ ul {
 
 #startButton {
     height: 100px;
-    position: static;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    position: fixed;
+    left: 37%;
+    top: 200px;
     color: black;
+    z-index: -1;
     font-family: ringbearer;
     font-size: 80px;
     font-weight: bold;
@@ -82,13 +82,15 @@ ul {
         -webkit-box-shadow: 0px 2px 0px #d35400;
         -moz-box-shadow: 0px 2px 0px #d35400;
         box-shadow: 0px 2px 0px #d35400;
-        position: static;
-        top: 4px;
+        position: fixed;
+        left: 37%;
+        top: 200px;
+        text-align: center;
     }
 
-#tank,
-#wizard,
-#elf {
+.tank,
+.wizard,
+.elf {
     width: 150px;
     height: 100px;
     display: inline-block;
@@ -111,9 +113,9 @@ ul {
     box-shadow: 0px 6px 0px #d35400;
 }
 
-    #tank:active,
-    #wizard:active,
-    #elf:active {
+    .tank:active,
+    .wizard:active,
+    .elf:active {
         -webkit-box-shadow: 0px 2px 0px #d35400;
         -moz-box-shadow: 0px 2px 0px #d35400;
         box-shadow: 0px 2px 0px #d35400;
