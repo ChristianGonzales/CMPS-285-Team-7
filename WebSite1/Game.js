@@ -18,18 +18,20 @@ function startGame(characterType) {
             ctx.fillRect(this.xPos, this.yPos, 100, 100);
         }
     };
-    //Key handlers
-    //var keysDown = {
-
-    //};
-    //Test Key handlers
+    var projectile = {
+        projectileImage: new Image(),
+        projectileReady: false,
+        projectileWidth: 20,
+        projectileHeight: 10
+    };
+    //Key handlersS
     var key = {
         _pressed: {},
-        UP: 87,
-        DOWN: 83,
-        LEFT: 65,
-        RIGHT: 68,
-        BATTLE: 69,
+        UP: 87, //W
+        DOWN: 83, //S
+        LEFT: 65, //A
+        RIGHT: 68, //D
+        BATTLE: 69, //E
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -73,42 +75,50 @@ function startGame(characterType) {
         }
         player.characterSprite.src = "../WebSite1/TankSprite/__SCML/3_KNIGHT/3_knight_.png";
     }
-
-    //Update game objexcts  used for moving
-    //var update = function (modifier) {
-    //    if (38 in keysDown) { //Player moving up pressing W code 87
-    //        console.log("Here in 87 key down");
-    //        player.yPos -= player.movementSpeed * modifier;
-    //    }
-    //    if (40 in keysDown) { //Player moving down, pressing S code 83
-    //        player.yPos += player.movementSpeed * modifier;
-    //    }
-    //    if (37 in keysDown) { //Player moving left, pressing A code 65
-    //        player.xPos -= player.movementSpeed * modifier;
-    //    }
-    //    if (39 in keysDown) { //Player moving right, pressing D code 68
-    //        player.xPos += player.movementSpeed * modifier;
-    //    }
-    //};
-    //Test update used for moving
+    //Projectile sprite
+    projectile.projectileImage.onload = function () {
+        projectile.projectileReady = true;
+    }
+    projectile.projectileImage.src = ("../WebSite1/ElfSprite/_SCML/1/arrow.png");
+    //When everything gets redrawn on canvas
     var update = function () {
+        //Variables for sides of the canvas
+        var top = canvas.hegiht;
+        var bottom = canvas.hegiht - canvas.height;
+        var rightSide = canvas.width;
+        var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();
-        if (key.isDown(key.UP)) {
-            player.yPos -= player.movementSpeed
-        }
-        if (key.isDown(key.LEFT)) {
-            player.xPos -= player.movementSpeed
-        }
-        if (key.isDown(key.DOWN)) {
-            player.yPos += player.movementSpeed
-        }
-        if (key.isDown(key.RIGHT)) {
-            player.xPos += player.movementSpeed
-        }
-        if (key.isDown(key.BATTLE)) {
-            battleLoop(); 
-        }
+        //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
+            if (key.isDown(key.UP)) {
+                player.yPos -= player.movementSpeed
+            }
+            if (key.isDown(key.LEFT)) {
+                player.xPos -= player.movementSpeed
+            }
+            if (key.isDown(key.DOWN)) {
+                player.yPos += player.movementSpeed
+            }
+            if (key.isDown(key.RIGHT)) {
+                player.xPos += player.movementSpeed
+            }
+            if (key.isDown(key.BATTLE)) {
+                battleLoop();
+            }
+        //}
+        //else {
+        //    if (player.yPos >= top) {
+        //        player.yPos = top;
+        //    }
+        //    if (player.yPos <= bottom) {
+        //        player.yPos = bottom;
+        //    }
+        //    if (player.xPos >= leftSide) {
+        //        player.yPos = leftSide;
+        //    }
+        //    if (player.yPos >= rightSide) {
+        //        player.yPos = rightSide;
+        //    }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
@@ -123,6 +133,10 @@ function startGame(characterType) {
         //if (characterSpriteReady) {
         //    ctx.drawImage(player.characterSprite, player.xPos, player.yPos);
         //}
+        if (projectile.projectileReady) {
+            ctx.drawImage(projectile.projectileImage, 500, -200, projectile.projectileWidth, projectile.projectileHeight);
+            console.log("Here");
+        }
         player.draw();
         //enemy.draw();
     }
