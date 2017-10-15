@@ -1,4 +1,12 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
+function Character(xPos, yPos, isEnemy) {
+    this.isEnemy = isEnemy;
+    this.width = 100;
+    this.height = 100;
+    this.movementSpeed = 5;
+    this.xPos = xPos;
+    this.yPos = yPos;
+}
 function startGame(characterType) {
 
     var startScreen = document.getElementById("startScreen");
@@ -8,16 +16,7 @@ function startGame(characterType) {
     var ctx = canvas.getContext("2d");
     console.log("Here in startGame");
     //Game objects
-    var player = {
-        characterSpriteReady: false,
-        characterSprite: new Image(),
-        xPos: 0,
-        yPos: 0,
-        movementSpeed: 5,
-        draw: function () {
-            ctx.fillRect(this.xPos, this.yPos, 100, 100);
-        }
-    };
+    var player = new Character(0, 0, false);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -25,8 +24,10 @@ function startGame(characterType) {
         projectileWidth: 20,
         projectileHeight: 10,
         draw: function () {
+            ctx.beginPath();
             ctx.fillStyle = this.color;
-            ctx.arc(200, -75, 50, 0, (2 * Math.PI));
+            ctx.fillRect(300, -150, 20, 10);
+            ctx.closePath();
         }
     };
     //Key handlersS
@@ -52,20 +53,79 @@ function startGame(characterType) {
     var w = window;
     //For multiple browsers Chrome, FireFox, Explorer
     requestAnimationFrame = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.msRequestAnimationFrame;
-    //Event listeners original
-    //w.addEventListener("keydown", function (event) { keysDown[event.keyCode] = true; }, false);
-    //w.addEventListener("keydown", function (event) { delete keysDown[event.keyCode]; }, false);
-    //Event listeners test
+    //Event listeners
     w.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
     w.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
-    //Background variables
-    //var backgroundReady = false;
-    //var backgroundImage = new Image();
 
     //Change canvas width and height to whole screen
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     document.body.appendChild(canvas); //Makes it to where the canvas is apart of the HTML body
+
+    //When everything gets redrawn on canvas
+    var update = function () {
+        //Variables for sides of the canvas
+        //var top = canvas.hegiht;
+        //var bottom = canvas.hegiht - canvas.height;
+        //var rightSide = canvas.width;
+        //var leftSide = canvas.width - canvas.width;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        resize();        
+        //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
+            if (key.isDown(key.UP)) {
+                player.yPos -= player.movementSpeed
+            }
+            if (key.isDown(key.LEFT)) {
+                player.xPos -= player.movementSpeed
+            }
+            if (key.isDown(key.DOWN)) {
+                player.yPos += player.movementSpeed
+            }
+            if (key.isDown(key.RIGHT)) {
+                player.xPos += player.movementSpeed
+            }
+            if (key.isDown(key.BATTLE)) {
+                battleLoop();
+            }
+    }
+    //Reszie canvas to broswer no matter what
+    var resize = function () {
+        canvas.width = w.innerWidth;
+        canvas.height = w.innerHeight;
+    }
+    //Drawing everything
+    var render = function () {
+        if (!(player.isEnemy)) {
+            ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+        }
+        projectile.draw();
+    }
+    //When player is in battle
+    var battleLoop = function () {
+        console.log("In battleLoop");
+    }
+    //Player walking around map
+    var mainGameLoop = function () {
+        var currentTime = Date.now();
+        var delta = currentTime - lastTime;
+
+        update(delta / 1000);
+        render();
+
+        lastTime = currentTime;
+
+        //Animation frame does this again
+        requestAnimationFrame(mainGameLoop);
+    };
+    mainGameLoop();
+}
+
+
+/*
+Test code for different parts of program that might be reused..
+    //Background variables
+    //var backgroundReady = false;
+    //var backgroundImage = new Image();
 
     //Displaying background
     //backgroundImage.onload = function () {
@@ -85,31 +145,17 @@ function startGame(characterType) {
     //    projectile.projectileReady = true;
     //}
     //projectile.projectileImage.src = ("../WebSite1/ElfSprite/_SCML/1/arrow.png");
-    //When everything gets redrawn on canvas
-    var update = function () {
-        //Variables for sides of the canvas
-        var top = canvas.hegiht;
-        var bottom = canvas.hegiht - canvas.height;
-        var rightSide = canvas.width;
-        var leftSide = canvas.width - canvas.width;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        resize();
+
+
+//Insdie update function for collsion detectioin for when box goes to corner of screen
+    //Variables for sides of the canvas
+        //var top = canvas.hegiht;
+        //var bottom = canvas.hegiht - canvas.height;
+        //var rightSide = canvas.width;
+        //var leftSide = canvas.width - canvas.width;
+
         //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
-            if (key.isDown(key.UP)) {
-                player.yPos -= player.movementSpeed
-            }
-            if (key.isDown(key.LEFT)) {
-                player.xPos -= player.movementSpeed
-            }
-            if (key.isDown(key.DOWN)) {
-                player.yPos += player.movementSpeed
-            }
-            if (key.isDown(key.RIGHT)) {
-                player.xPos += player.movementSpeed
-            }
-            if (key.isDown(key.BATTLE)) {
-                battleLoop();
-            }
+                //Code for key presses
         //}
         //else {
         //    if (player.yPos >= top) {
@@ -124,15 +170,9 @@ function startGame(characterType) {
         //    if (player.yPos >= rightSide) {
         //        player.yPos = rightSide;
         //    }
-    }
-    //Reszie canvas to broswer no matter what
-    var resize = function () {
-        canvas.width = w.innerWidth;
-        canvas.height = w.innerHeight;
-    }
-    //Drawing everything
-    var render = function () {
-        //if (backgroundReady) {
+
+    Inside the render function
+         //if (backgroundReady) {
         //    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         //}
         //if (characterSpriteReady) {
@@ -142,34 +182,4 @@ function startGame(characterType) {
         //    ctx.drawImage(projectile.projectileImage, 500, -200, projectile.projectileWidth, projectile.projectileHeight);
         //    console.log("Here");
         //}
-        player.draw();
-        projectile.draw();
-        //enemy.draw();
-    }
-    //When player is in battle
-    var battleLoop = function () {
-        console.log("In battleLoop");
-        var enemy = {
-            xPos: 200,
-            yPos: -200,
-            draw: function () {
-                ctx.fillStyle = "brown";
-                ctx.fillRect(this.xPos, this.yPos, 100, 100);
-            }
-        };
-    }
-    //Player walking around map
-    var mainGameLoop = function () {
-        var currentTime = Date.now();
-        var delta = currentTime - lastTime;
-
-        update(delta / 1000);
-        render();
-
-        lastTime = currentTime;
-
-        //Animation frame does this again
-        requestAnimationFrame(mainGameLoop);
-    };
-    mainGameLoop();
-}
+*/
