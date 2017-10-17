@@ -70,62 +70,62 @@ var key = {
         delete this._pressed[event.keyCode];
     }
 };
-function Character(xPos, yPos) {
-    this.characterSprite = new Image();
-    this.isMoving = false;
-    this.width = 150;
-    this.height = 150;
-    this.movementSpeed = 0;
-    this.xPos = xPos;
-    this.yPos = yPos;
-    this.draw = function () {
-        console.log("Inside draw function");
-        console.log(this);
-        ctx = gameArea.context;
-        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-        console.log(this);
-        console.log("end of draw function");
-    }
-    this.update = function () {
-        console.log("in player.update");
-        ctx = gameArea.context;
-        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-        console.log(this);
-        console.log("after the ctx code");
-        if (key.isDown(key.UP)) {
-            this.moveUp();
-        }
-        if (key.isDown(key.LEFT)) {
-            this.moveLeft();
-        }
-        if (key.isDown(key.DOWN)) {
-            this.moveDown();
-        }
-        if (key.isDown(key.RIGHT)) {
-            this.moveRight();
-        }
-        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-    }
-    this.moveUp = function () {
-        movementSpeed = 1;
-        this.yPos += movementSpeed;
-    }
-    this.moveDown = function () {
-        movementSpeed = -1;
-        this.yPos += movementSpeed;
-    }
-    this.moveLeft = function () {
-        movementSpeed = -1;
-        this.xPos += movementSpeed;
-    }
-    this.moveRight = function () {
-        movementSpeed = 1;
-        this.xPos += movementSpeed;
-    }
-    this.stopMoving = function () {
-        movementSpeed = 0;
-    }
-}
+//function Character(xPos, yPos) {
+//    this.characterSprite = new Image();
+//    this.isMoving = false;
+//    this.width = 150;
+//    this.height = 150;
+//    this.movementSpeed = 0;
+//    this.xPos = xPos;
+//    this.yPos = yPos;
+//    this.draw = function () {
+//        console.log("Inside draw function");
+//        console.log(this);
+//        ctx = gameArea.context;
+//        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+//        console.log(this);
+//        console.log("end of draw function");
+//    }
+//    this.update = function () {
+//        console.log("in player.update");
+//        ctx = gameArea.context;
+//        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+//        console.log(this);
+//        console.log("after the ctx code");
+//        if (key.isDown(key.UP)) {
+//            this.moveUp();
+//        }
+//        if (key.isDown(key.LEFT)) {
+//            this.moveLeft();
+//        }
+//        if (key.isDown(key.DOWN)) {
+//            this.moveDown();
+//        }
+//        if (key.isDown(key.RIGHT)) {
+//            this.moveRight();
+//        }
+//        ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+//    }
+//    this.moveUp = function () {
+//        movementSpeed = 1;
+//        this.yPos += movementSpeed;
+//    }
+//    this.moveDown = function () {
+//        movementSpeed = -1;
+//        this.yPos += movementSpeed;
+//    }
+//    this.moveLeft = function () {
+//        movementSpeed = -1;
+//        this.xPos += movementSpeed;
+//    }
+//    this.moveRight = function () {
+//        movementSpeed = 1;
+//        this.xPos += movementSpeed;
+//    }
+//    this.stopMoving = function () {
+//        movementSpeed = 0;
+//    }
+//}
 function startGame(characterType) {
     var player = new Character(50, -100);
     console.log(player);

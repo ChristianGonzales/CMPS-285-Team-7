@@ -14,9 +14,8 @@ function startGame(characterType) {
 
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
-    console.log("Here in startGame");
     //Game objects
-    var player = new Character(0, 0, false);
+    var player = new Character(0, 530, false);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -51,6 +50,26 @@ function startGame(characterType) {
     //Other variables
     var lastTime = Date.now();
     var w = window;
+    //Create enemies when E is pressed
+    var createEnemy = function () {
+        var enemy = new Character(300, 0, true);
+        return enemy;
+    }
+    var objective = {
+        currentObjective: "",
+        getObjective: function () {
+            this.currentObjective = "Strap up and get into your first fight!";
+            return this.currentObjective;
+        },
+        drawObjective: function (currentObjective) {
+            ctx.font = "36px Helvetica";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = "black";
+            ctx.fillStyle = "gold";
+            ctx.fillText(this.currentObjective, 0, 0);
+        }
+    };
     //For multiple browsers Chrome, FireFox, Explorer
     requestAnimationFrame = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.msRequestAnimationFrame;
     //Event listeners
@@ -64,11 +83,6 @@ function startGame(characterType) {
 
     //When everything gets redrawn on canvas
     var update = function () {
-        //Variables for sides of the canvas
-        //var top = canvas.hegiht;
-        //var bottom = canvas.hegiht - canvas.height;
-        //var rightSide = canvas.width;
-        //var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();        
         //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
@@ -85,7 +99,8 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed
             }
             if (key.isDown(key.BATTLE)) {
-                battleLoop();
+                createEnemy();
+                console.log(enemy);
             }
     }
     //Reszie canvas to broswer no matter what
@@ -95,7 +110,14 @@ function startGame(characterType) {
     }
     //Drawing everything
     var render = function () {
-        if (!(player.isEnemy)) {
+        //Draw objective
+        objective.currentObjective = objective.getObjective();
+        objective.drawObjective(objective.currentObjective);
+        if (Character.isEnemy) {
+            ctx.fillStyle = "brown";
+            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+        }
+        else {
             ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
         }
         projectile.draw();
