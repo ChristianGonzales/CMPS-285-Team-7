@@ -118,6 +118,8 @@ function startGame(characterType) {
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
         }
         else {
+            //If you need to change the color of the rectangle.
+            ctx.fillStyle = "purple";
             ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
         }
         projectile.draw();
