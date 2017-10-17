@@ -102,6 +102,18 @@ function startGame(characterType) {
                 createEnemy();
                 console.log(enemy);
             }
+            if (player.xPos >= canvas.width) {
+                player.xPos = canvas.width - 100
+            }
+            if (player.xPos < 0) {
+                player.xPos = 100
+            }
+            if (player.yPos >= canvas.height) {
+                player.yPos = canvas.height - 100
+            }
+            if (player.yPos > 0) {
+                player.ypos = 100
+            }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
