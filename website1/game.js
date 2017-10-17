@@ -127,6 +127,7 @@ function startGame(characterType) {
     }
     //Drawing everything
     var render = function () {
+<<<<<<< HEAD
         //if (backgroundReady) {
         //    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         //}
@@ -136,6 +137,17 @@ function startGame(characterType) {
         if (projectile.projectileReady) {
             ctx.drawImage(projectile.projectileImage, 500, -200, projectile.projectileWidth, projectile.projectileHeight);
             console.log("Here");
+=======
+        //Draw objective
+        objective.currentObjective = objective.getObjective();
+        objective.drawObjective(objective.currentObjective);
+        if (Character.isEnemy) {
+            ctx.fillStyle = "brown";
+            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+        }
+        else {
+            ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+>>>>>>> parent of fc5c7ee... Multiple objects with different colors (Forgot this in last commit)-Dustin
         }
         player.draw();
         //enemy.draw();
