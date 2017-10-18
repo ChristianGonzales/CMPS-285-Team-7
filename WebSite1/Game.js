@@ -6,6 +6,7 @@ function Character(xPos, yPos, isEnemy) {
     this.movementSpeed = 5;
     this.xPos = xPos;
     this.yPos = yPos;
+    this.isMoving = false;
 }
 function startGame(characterType) {
 
@@ -83,37 +84,45 @@ function startGame(characterType) {
 
     //When everything gets redrawn on canvas
     var update = function () {
+        var rightSide = canvas.width;
+        var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();        
-        //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
-            if (key.isDown(key.UP)) {
-                player.yPos -= player.movementSpeed
+        if (key.isDown(key.UP)) {
+            player.yPos -= player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.LEFT)) {
+            player.xPos -= player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.DOWN)) {
+            player.yPos += player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.RIGHT)) {
+            player.xPos += player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.BATTLE)) {
+            createEnemy();
+            console.log(enemy);
+        }
+        //Collision detection
+        if (player.isMoving) {
+            if (player.xPos <= leftSide){
+                player.xPos = leftSide;
             }
-            if (key.isDown(key.LEFT)) {
-                player.xPos -= player.movementSpeed
+            if (player.xPos + player.width >= rightSide){
+                player.xPos = rightSide - player.width;
             }
-            if (key.isDown(key.DOWN)) {
-                player.yPos += player.movementSpeed
+            if (player.yPos <= 0) {
+                player.yPos = 0;
             }
-            if (key.isDown(key.RIGHT)) {
-                player.xPos += player.movementSpeed
+            if (player.yPos + player.height >= canvas.height) {
+                player.yPos = canvas.height - player.height;
             }
-            if (key.isDown(key.BATTLE)) {
-                createEnemy();
-                console.log(enemy);
-            }
-            if (player.xPos >= canvas.width) {
-                player.xPos = canvas.width - 100
-            }
-            if (player.xPos < 0) {
-                player.xPos = 100
-            }
-            if (player.yPos >= canvas.height) {
-                player.yPos = canvas.height - 100
-            }
-            if (player.yPos > 0) {
-                player.ypos = 100
-            }
+        }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
