@@ -88,7 +88,7 @@ ul {
         text-align: center;
     }
 
-#tank,
+#knight,
 #wizard,
 #elf {
     width: 150px;
@@ -113,7 +113,7 @@ ul {
     box-shadow: 0px 6px 0px #d35400;
 }
 
-    #tank:active,
+    #knight:active,
     #wizard:active,
     #elf:active {
         -webkit-box-shadow: 0px 2px 0px #d35400;
