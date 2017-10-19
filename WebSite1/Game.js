@@ -9,7 +9,7 @@ function Character(xPos, yPos, isEnemy) {
     this.isMoving = false;
 }
 function startGame(characterType) {
-
+    console.log(characterType);
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none"; //Hides the start screen once canvas gets created
 
@@ -139,14 +139,25 @@ function startGame(characterType) {
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
         }
         else {
-            //If you need to change the color of the rectangle.
-            ctx.fillStyle = "purple";
-            ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            console.log(characterType);
+            if (characterType == 1) {
+                ctx.fillStyle = "gold";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
+            else if (characterType == 2) {
+                ctx.fillStyle = "purple";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
+            else {
+                ctx.fillStyle = "olive";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
         }
         projectile.draw();
     }
     //When player is in battle
     var battleLoop = function () {
+        //The loop for deciding winner in fights goes here
         console.log("In battleLoop");
     }
     //Player walking around map
