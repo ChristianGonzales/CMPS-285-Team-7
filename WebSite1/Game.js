@@ -20,7 +20,7 @@ function startGame(characterType) {
     var ctx = canvas.getContext("2d");
     //Game objects
     var player = new Character(0, 530, false);
-    var enemy;
+    var enemy = new Character(100, 530, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -42,6 +42,8 @@ function startGame(characterType) {
         LEFT: 65, //A
         RIGHT: 68, //D
         BATTLE: 69, //E
+        ATTACK: 81, //Q
+        POWERUP: 82, //R
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -110,7 +112,7 @@ function startGame(characterType) {
         }
         if (key.isDown(key.BATTLE)) {
             player.inBattle = true;
-            battleLoop(enemy);
+            battleLoop();
         }
         //Collision detection
         if (player.isMoving) {
@@ -162,67 +164,96 @@ function startGame(characterType) {
         projectile.draw();
     }
     //When player is in battle
-    var battleLoop = function (enemy) {
-        //The loop for deciding winner in fights goes here
-        //STILL A WORK IN PROGRESS
-        enemy = new Character(100, 530, true);
-        var playersTurn = true;
-        var powerUpUsed = false;
-        //Text to lead the player through battle i.e. "Which attack will you select?"
-        var battleGuide = {
-            currentGuide: "",
-            getGuide: function (currentGuide) {
-                if (playersTurn) {
-                    this.currentGuide = "Which attack will you perform this turn?";
-                }
-                return this.currentGuide;
-            },
-            drawGuide: function () {
+    var battleLoop = function () {
+        console.log("In battleLoop");
+        ctx.font = "36px Helvetica";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "gold";
+        ctx.fillText("Combat system work in progress!", 250, 0);
+        console.log("After fillText");
+        //console.log("In battleLoop");
+        ////The loop for deciding winner in fights goes here
+        ////STILL A WORK IN PROGRESS
+        //var playersTurn = true;
+        //var powerUpUsed = false;
+        //console.log("Before battleGuide var");
+        //console.log(enemy.attackDamge);
+        ////Text to lead the player through battle i.e. "Which attack will you select?"
+        //var battleGuide = {
+        //    currentGuide: "",
+        //    getGuide: function (currentGuide) {
+        //        if (playersTurn) {
+        //            this.currentGuide = "Which attack will you perform this turn?";
+        //        }
+        //        return this.currentGuide;
+        //    },
+        //    drawGuide: function () {
                 
-                if (playersTurn) {
-                    console.log("in drawGuide");
-                    ctx.font = "36px Helvetica";
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "top";
-                    ctx.strokeStyle = "black";
-                    ctx.fillStyle = "gold";
-                    ctx.fillText(this.currentGuide, 0, 0);
-                }
-            }
-        };
-        var powerUp = function (attackDamge) {
-            var empoweredAttack = 0;
-            empoweredAttack = attackDamge * 2;
+        //        if (playersTurn) {
+        //            console.log("in drawGuide");
+        //            ctx.font = "36px Helvetica";
+        //            ctx.textAlign = "left";
+        //            ctx.textBaseline = "top";
+        //            ctx.strokeStyle = "black";
+        //            ctx.fillStyle = "gold";
+        //            ctx.fillText(this.currentGuide, 0, 0);
+        //        }
+        //    }
+        //};
+        //var powerUp = function (attackDamge) {
+        //    var empoweredAttack = 0;
+        //    empoweredAttack = attackDamge * 2;
 
-            return empoweredAttack;
-        }
-        var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
-            if (playersTurn) {
-                enemyHealth -= playerDamage;
-            }
-            else {
-                playerHealth -= enemyDamage;
-            }
-        }
-        //Basic combat system WILL NOT WORK RIGHT NOW ONLY FOR A BASE LAYOUT OF WHAT IT 
-        //SHOULD LOOK LIKE WHEN FINISHED
-        while (player.HP > 0) {
-            if (playersTurn) {
-                if (powerUpUsed) {
-                    player.attackDamge = Math.floor(Math.random() * 30) + 10;
-                    player.attackDamge = powerUp(player.attackDamge);
-                }
-                else {
-                    if (attack1) {
-                        player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
-                    }
-                    else if (attack2) {
-                        powerUpUsed = true;
-                        playersTurn = false;
-                    }
-                }
-            }
-        }
+        //    return empoweredAttack;
+        //}
+        //var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
+        //    if (playersTurn) {
+        //        enemyHealth -= playerDamage;
+        //    }
+        //    else {
+        //        playerHealth -= enemyDamage;
+        //    }
+        //}
+        //var block = function (playerDamage, enemyDamge) {
+        //    var damageBlocked = Math.floor(Math.random() * 10) + 1;;
+        //    if (playersTurn) {
+        //        playerDamage -= damageBlocked;
+        //    }
+        //    else {
+        //        enemyDamge -= damageBlocked
+        //    }
+        //}
+        ////Basic combat system WILL NOT WORK RIGHT NOW ONLY FOR A BASE LAYOUT OF WHAT IT 
+        ////SHOULD LOOK LIKE WHEN FINISHED
+        //while ((player.HP || enemy.HP) > 0) {
+        //    if (playersTurn) {
+        //        if (powerUpUsed) {
+        //            player.attackDamge = Math.floor(Math.random() * 30) + 10;
+        //            player.attackDamge = powerUp(player.attackDamge);
+        //            block(player.attackDamge, enemy.attackDamge );
+        //            damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
+        //            playersTurn = false;
+        //        }
+        //        else {
+        //            if (key.isDown(key.ATTACK)) {
+        //                player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
+        //                block(player.attackDamge, enemy.attackDamge);
+        //                damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
+        //            }
+        //            else if (key.isDown(key.POWERUP)) {
+        //                powerUpUsed = true;
+        //                playersTurn = false;
+        //            }
+        //        }
+        //    }
+        //    else {
+        //        enemy.attackDamge = Math.floor(Math.random() * 50) + 10;
+        //        block(player.attackDamge, enemy.attackDamge);
+        //        damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
+        //    }
+        //}
     }
     //Player walking around map
     var mainGameLoop = function () {
