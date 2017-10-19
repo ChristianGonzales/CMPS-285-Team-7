@@ -1,21 +1,26 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 function Character(xPos, yPos, isEnemy) {
-    this.isEnemy = isEnemy;
+    this.HP = 200;
+    this.attackDamge = 10;
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
     this.xPos = xPos;
     this.yPos = yPos;
+    this.isEnemy = isEnemy;
+    this.isMoving = false;
+    this.inBattle = false;
 }
 function startGame(characterType) {
-
+    //Hides the start screen once canvas gets created
     var startScreen = document.getElementById("startScreen");
-    startScreen.style.display = "none"; //Hides the start screen once canvas gets created
+    startScreen.style.display = "none";
 
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     //Game objects
     var player = new Character(0, 530, false);
+    var enemy;
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -37,6 +42,8 @@ function startGame(characterType) {
         LEFT: 65, //A
         RIGHT: 68, //D
         BATTLE: 69, //E
+        ATTACK: 81, //Q
+        POWERUP: 82, //R
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -50,11 +57,11 @@ function startGame(characterType) {
     //Other variables
     var lastTime = Date.now();
     var w = window;
-    //Create enemies when E is pressed
-    var createEnemy = function () {
-        var enemy = new Character(300, 0, true);
-        return enemy;
-    }
+      //Test code (does not work, but I want to try and get this method to work) //Create enemies when E is pressed
+                                    //var createEnemy = function () {
+                                    //    var enemy = new Character(300, 0, true);
+                                    //    return enemy;
+                                    //}
     var objective = {
         currentObjective: "",
         getObjective: function () {
@@ -83,37 +90,45 @@ function startGame(characterType) {
 
     //When everything gets redrawn on canvas
     var update = function () {
+        var rightSide = canvas.width;
+        var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();        
-        //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
-            if (key.isDown(key.UP)) {
-                player.yPos -= player.movementSpeed
+        if (key.isDown(key.UP)) {
+            player.yPos -= player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.LEFT)) {
+            player.xPos -= player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.DOWN)) {
+            player.yPos += player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.RIGHT)) {
+            player.xPos += player.movementSpeed;
+            player.isMoving = true;
+        }
+        if (key.isDown(key.BATTLE)) {
+            player.inBattle = true;
+            battleLoop(enemy);
+        }
+        //Collision detection
+        if (player.isMoving) {
+            if (player.xPos <= leftSide){
+                player.xPos = leftSide;
             }
-            if (key.isDown(key.LEFT)) {
-                player.xPos -= player.movementSpeed
+            if (player.xPos + player.width >= rightSide){
+                player.xPos = rightSide - player.width;
             }
-            if (key.isDown(key.DOWN)) {
-                player.yPos += player.movementSpeed
+            if (player.yPos <= 0) {
+                player.yPos = 0;
             }
-            if (key.isDown(key.RIGHT)) {
-                player.xPos += player.movementSpeed
+            if (player.yPos + player.height >= canvas.height) {
+                player.yPos = canvas.height - player.height;
             }
-            if (key.isDown(key.BATTLE)) {
-                createEnemy();
-                console.log(enemy);
-            }
-            if (player.xPos >= canvas.width) {
-                player.xPos = canvas.width - 100
-            }
-            if (player.xPos < 0) {
-                player.xPos = 100
-            }
-            if (player.yPos >= canvas.height) {
-                player.yPos = canvas.height - 100
-            }
-            if (player.yPos > 0) {
-                player.ypos = 100
-            }
+        }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
@@ -122,23 +137,107 @@ function startGame(characterType) {
     }
     //Drawing everything
     var render = function () {
-        //Draw objective
-        objective.currentObjective = objective.getObjective();
-        objective.drawObjective(objective.currentObjective);
+        //Draw objective if not in battle
+        if (!(player.inBattle)) {
+            objective.currentObjective = objective.getObjective();
+            objective.drawObjective(objective.currentObjective);
+        }
         if (Character.isEnemy) {
+            console.log("In Character.isEnemy if statement");
             ctx.fillStyle = "brown";
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
         }
         else {
-            //If you need to change the color of the rectangle.
-            ctx.fillStyle = "purple";
-            ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            if (characterType == 1) {
+                ctx.fillStyle = "gold";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
+            else if (characterType == 2) {
+                ctx.fillStyle = "purple";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
+            else {
+                ctx.fillStyle = "olive";
+                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+            }
         }
         projectile.draw();
     }
     //When player is in battle
-    var battleLoop = function () {
-        console.log("In battleLoop");
+    var battleLoop = function (enemy) {
+        //The loop for deciding winner in fights goes here
+        //STILL A WORK IN PROGRESS
+        enemy = new Character(100, 530, true);
+        var playersTurn = true;
+        var powerUpUsed = false;
+        //Text to lead the player through battle i.e. "Which attack will you select?"
+        var battleGuide = {
+            currentGuide: "",
+            getGuide: function (currentGuide) {
+                if (playersTurn) {
+                    this.currentGuide = "Which attack will you perform this turn?";
+                }
+                return this.currentGuide;
+            },
+            drawGuide: function () {
+                
+                if (playersTurn) {
+                    console.log("in drawGuide");
+                    ctx.font = "36px Helvetica";
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle = "gold";
+                    ctx.fillText(this.currentGuide, 0, 0);
+                }
+            }
+        };
+        var powerUp = function (attackDamge) {
+            var empoweredAttack = 0;
+            empoweredAttack = attackDamge * 2;
+
+            return empoweredAttack;
+        }
+        var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
+            if (playersTurn) {
+                enemyHealth -= playerDamage;
+            }
+            else {
+                playerHealth -= enemyDamage;
+            }
+        }
+        var block = function (playerDamage, enemyDamge) {
+            var damageBlocked = Math.floor(Math.random() * 10) + 1;;
+            if (playersTurn) {
+                playerDamage -= damageBlocked;
+            }
+            else {
+                enemyDamge -= damageBlocked
+            }
+        }
+        //Basic combat system WILL NOT WORK RIGHT NOW ONLY FOR A BASE LAYOUT OF WHAT IT 
+        //SHOULD LOOK LIKE WHEN FINISHED
+        while (player.HP > 0) {
+            if (playersTurn) {
+                if (powerUpUsed) {
+                    player.attackDamge = Math.floor(Math.random() * 30) + 10;
+                    player.attackDamge = powerUp(player.attackDamge);
+                    block();
+                    damageCalculations();
+                }
+                else {
+                    if (key.isDown(key.ATTACK)) {
+                        player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
+                        block();
+                        damageCalculations();
+                    }
+                    else if (key.isDown(key.POWERUP)) {
+                        powerUpUsed = true;
+                        playersTurn = false;
+                    }
+                }
+            }
+        }
     }
     //Player walking around map
     var mainGameLoop = function () {
@@ -181,31 +280,6 @@ Test code for different parts of program that might be reused..
     //    projectile.projectileReady = true;
     //}
     //projectile.projectileImage.src = ("../WebSite1/ElfSprite/_SCML/1/arrow.png");
-
-
-//Insdie update function for collsion detectioin for when box goes to corner of screen
-    //Variables for sides of the canvas
-        //var top = canvas.hegiht;
-        //var bottom = canvas.hegiht - canvas.height;
-        //var rightSide = canvas.width;
-        //var leftSide = canvas.width - canvas.width;
-
-        //if (((player.xPos || player.yPos) <= (canvas.width || canvas.height))) {
-                //Code for key presses
-        //}
-        //else {
-        //    if (player.yPos >= top) {
-        //        player.yPos = top;
-        //    }
-        //    if (player.yPos <= bottom) {
-        //        player.yPos = bottom;
-        //    }
-        //    if (player.xPos >= leftSide) {
-        //        player.yPos = leftSide;
-        //    }
-        //    if (player.yPos >= rightSide) {
-        //        player.yPos = rightSide;
-        //    }
 
     Inside the render function
          //if (backgroundReady) {
