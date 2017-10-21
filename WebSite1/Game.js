@@ -19,8 +19,8 @@ function startGame(characterType) {
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     //Game objects
-    var player = new Character(0, 530, false);
-    var enemy = new Character(100, 530, true);
+    var player = new Character(200, 560, false);
+    var enemy = new Character(1500, 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -93,25 +93,27 @@ function startGame(characterType) {
         var rightSide = canvas.width;
         var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        resize();        
-        if (key.isDown(key.UP)) {
-            player.yPos -= player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.LEFT)) {
-            player.xPos -= player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.DOWN)) {
-            player.yPos += player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.RIGHT)) {
-            player.xPos += player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.BATTLE)) {
-            player.inBattle = true;
+        resize();
+        if (!(player.inBattle)) {
+            if (key.isDown(key.UP)) {
+                player.yPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.LEFT)) {
+                player.xPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.DOWN)) {
+                player.yPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.RIGHT)) {
+                player.xPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.BATTLE)) {
+                player.inBattle = true;
+            }
         }
         //Collision detection
         if (player.isMoving) {
