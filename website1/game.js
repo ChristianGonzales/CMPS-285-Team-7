@@ -10,6 +10,7 @@ function Character(xPos, yPos, isEnemy) {
     this.isEnemy = isEnemy;
     this.isMoving = false;
     this.inBattle = false;
+    this.isAttacking = false;
 }
 function startGame(characterType) {
     //Hides the start screen once canvas gets created
@@ -19,20 +20,14 @@ function startGame(characterType) {
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     //Game objects
-    var player = new Character(0, 530, false);
-    var enemy;
+    var player = new Character(200, 560, false);
+    var enemy = new Character(1000, 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
         color: "red",
-        projectileWidth: 20,
-        projectileHeight: 10,
-        draw: function () {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(300, -150, 20, 10);
-            ctx.closePath();
-        }
+        width: 20,
+        height: 10,
     };
     //Key handlersS
     var key = {
@@ -93,26 +88,32 @@ function startGame(characterType) {
         var rightSide = canvas.width;
         var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        resize();        
-        if (key.isDown(key.UP)) {
-            player.yPos -= player.movementSpeed;
-            player.isMoving = true;
+        resize();
+        if (!(player.inBattle)) { //Haults player movement after E press
+            if (key.isDown(key.UP)) {
+                player.yPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.LEFT)) {
+                player.xPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.DOWN)) {
+                player.yPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.RIGHT)) {
+                player.xPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.BATTLE)) {
+                player.inBattle = true;
+            }
         }
-        if (key.isDown(key.LEFT)) {
-            player.xPos -= player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.DOWN)) {
-            player.yPos += player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.RIGHT)) {
-            player.xPos += player.movementSpeed;
-            player.isMoving = true;
-        }
-        if (key.isDown(key.BATTLE)) {
-            player.inBattle = true;
-            battleLoop(enemy);
+        if (player.inBattle) {
+            player.xPos = 200;
+            player.yPos = 560;
+            battleLoop();
         }
         //Collision detection
         if (player.isMoving) {
@@ -142,32 +143,40 @@ function startGame(characterType) {
             objective.currentObjective = objective.getObjective();
             objective.drawObjective(objective.currentObjective);
         }
-        if (Character.isEnemy) {
-            console.log("In Character.isEnemy if statement");
-            ctx.fillStyle = "brown";
-            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
-        }
-        else {
+        if (!(Character.isEnemy)) {
             if (characterType == 1) {
-                ctx.fillStyle = "gold";
+                ctx.beginPath();
+                ctx.fillStyle = "navy";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
             else if (characterType == 2) {
+                ctx.beginPath();
                 ctx.fillStyle = "purple";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
             else {
+                ctx.beginPath();
                 ctx.fillStyle = "olive";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
         }
-        projectile.draw();
+        if (player.inBattle) {
+            ctx.beginPath();
+            ctx.fillStyle = "brown";
+            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+            ctx.closePath();
+        }
+        if (player.isAttacking) {
+            ctx.beginPath();
+            ctx.fillRect(100, 100, projectile.width, projectile.height);
+            ctx.closePath();
+        }
     }
     //When player is in battle
-    var battleLoop = function (enemy) {
-        //The loop for deciding winner in fights goes here
-        //STILL A WORK IN PROGRESS
-        enemy = new Character(100, 530, true);
+    var battleLoop = function () {
         var playersTurn = true;
         var powerUpUsed = false;
         //Text to lead the player through battle i.e. "Which attack will you select?"
@@ -182,7 +191,6 @@ function startGame(characterType) {
             drawGuide: function () {
                 
                 if (playersTurn) {
-                    console.log("in drawGuide");
                     ctx.font = "36px Helvetica";
                     ctx.textAlign = "left";
                     ctx.textBaseline = "top";
@@ -192,51 +200,34 @@ function startGame(characterType) {
                 }
             }
         };
-        var powerUp = function (attackDamge) {
-            var empoweredAttack = 0;
-            empoweredAttack = attackDamge * 2;
+        var battleResult = function () {
+            console.log("IN battlereuslt");
+            console.log(enemy.HP);
+            if ((player.HP || enemy.HP) > 0) {
+                console.log("Here");
+                if (enemy.HP < 0) {
+                    battleGuide.currentGuide = "You win!";
+                    battleGuide.drawGuide(battleGuide.currentGuide);
+                    player.inBattle = false;
 
-            return empoweredAttack;
-        }
-        var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
-            if (playersTurn) {
-                enemyHealth -= playerDamage;
-            }
-            else {
-                playerHealth -= enemyDamage;
-            }
-        }
-        var block = function (playerDamage, enemyDamge) {
-            var damageBlocked = Math.floor(Math.random() * 10) + 1;;
-            if (playersTurn) {
-                playerDamage -= damageBlocked;
-            }
-            else {
-                enemyDamge -= damageBlocked
-            }
-        }
-        //Basic combat system WILL NOT WORK RIGHT NOW ONLY FOR A BASE LAYOUT OF WHAT IT 
-        //SHOULD LOOK LIKE WHEN FINISHED
-        while (player.HP > 0) {
-            if (playersTurn) {
-                if (powerUpUsed) {
-                    player.attackDamge = Math.floor(Math.random() * 30) + 10;
-                    player.attackDamge = powerUp(player.attackDamge);
-                    block();
-                    damageCalculations();
                 }
-                else {
-                    if (key.isDown(key.ATTACK)) {
-                        player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
-                        block();
-                        damageCalculations();
-                    }
-                    else if (key.isDown(key.POWERUP)) {
-                        powerUpUsed = true;
-                        playersTurn = false;
-                    }
+                else if (player.HP < 0) {
+                    battleGuide.currentGuide = "You lose!";
+                    battleGuide.drawGuide(battleGuide.currentGuide);
+                    return battleGuide.currentGuide;
                 }
             }
+        }
+        if (!(player.isAttacking)) {
+            battleGuide.getGuide();
+            battleGuide.drawGuide(battleGuide.currentGuide);
+        }
+        
+        if (key.isDown(key.ATTACK)) {
+            player.isAttacking = true;
+            enemy.HP -= player.attackDamge;
+            battleResult();
+            battleGuide.drawGuide(battleGuide.currentGuide);
         }
     }
     //Player walking around map
