@@ -112,7 +112,6 @@ function startGame(characterType) {
         }
         if (key.isDown(key.BATTLE)) {
             player.inBattle = true;
-            battleLoop();
         }
         //Collision detection
         if (player.isMoving) {
@@ -142,24 +141,32 @@ function startGame(characterType) {
             objective.currentObjective = objective.getObjective();
             objective.drawObjective(objective.currentObjective);
         }
-        if (Character.isEnemy) {
-            console.log("In Character.isEnemy if statement");
-            ctx.fillStyle = "brown";
-            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
-        }
-        else {
+        if (!(Character.isEnemy)) {
             if (characterType == 1) {
-                ctx.fillStyle = "gold";
+                ctx.beginPath();
+                ctx.fillStyle = "navy";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
             else if (characterType == 2) {
+                ctx.beginPath();
                 ctx.fillStyle = "purple";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
             else {
+                ctx.beginPath();
                 ctx.fillStyle = "olive";
                 ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
+                ctx.closePath();
             }
+        }
+        if (player.inBattle) {
+            console.log("In Character.isEnemy if statement");
+            ctx.beginPath();
+            ctx.fillStyle = "brown";
+            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+            ctx.closePath();
         }
         projectile.draw();
     }
