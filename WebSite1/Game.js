@@ -94,7 +94,7 @@ function startGame(characterType) {
         var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();
-        if (!(player.inBattle)) {
+        if (!(player.inBattle)) { //Haults player movement after E press
             if (key.isDown(key.UP)) {
                 player.yPos -= player.movementSpeed;
                 player.isMoving = true;
@@ -114,6 +114,11 @@ function startGame(characterType) {
             if (key.isDown(key.BATTLE)) {
                 player.inBattle = true;
             }
+        }
+        if (player.inBattle) {
+            player.xPos = 200;
+            player.yPos = 560;
+            battleLoop();
         }
         //Collision detection
         if (player.isMoving) {
@@ -164,7 +169,6 @@ function startGame(characterType) {
             }
         }
         if (player.inBattle) {
-            console.log("In Character.isEnemy if statement");
             ctx.beginPath();
             ctx.fillStyle = "brown";
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
@@ -174,43 +178,32 @@ function startGame(characterType) {
     }
     //When player is in battle
     var battleLoop = function () {
-        console.log("In battleLoop");
-        ctx.font = "36px Helvetica";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.strokeStyle = "black";
-        ctx.fillStyle = "gold";
-        ctx.fillText("Combat system work in progress!", 250, 0);
-        console.log("After fillText");
-        //console.log("In battleLoop");
-        ////The loop for deciding winner in fights goes here
-        ////STILL A WORK IN PROGRESS
-        //var playersTurn = true;
-        //var powerUpUsed = false;
-        //console.log("Before battleGuide var");
-        //console.log(enemy.attackDamge);
-        ////Text to lead the player through battle i.e. "Which attack will you select?"
-        //var battleGuide = {
-        //    currentGuide: "",
-        //    getGuide: function (currentGuide) {
-        //        if (playersTurn) {
-        //            this.currentGuide = "Which attack will you perform this turn?";
-        //        }
-        //        return this.currentGuide;
-        //    },
-        //    drawGuide: function () {
+        var playersTurn = true;
+        var powerUpUsed = false;
+        //Text to lead the player through battle i.e. "Which attack will you select?"
+        var battleGuide = {
+            currentGuide: "",
+            getGuide: function (currentGuide) {
+                if (playersTurn) {
+                    this.currentGuide = "Which attack will you perform this turn?";
+                }
+                return this.currentGuide;
+            },
+            drawGuide: function () {
                 
-        //        if (playersTurn) {
-        //            console.log("in drawGuide");
-        //            ctx.font = "36px Helvetica";
-        //            ctx.textAlign = "left";
-        //            ctx.textBaseline = "top";
-        //            ctx.strokeStyle = "black";
-        //            ctx.fillStyle = "gold";
-        //            ctx.fillText(this.currentGuide, 0, 0);
-        //        }
-        //    }
-        //};
+                if (playersTurn) {
+                    ctx.font = "36px Helvetica";
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle = "gold";
+                    ctx.fillText(this.currentGuide, 0, 0);
+                }
+            }
+        };
+        console.log(player.HP + " " + player.attackDamge + " " + enemy.HP + " " + enemy.attackDamge);
+        battleGuide.getGuide();
+        battleGuide.drawGuide(battleGuide.currentGuide);
         //var powerUp = function (attackDamge) {
         //    var empoweredAttack = 0;
         //    empoweredAttack = attackDamge * 2;
@@ -234,8 +227,7 @@ function startGame(characterType) {
         //        enemyDamge -= damageBlocked
         //    }
         //}
-        ////Basic combat system WILL NOT WORK RIGHT NOW ONLY FOR A BASE LAYOUT OF WHAT IT 
-        ////SHOULD LOOK LIKE WHEN FINISHED
+        
         //while ((player.HP || enemy.HP) > 0) {
         //    if (playersTurn) {
         //        if (powerUpUsed) {
