@@ -10,6 +10,7 @@ function Character(xPos, yPos, isEnemy) {
     this.isEnemy = isEnemy;
     this.isMoving = false;
     this.inBattle = false;
+    this.isAttacking = false;
 }
 function startGame(characterType) {
     //Hides the start screen once canvas gets created
@@ -20,19 +21,13 @@ function startGame(characterType) {
     var ctx = canvas.getContext("2d");
     //Game objects
     var player = new Character(200, 560, false);
-    var enemy = new Character(1500, 560, true);
+    var enemy = new Character(1000, 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
         color: "red",
-        projectileWidth: 20,
-        projectileHeight: 10,
-        draw: function () {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(300, -150, 20, 10);
-            ctx.closePath();
-        }
+        width: 20,
+        height: 10,
     };
     //Key handlersS
     var key = {
@@ -174,7 +169,11 @@ function startGame(characterType) {
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
             ctx.closePath();
         }
-        projectile.draw();
+        if (player.isAttacking) {
+            ctx.beginPath();
+            ctx.fillRect(100, 100, projectile.width, projectile.height);
+            ctx.closePath();
+        }
     }
     //When player is in battle
     var battleLoop = function () {
@@ -201,60 +200,35 @@ function startGame(characterType) {
                 }
             }
         };
-        console.log(player.HP + " " + player.attackDamge + " " + enemy.HP + " " + enemy.attackDamge);
-        battleGuide.getGuide();
-        battleGuide.drawGuide(battleGuide.currentGuide);
-        //var powerUp = function (attackDamge) {
-        //    var empoweredAttack = 0;
-        //    empoweredAttack = attackDamge * 2;
+        var battleResult = function () {
+            console.log("IN battlereuslt");
+            console.log(enemy.HP);
+            if ((player.HP || enemy.HP) > 0) {
+                console.log("Here");
+                if (enemy.HP < 0) {
+                    battleGuide.currentGuide = "You win!";
+                    battleGuide.drawGuide(battleGuide.currentGuide);
+                    player.inBattle = false;
 
-        //    return empoweredAttack;
-        //}
-        //var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
-        //    if (playersTurn) {
-        //        enemyHealth -= playerDamage;
-        //    }
-        //    else {
-        //        playerHealth -= enemyDamage;
-        //    }
-        //}
-        //var block = function (playerDamage, enemyDamge) {
-        //    var damageBlocked = Math.floor(Math.random() * 10) + 1;;
-        //    if (playersTurn) {
-        //        playerDamage -= damageBlocked;
-        //    }
-        //    else {
-        //        enemyDamge -= damageBlocked
-        //    }
-        //}
+                }
+                else if (player.HP < 0) {
+                    battleGuide.currentGuide = "You lose!";
+                    battleGuide.drawGuide(battleGuide.currentGuide);
+                    return battleGuide.currentGuide;
+                }
+            }
+        }
+        if (!(player.isAttacking)) {
+            battleGuide.getGuide();
+            battleGuide.drawGuide(battleGuide.currentGuide);
+        }
         
-        //while ((player.HP || enemy.HP) > 0) {
-        //    if (playersTurn) {
-        //        if (powerUpUsed) {
-        //            player.attackDamge = Math.floor(Math.random() * 30) + 10;
-        //            player.attackDamge = powerUp(player.attackDamge);
-        //            block(player.attackDamge, enemy.attackDamge );
-        //            damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //            playersTurn = false;
-        //        }
-        //        else {
-        //            if (key.isDown(key.ATTACK)) {
-        //                player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
-        //                block(player.attackDamge, enemy.attackDamge);
-        //                damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //            }
-        //            else if (key.isDown(key.POWERUP)) {
-        //                powerUpUsed = true;
-        //                playersTurn = false;
-        //            }
-        //        }
-        //    }
-        //    else {
-        //        enemy.attackDamge = Math.floor(Math.random() * 50) + 10;
-        //        block(player.attackDamge, enemy.attackDamge);
-        //        damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //    }
-        //}
+        if (key.isDown(key.ATTACK)) {
+            player.isAttacking = true;
+            enemy.HP -= player.attackDamge;
+            battleResult();
+            battleGuide.drawGuide(battleGuide.currentGuide);
+        }
     }
     //Player walking around map
     var mainGameLoop = function () {
