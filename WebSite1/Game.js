@@ -177,57 +177,47 @@ function startGame(characterType) {
     }
     //When player is in battle
     var battleLoop = function () {
-        var playersTurn = true;
-        var powerUpUsed = false;
-        //Text to lead the player through battle i.e. "Which attack will you select?"
-        var battleGuide = {
-            currentGuide: "",
-            getGuide: function (currentGuide) {
-                if (playersTurn) {
-                    this.currentGuide = "Which attack will you perform this turn?";
-                }
-                return this.currentGuide;
-            },
-            drawGuide: function () {
-                
-                if (playersTurn) {
-                    ctx.font = "36px Helvetica";
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "top";
-                    ctx.strokeStyle = "black";
-                    ctx.fillStyle = "gold";
-                    ctx.fillText(this.currentGuide, 0, 0);
-                }
+        var battleOver = false;
+        var battleMenu = {
+            width: canvas.width,
+            height: 50,
+            xPos: 0,
+            yPos: canvas.height - 57,
+            text: "", 
+            color: "white",
+            draw: function (text) {
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+                //Text inside battle menu
+                ctx.font = "24px Helvetica";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = "black";
+                ctx.fillText(this.text, this.xPos, this.yPos);
+                ctx.closePath();
             }
         };
         var battleResult = function () {
-            console.log("IN battlereuslt");
-            console.log(enemy.HP);
             if ((player.HP || enemy.HP) > 0) {
-                console.log("Here");
-                if (enemy.HP < 0) {
-                    battleGuide.currentGuide = "You win!";
-                    battleGuide.drawGuide(battleGuide.currentGuide);
-                    player.inBattle = false;
-                   
+                if (enemy.HP <= 0) {
+                    battleMenu.text = "You win!";
+                    battleMenu.draw(battleMenu.text);
+                    battleOver = true;
                 }
-                else if (player.HP < 0) {
-                    battleGuide.currentGuide = "You lose!";
-                    battleGuide.drawGuide(battleGuide.currentGuide);
-                    return battleGuide.currentGuide;
+                else if (player.HP <= 0) {
+                    battleMenu.text = "You lose";
+                    battleMenu.draw(battleMenu.text);
+                    battleOver = true;
                 }
             }
         }
-        if (!(player.isAttacking)) {
-            battleGuide.getGuide();
-            battleGuide.drawGuide(battleGuide.currentGuide);
-        }
-        
+        battleMenu.text = "Which attack will you perform?";
+        battleMenu.draw(battleMenu.text);
         if (key.isDown(key.ATTACK)) {
-            player.isAttacking = true;
             enemy.HP -= player.attackDamge;
             battleResult();
-            battleGuide.drawGuide(battleGuide.currentGuide);
         }
     }
     //Player walking around map
