@@ -5,7 +5,7 @@ function Character(xPos, yPos, isEnemy) {
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
-    this.xPos = xPos;
+    this.xPos = xPos;//ya
     this.yPos = yPos;
     this.isEnemy = isEnemy;
     this.isMoving = false;
@@ -209,7 +209,7 @@ function startGame(characterType) {
                     battleGuide.currentGuide = "You win!";
                     battleGuide.drawGuide(battleGuide.currentGuide);
                     player.inBattle = false;
-
+                   
                 }
                 else if (player.HP < 0) {
                     battleGuide.currentGuide = "You lose!";
