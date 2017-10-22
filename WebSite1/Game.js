@@ -22,7 +22,7 @@ function startGame(characterType) {
     var ctx = canvas.getContext("2d");
     //Game objects
     var player = new Character(200, 560, false);
-    var enemy = new Character(1000, 560, true);
+    var enemy = new Character((canvas.width * 5.9), 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -31,7 +31,7 @@ function startGame(characterType) {
         height: 10
     };
 
-    //switches
+    //Switches
     var playersTurn = true;
     var hasAttacked = false;
     var attackChosen = 0;
@@ -60,6 +60,8 @@ function startGame(characterType) {
         }
     };
     //Other variables
+    var rightSide = canvas.width;
+    var leftSide = canvas.width - canvas.width;
     var lastTime = Date.now();
     var w = window;
     var objective = {
@@ -78,25 +80,9 @@ function startGame(characterType) {
         }
     };
     var healthBar = {
-        color: "white",
+        color: "black",
         width: 200,
         height: 50,
-        draw: function (bar) {
-            ctx.beginPath();
-            ctx.font = "36px Helvetica";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "top";
-            ctx.strokeStyle = "black";
-            ctx.fillStyle = this.color;
-            ctx.fillText("Player: ", 0, 0);
-            ctx.closePath();
-
-            //Actual health bar
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(150, 0, this.width, this.height);
-            ctx.closePath();
-        }
     };
     //For multiple browsers Chrome, FireFox, Explorer
     requestAnimationFrame = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.msRequestAnimationFrame;
@@ -111,8 +97,6 @@ function startGame(characterType) {
 
     //When everything gets redrawn on canvas
     var update = function () {
-        var rightSide = canvas.width;
-        var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();
         if (!(player.inBattle)) { //Haults player movement after E press
@@ -153,7 +137,7 @@ function startGame(characterType) {
         }
         //Brings player to certain position after E press
         if (player.inBattle) {
-            player.xPos = 200;
+            player.xPos = 0;
             player.yPos = 560;
             battle();
         }
@@ -193,26 +177,43 @@ function startGame(characterType) {
         if (player.inBattle) {
             //Healthbar font
             ctx.beginPath();
-            ctx.font = "36px Helvetica";
+            ctx.font = "bold 36px Helvetica";
             ctx.textAlign = "left";
             ctx.textBaseline = "top";
             ctx.strokeStyle = "black";
-            ctx.fillStyle = this.color;
+            ctx.fillStyle = healthBar.color;
             ctx.fillText("Player: ", 0, 0);
             ctx.closePath();
 
             //Actual health bar
             ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(150, 0, this.width, this.height);
+            ctx.fillStyle = "red";
+            ctx.fillRect(150, 0, healthBar.width, healthBar.height);
+            ctx.strokeText(player.HP.toString(), 170, 0);
             ctx.closePath();
-
             //Enemy
             ctx.beginPath();
             ctx.fillStyle = "brown";
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
             ctx.closePath();   
-            healthBar.draw();
+
+            //Enemy health bar font
+            ctx.beginPath();
+            ctx.font = "bold 36px Helvetica";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = "black";
+            ctx.fillStyle = healthBar.color;
+            ctx.fillText("Enemy: ", 1600, 0);
+            ctx.closePath();
+
+            //Enemy health bar
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.fillRect(1620, 0, healthBar.width, healthBar.height);
+            ctx.fillStyle = "black";
+            ctx.strokeText(enemy.HP.toString(), 1700, 0);
+            ctx.closePath();
         }
         if (player.isAttacking) {
             ctx.beginPath();
