@@ -12,11 +12,32 @@ function Character(xPos, yPos, isEnemy) {
     this.inBattle = false;
     this.isAttacking = false;
 }
+var healthBar = {
+    color: "white",
+    width: 200,
+    height: 50,
+    draw: function () {
+        ctx.beginPath();
+        ctx.font = "36px Helvetica";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = this.color;
+        ctx.fillText("Player: ", 0, 0);
+        ctx.closePath();
+
+        //Actual health bar
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.fillRect(150, 0, this.width, this.height);
+        ctx.closePath();
+    }
+};
 function startGame(characterType) {
     //Hides the start screen once canvas gets created
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none";
-
+    
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     //Game objects
@@ -29,6 +50,7 @@ function startGame(characterType) {
         width: 20,
         height: 10
     };
+       
     //Key handlersS
     var key = {
         _pressed: {},
@@ -210,7 +232,8 @@ function startGame(characterType) {
                 ctx.fillStyle = "black";
                 ctx.fillText(this.text, this.xPos, this.yPos);
                 ctx.closePath();
-            }
+            
+            },
         };
         var battleResult = function () {
             if ((player.HP || enemy.HP) > 0) {
