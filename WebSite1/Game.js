@@ -12,27 +12,7 @@ function Character(xPos, yPos, isEnemy) {
     this.inBattle = false;
     this.isAttacking = false;
 }
-var healthBar = {
-    color: "white",
-    width: 200,
-    height: 50,
-    draw: function () {
-        ctx.beginPath();
-        ctx.font = "36px Helvetica";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.strokeStyle = "black";
-        ctx.fillStyle = this.color;
-        ctx.fillText("Player: ", 0, 0);
-        ctx.closePath();
 
-        //Actual health bar
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        ctx.fillRect(150, 0, this.width, this.height);
-        ctx.closePath();
-    }
-};
 function startGame(characterType) {
     //Hides the start screen once canvas gets created
     var startScreen = document.getElementById("startScreen");
@@ -95,6 +75,27 @@ function startGame(characterType) {
             ctx.strokeStyle = "black";
             ctx.fillStyle = "gold";
             ctx.fillText(this.currentObjective, 0, 0);
+        }
+    };
+    var healthBar = {
+        color: "white",
+        width: 200,
+        height: 50,
+        draw: function (bar) {
+            ctx.beginPath();
+            ctx.font = "36px Helvetica";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = "black";
+            ctx.fillStyle = this.color;
+            ctx.fillText("Player: ", 0, 0);
+            ctx.closePath();
+
+            //Actual health bar
+            ctx.beginPath();
+            ctx.fillStyle = this.color;
+            ctx.fillRect(150, 0, this.width, this.height);
+            ctx.closePath();
         }
     };
     //For multiple browsers Chrome, FireFox, Explorer
@@ -210,7 +211,8 @@ function startGame(characterType) {
             ctx.beginPath();
             ctx.fillStyle = "brown";
             ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
-            ctx.closePath();
+            ctx.closePath();   
+            healthBar.draw();
         }
         if (player.isAttacking) {
             ctx.beginPath();
