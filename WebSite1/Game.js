@@ -27,7 +27,7 @@ function startGame(characterType) {
         //projectileReady: false,
         color: "red",
         width: 20,
-        height: 10,
+        height: 10
     };
     //Key handlersS
     var key = {
@@ -110,17 +110,12 @@ function startGame(characterType) {
                 player.inBattle = true;
             }
         }
-        if (player.inBattle) {
-            player.xPos = 200;
-            player.yPos = 560;
-            battleLoop();
-        }
         //Collision detection
         if (player.isMoving) {
-            if (player.xPos <= leftSide){
+            if (player.xPos <= leftSide) {
                 player.xPos = leftSide;
             }
-            if (player.xPos + player.width >= rightSide){
+            if (player.xPos + player.width >= rightSide) {
                 player.xPos = rightSide - player.width;
             }
             if (player.yPos <= 0) {
@@ -130,6 +125,21 @@ function startGame(characterType) {
                 player.yPos = canvas.height - player.height;
             }
         }
+        //Brings player to certain position after E press
+        if (player.inBattle) {
+            player.xPos = 200;
+            player.yPos = 560;
+            battle();
+        }
+        ////Projectile drawing
+        //if (Character.isAttacking) {
+        //    if (!(Character.isEnemy)) {
+        //        projectile.draw((player.xPos + player.width), player.yPos);
+        //    }
+        //    else {
+        //        projectile.draw((enemy.xPos + enemy.width), player.yPos);
+        //    }
+        //}
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
@@ -171,13 +181,16 @@ function startGame(characterType) {
         }
         if (player.isAttacking) {
             ctx.beginPath();
-            ctx.fillRect(100, 100, projectile.width, projectile.height);
+            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
             ctx.closePath();
         }
     }
     //When player is in battle
-    var battleLoop = function () {
+    var battle = function () {
+        var playersTurn = true;
+        var powerUpUsed = false;
         var battleOver = false;
+        var battleWait;//Used for the delay of text so the user can read what's happening
         var battleMenu = {
             width: canvas.width,
             height: 50,
@@ -213,11 +226,62 @@ function startGame(characterType) {
                 }
             }
         }
-        battleMenu.text = "Which attack will you perform?";
-        battleMenu.draw(battleMenu.text);
-        if (key.isDown(key.ATTACK)) {
+        var attack = function (character) {
+            if (!(character.isEnemy)) {
+                //Add a random number to current attack damage
+                player.isAttacking = true;
+                player.attackDamage += Math.floor(Math.random() * 20) + 1;
+                enemy.HP -= player.attackDamge;
+                battleMenu.text = "You hit the enemy for " + player.attackDamge + " damage!";
+                battleMenu.draw(battleMenu.text);
+                battleResult();
+                playersTurn = false;
+            }
+            else {
+                enemy.isAttacking = true;
+                enemy.attackDamge += Math.floor(Math.random() * 20) + 1;
+                player.HP -= enemy.attackDamge;
+                battleMenu.text = "Enemy hit you for " + enemy.attackDamge + " damage!";
+                battleMenu.draw(battleMenu.text);
+                battleResult();
+                playersTurn = true;
+
+            }
+        }
+        var powerUp = function () {
+            //Add a random number to current attack damage
+            player.isAttacking = true;
+            player.attackDamge += Math.floor(Math.random() * 20) + 1;
+            player.attackDamge = player.attackDamge * 2;
             enemy.HP -= player.attackDamge;
-            battleResult();
+            playersTurn = false;
+        }
+        var battleLoop = function () {
+            if (playersTurn) {
+                battleMenu.text = "Which attack will you perform?";
+                battleMenu.draw(battleMenu.text);
+                if (powerUpUsed) {
+                    powerUp();
+                }
+                else {
+                    if (key.isDown(key.ATTACK)) {
+                        attack(player);
+                    }
+                    else if (key.isDown(key.POWERUP)) {
+                        powerUpUsed = true;
+                        battleMenu.text = "You powering up! Next turn you will deal double damage!";
+                        battleMenu.draw(battleMenu.text);
+                        playersTurn = false;
+                    }
+                }
+            }
+            else {
+                
+            }
+        }
+        battleLoop();
+        if (battleOver) {
+            player.inBattle = false;
         }
     }
     //Player walking around map
