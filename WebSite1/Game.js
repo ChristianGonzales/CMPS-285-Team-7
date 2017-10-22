@@ -175,45 +175,46 @@ function startGame(characterType) {
             }
         }
         if (player.inBattle) {
-            //Healthbar font
-            ctx.beginPath();
-            ctx.font = "bold 36px Helvetica";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "top";
-            ctx.strokeStyle = "black";
-            ctx.fillStyle = healthBar.color;
-            ctx.fillText("Player: ", 0, 0);
-            ctx.closePath();
+                //Healthbar font
+                ctx.beginPath();
+                ctx.font = "bold 36px Helvetica";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.closePath();
 
-            //Actual health bar
-            ctx.beginPath();
-            ctx.fillStyle = "red";
-            ctx.fillRect(150, 0, healthBar.width, healthBar.height);
-            ctx.strokeText(player.HP.toString(), 170, 0);
-            ctx.closePath();
-            //Enemy
-            ctx.beginPath();
-            ctx.fillStyle = "brown";
-            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
-            ctx.closePath();   
+                //Actual health bar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.fillRect(150, 0, healthBar.width, healthBar.height);
+                ctx.strokeText(player.HP.toString(), 170, 0);
+                ctx.closePath();
 
-            //Enemy health bar font
-            ctx.beginPath();
-            ctx.font = "bold 36px Helvetica";
-            ctx.textAlign = "right";
-            ctx.textBaseline = "top";
-            ctx.strokeStyle = "black";
-            ctx.fillStyle = healthBar.color;
-            ctx.fillText("Enemy: ", 1600, 0);
-            ctx.closePath();
+                //Enemy health bar font
+                ctx.beginPath();
+                ctx.font = "bold 36px Helvetica";
+                ctx.textAlign = "right";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText("Enemy: ", 600, 0);
+                ctx.closePath();
 
-            //Enemy health bar
-            ctx.beginPath();
-            ctx.fillStyle = "red";
-            ctx.fillRect(1620, 0, healthBar.width, healthBar.height);
-            ctx.fillStyle = "black";
-            ctx.strokeText(enemy.HP.toString(), 1700, 0);
-            ctx.closePath();
+                //Enemy health bar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.fillRect(620, 0, healthBar.width, healthBar.height);
+                ctx.strokeText(enemy.HP.toString(),1700, 0);
+                ctx.closePath();
+
+                //Enemy
+                ctx.beginPath();
+                ctx.fillStyle = "brown";
+                ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+                ctx.closePath(); 
+
         }
         if (player.isAttacking) {
             ctx.beginPath();
