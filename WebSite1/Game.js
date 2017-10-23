@@ -22,7 +22,7 @@ function startGame(characterType) {
     var ctx = canvas.getContext("2d");
     //Game objects
     var player = new Character(200, 560, false);
-    var enemy = new Character((canvas.width * 5.9), 560, true);
+    var enemy = new Character(650, 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
@@ -205,7 +205,7 @@ function startGame(characterType) {
                 ctx.beginPath();
                 ctx.fillStyle = "red";
                 ctx.fillRect(620, 0, healthBar.width, healthBar.height);
-                ctx.strokeText(enemy.HP.toString(),1700, 0);
+                ctx.strokeText(enemy.HP.toString(), 700, 0);
                 ctx.closePath();
 
                 //Enemy
