@@ -4,6 +4,7 @@
     background-image: url("http://www.spriteland.com/sprites/downloads/green-forest-and-hills-background_PNG.png");
     background-repeat: no-repeat;
     background-size: 100% 100vh;
+    overflow:hidden;
 }
 
 @font-face {

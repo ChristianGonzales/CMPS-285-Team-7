@@ -5,7 +5,7 @@ function Character(xPos, yPos, isEnemy) {
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
-    this.xPos = xPos;//ya
+    this.xPos = xPos;
     this.yPos = yPos;
     this.isEnemy = isEnemy;
     this.isMoving = false;
@@ -188,7 +188,8 @@ function startGame(characterType) {
                 ctx.beginPath();
                 ctx.fillStyle = "red";
                 ctx.fillRect(150, 0, healthBar.width, healthBar.height);
-                ctx.strokeText(player.HP.toString(), 170, 0);
+                ctx.fillStyle = "black";
+                ctx.fillText(player.HP.toString(), 170, 0);
                 ctx.closePath();
 
                 //Enemy health bar font
@@ -205,7 +206,8 @@ function startGame(characterType) {
                 ctx.beginPath();
                 ctx.fillStyle = "red";
                 ctx.fillRect(620, 0, healthBar.width, healthBar.height);
-                ctx.strokeText(enemy.HP.toString(), 700, 0);
+                ctx.fillStyle = "black";
+                ctx.fillText(enemy.HP.toString(), 700, 0);
                 ctx.closePath();
 
                 //Enemy
