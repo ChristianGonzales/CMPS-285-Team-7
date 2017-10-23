@@ -1,7 +1,7 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 function Character(xPos, yPos, isEnemy) {
     this.HP = 200;
-    this.attackDamge = 10;
+    this.attackDamge = 15;
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
@@ -46,13 +46,12 @@ function startGame(characterType) {
         RIGHT: 68, //D
         BATTLE: 69, //E
         ATTACK: 81, //Q
-        POWERUP: 82, //R
+        RANDOMATTACK: 82, //R
         CONTINUE: 70, //F
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
         onKeydown: function (event) {
-            console.log("keycode " + event.keyCode);
             this._pressed[event.keyCode] = true;
         },
         onKeyup: function (event) {
@@ -266,93 +265,99 @@ function startGame(characterType) {
         }
 
         var attack = function () {
+            console.log("playersTurn " + playersTurn);
             if (playersTurn) {
-                //Add a random number to current attack damage
                 player.isAttacking = true;
-                player.attackDamage += Math.floor(Math.random() * 20) + 1;
                 enemy.HP -= player.attackDamge;
             }
             else {
+                console.log("Here in enemy attack");
                 enemy.isAttacking = true;
-                enemy.attackDamge += Math.floor(Math.random() * 20) + 1;
                 player.HP -= enemy.attackDamge;
             }
         }
 
-        var powerUp = function () {
-            //Add a random number to current attack damage
-            player.isAttacking = true;
-            player.attackDamge += Math.floor(Math.random() * 20) + 1;
-            player.attackDamge = player.attackDamge * 2;
-            enemy.HP -= player.attackDamge;     
+        var randomAttack = function () {
+            //Random damage for attack 1-30
+            if (playersTurn) {
+                player.isAttacking = true;
+                player.attackDamge = Math.floor(Math.random() * 30) + 1;
+                enemy.HP -= player.attackDamge;   
+            }
+            else {
+                enemy.isAttacking = true;
+                enemy.attackDamge = Math.floor(Math.random() * 30) + 1;
+            } 
         }
 
         var battleLoop = function () {
-            
             if (playersTurn) {
-                if (!powerUpUsed) {
-                    if (!hasAttacked) {
-                        if (key.isDown(key.ATTACK)) {
-                            attackChosen = 1;
-                        }
-                        if (key.isDown(key.POWERUP)) {
-                            attackChosen = 2;
-                        }
-                        if (attackChosen === 0) {
-                            notifyPlayer("Which attack will you perform?");
-                        }
-                        else if (attackChosen === 1) {
-                            notifyPlayer("Perform normal attack. Press 'F' to continue...");
+                if (!hasAttacked) {
+                    if (key.isDown(key.ATTACK)) {
+                        attackChosen = 1;
+                    }
+                    if (key.isDown(key.RANDOMATTACK)) {
+                        attackChosen = 2;
+                    }
+                    if (attackChosen === 0) {
+                        notifyPlayer("Which attack will you perform?");
+                    }
+                    else if (attackChosen === 1) {
+                        notifyPlayer("Perform normal attack. Press 'F' to continue...");
+                    }
+                    else if (attackChosen === 2) {
+                        notifyPlayer("Perform random attack. Next attack will deal a random number to enemey. Press 'F' to continue...");
+                    }
+                    if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
+                        if (attackChosen === 1) {
+                            attack();
                         }
                         else if (attackChosen === 2) {
-                            notifyPlayer("Charging power up. Next turn will deal double damage. Press 'F' to continue...");
+                            randomAttack();
                         }
-                        if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
-                            if (attackChosen === 1) {
-                                attack();
-                                notifyPlayer("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
-                            }
-                            else if (attackChosen === 2) {
-                                powerUpUsed = true;
-                            }
-                            hasAttacked = true;
-                        }
+                        hasAttacked = true;
                     }
                 }
                 else {
-                    if (!hasAttacked) {
-                        powerUp(); 
-                        console.log("Here");
-                        hasAttacked = true;
-                    }
-                    else {
-                        notifyPlayer("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
-                    }                     
+                    notifyPlayer("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
                 }
                 if (key.isDown(key.CONTINUE) && hasAttacked) {
-                    if (attackChosen === 0) {
-                        powerUpUsed = false;
-                    }
-                    else {
-                        attackChosen = 0;
-                    }
                     checkBattleResult();
+                    attackChosen = 0;
                     playersTurn = false;
-                    hasAttacked = false; 
+                    hasAttacked = false;
                 }
             }
             else {
-
                 notifyPlayer("Enemy's turn. Press 'F' to continue...");
-                //notifyPlayer("Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...");
-                if (key.isDown(key.CONTINUE)) {
+                if (key.isDown(key.CONTINUE) && !hasAttacked) {
+                    attackChosen = Math.floor(Math.random() * 2) + 1;
+
+                    if (attackChosen === 1) {
+                        attack()
+                    }
+                    else if (attackChosen === 2) {
+                        randomAttack();
+                    }
+                    hasAttacked = true;
+                }
+                else {
+                    notifyPlayer("Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...");
+                }
+                if (key.isDown(key.CONTINUE) && hasAttacked) {
+                    checkBattleResult();
+                    attackChosen = 0
+                    hasAttacked = false;
                     playersTurn = true;
                 }
             }
         }
 
         battleLoop();
+
         if (battleOver) {
+            player.HP = 200;
+            enemy.HP = 200;
             player.inBattle = false;
         }
     }
