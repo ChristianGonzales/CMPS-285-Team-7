@@ -5,7 +5,7 @@ function Character(xPos, yPos, isEnemy) {
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
-    this.xPos = xPos;//ya
+    this.xPos = xPos;
     this.yPos = yPos;
     this.isEnemy = isEnemy;
     this.isMoving = false;
@@ -133,6 +133,11 @@ function startGame(characterType) {
                 player.yPos = canvas.height - player.height;
             }
         }
+        if (player.inBattle) {
+            player.xPos = 0;
+            player.yPos = 560;
+            battle.combatStart();
+        }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
@@ -216,51 +221,14 @@ function startGame(characterType) {
             ctx.closePath();
         }
     }
-    //When player is in battle
-    var battle = function () {
-        var battleOver = false;
-        var battleWait;//Used for the delay of text so the user can read what's happening
-        var battleMenu = {
-            width: canvas.width,
-            height: 50,
-            xPos: 0,
-            yPos: canvas.height - 57,
-            text: "", 
-            color: "white",
-            draw: function (text) {
-                ctx.beginPath();
-                ctx.fillStyle = this.color;
-                ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-                //Text inside battle menu
-                ctx.font = "24px Helvetica";
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = "black";
-                ctx.fillStyle = "black";
-                ctx.fillText(this.text, this.xPos, this.yPos);
-                ctx.closePath();
-            
-            },
-        };
-
-        var notifyPlayer = function (currentText) {
-            battleMenu.text = currentText;
-            battleMenu.draw(battleMenu.text);
-
-        }
-
-        var checkBattleResult = function () {
-                if (enemy.HP <= 0) {
-                    notifyPlayer("You win");
-                    battleOver = true;
-                }
-                else if (player.HP <= 0) {
-                    notifyPlayer("You lose");
-                    battleOver = true;
-                }
-        }
-
-        var attack = function () {
+    //Battle Loop
+    var battle = {
+        battleOver: false,
+        combatTimer: null, //Time variable
+        combatStart: function () {
+            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
+        },
+        attack: function () {
             if (playersTurn) {
                 player.isAttacking = true;
                 enemy.HP -= player.attackDamge;
@@ -268,93 +236,27 @@ function startGame(characterType) {
             else {
                 enemy.isAttacking = true;
                 player.HP -= enemy.attackDamge;
-                console.log("Perform attack? Press Q to perform normal attack.");
             }
-        }
+        },
+        checkBattleResult: function () {
+            if (enemy.HP <= 0) {
+                console.log("You win!");
+                battle.battleOver = true;
 
-        var randomAttack = function () {
-            //Random damage for attack 1-30
-            if (playersTurn) {
-                player.isAttacking = true;
-                player.attackDamge = Math.floor(Math.random() * 30) + 1;
-                enemy.HP -= player.attackDamge;   
             }
-            else {
-                enemy.isAttacking = true;
-                enemy.attackDamge = Math.floor(Math.random() * 30) + 1;
-            } 
-        }
-        //THIS IS THE BATTLE THAT WAS USED IN MIDTERMS
-        //IT STILL SEMI WORKS I AM COMMENTING IT OUT SO I CAN TRY TO WORK
-        //ON ONE WITHOUT THE TEXT ON THE SCREEN WHERE IT JUST USES CONSOLE LOGS
-        //BECASUE SARA IS WORKING ON THE TEXT!
-        //var battleLoop = function () {
-        //    if (playersTurn) {
-        //        if (!hasAttacked) {
-        //            if (key.isDown(key.ATTACK)) {
-        //                attackChosen = 1;
-        //            }
-        //            if (key.isDown(key.RANDOMATTACK)) {
-        //                attackChosen = 2;
-        //            }
-        //            if (attackChosen === 0) {
-        //                notifyPlayer("Which attack will you perform?");
-        //            }
-        //            else if (attackChosen === 1) {
-        //                notifyPlayer("Perform normal attack. Press 'F' to continue...");
-        //            }
-        //            else if (attackChosen === 2) {
-        //                notifyPlayer("Perform random attack. Next attack will deal a random number to enemey. Press 'F' to continue...");
-        //            }
-        //            if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
-        //                if (attackChosen === 1) {
-        //                    attack();
-        //                }
-        //                else if (attackChosen === 2) {
-        //                    randomAttack();
-        //                }
-        //                hasAttacked = true;
-        //            }
-        //        }
-        //        else {
-        //            notifyPlayer("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
-        //        }
-        //        if (key.isDown(key.CONTINUE) && hasAttacked) {
-        //            checkBattleResult();
-        //            attackChosen = 0;
-        //            playersTurn = false;
-        //            hasAttacked = false;
-        //        }
-        //    }
-        //    else {
-        //        notifyPlayer("Enemy's turn. Press 'F' to continue...");
-        //        if (key.isDown(key.CONTINUE) && !hasAttacked) {
-        //            attackChosen = Math.floor(Math.random() * 2) + 1;
-
-        //            if (attackChosen === 1) {
-        //                attack()
-        //            }
-        //            else if (attackChosen === 2) {
-        //                randomAttack();
-        //            }
-        //            hasAttacked = true;
-        //        }
-        //        else {
-        //            notifyPlayer("Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...");
-        //        }
-        //        if (key.isDown(key.CONTINUE) && hasAttacked) {
-        //            checkBattleResult();
-        //            attackChosen = 0
-        //            hasAttacked = false;
-        //            playersTurn = true;
-        //        }
-        //    }
-        //}
-        //PRODOTYPE BATTLE LOOP
-        var battleLoop = function () {
-            console.log("Player HP: " + player.HP + " Enemy HP: " + enemy.HP );
+            else if (player.HP <= 0) {
+                console.log("You lose!");
+                battle.battleOver = true;
+            }
+            if (battle.battleOver) {
+                player.HP = 200;
+                enemy.HP = 200;
+                player.inBattle = false;
+            }
+        },
+        combatLogic: function () {
             if (playersTurn) {
-                if (!(hasAttacked)) {
+                if (!hasAttacked) { //When you haven't attacked
                     if (key.isDown(key.ATTACK)) {
                         attackChosen = 1;
                     }
@@ -366,47 +268,40 @@ function startGame(characterType) {
                     }
                     if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
                         if (attackChosen === 1) {
-                            attack();
+                            clearTimeout(battle.combatTimer);
+                            battle.attack();
                         }
                         hasAttacked = true;
+                        battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     }
                 }
                 else {
                     console.log("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
-                }
-                if (key.isDown(key.CONTINUE) && hasAttacked) {
-                    checkBattleResult();
+                    battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
                     playersTurn = false;
                 }
             }
             else {
-                console.log("Enemy's turn to attack! Press F to continue");
+                console.log("Enemy's turn! Press F to continue...");
 
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
-                    attack();
+                    clearTimeout(battle.combatTimer);
+                    battle.attack();
                     hasAttacked = true;
                 }
                 else {
                     console.log("Enemy hit you for " + enemy.attackDamge + "! Press F to continue...");
                 }
                 if (key.isDown(key.CONTINUE) && hasAttacked){
-                    checkBattleResult();
+                    battle.checkBattleResult();
                     hasAttacked = false;
                     playersTurn = true;
                 }
             }
         }
-
-        battleLoop();
-
-        if (battleOver) {
-            player.HP = 200;
-            enemy.HP = 200;
-            player.inBattle = false;
-        }
-    }
+    };
     //Player walking around map
     var mainGameLoop = function () {
         var currentTime = Date.now();
@@ -417,12 +312,6 @@ function startGame(characterType) {
 
         lastTime = currentTime;
 
-        //Brings player to certain position after E press
-        if (player.inBattle) {
-            player.xPos = 0;
-            player.yPos = 560;
-            battle();
-        }
 
         //Animation frame does this again
         requestAnimationFrame(mainGameLoop);
