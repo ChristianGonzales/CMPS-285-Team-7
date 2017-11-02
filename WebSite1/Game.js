@@ -1,6 +1,6 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 function Character(xPos, yPos, isEnemy) {
-    this.HP = 200;
+    this.HP = 201;
     this.attackDamge = 10;
     this.width = 100;
     this.height = 100;
