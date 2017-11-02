@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\WebSite1",
-    "\\WebSite1\\Bin"
+    "\\WebSite1\\Bin",
+    "\\WebSite1\\WizardSprite",
+    "\\WebSite1\\WizardSprite\\SCML",
+    "\\WebSite1\\WizardSprite\\SCML\\1"
   ],
-  "SelectedNode": "\\WebSite1\\magecity.png",
+  "SelectedNode": "\\WebSite1\\Game.js",
   "PreviewInSolutionExplorer": false
 }

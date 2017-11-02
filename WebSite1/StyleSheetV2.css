@@ -4,7 +4,6 @@
     background-image: url("http://www.spriteland.com/sprites/downloads/green-forest-and-hills-background_PNG.png");
     background-repeat: no-repeat;
     background-size: 100% 100vh;
-    overflow: hidden;
 }
 
 @font-face {
@@ -19,7 +18,6 @@
 
 h1 {
     position: fixed;
-    top: 0px;
     left: 29%;
     text-align: center;
     font-family: ringbearer;
@@ -32,7 +30,7 @@ h1 {
 h2 {
     position: fixed;
     text-align: center;
-    bottom: 120px;
+    top: 350px;
     left: 40%;
     line-height: 100%;
     font-family: ringbearer;
@@ -42,7 +40,7 @@ h2 {
 ul {
     position: fixed;
     text-align: center;
-    bottom: 0px;
+    top: 380px;
     left: 40%;
     line-height: 100%;
     font-family: ringbearer;
@@ -59,7 +57,7 @@ ul {
     height: 100px;
     position: fixed;
     left: 37%;
-    top: 40%;
+    top: 200px;
     color: black;
     z-index: -1;
     font-family: ringbearer;
@@ -86,7 +84,7 @@ ul {
         box-shadow: 0px 2px 0px #d35400;
         position: fixed;
         left: 37%;
-        top: 40%;
+        top: 200px;
         text-align: center;
     }
 
@@ -127,11 +125,11 @@ ul {
 
 .popUpWindow {
     display: none;
-    position: fixed;
+    position: static;
     z-index: 1;
     padding-top: 100px;
     left: 0;
-    top: 15%;
+    top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
