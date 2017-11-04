@@ -1,7 +1,7 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 function Character(xPos, yPos, isEnemy) {
-    this.HP = 201;
-    this.attackDamge = 10;
+    this.HP = 200;
+    this.attackDamge = 15;
     this.width = 100;
     this.height = 100;
     this.movementSpeed = 5;
@@ -10,30 +10,32 @@ function Character(xPos, yPos, isEnemy) {
     this.isEnemy = isEnemy;
     this.isMoving = false;
     this.inBattle = false;
+    this.isAttacking = false;
 }
+
 function startGame(characterType) {
     //Hides the start screen once canvas gets created
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none";
-
+    
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     //Game objects
     var player = new Character(200, 560, false);
-    var enemy = new Character(1500, 560, true);
+    var enemy = new Character(650, 560, true);
     var projectile = {
         //projectileImage: new Image(),
         //projectileReady: false,
         color: "red",
-        projectileWidth: 20,
-        projectileHeight: 10,
-        draw: function () {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(300, -150, 20, 10);
-            ctx.closePath();
-        }
+        width: 20,
+        height: 10
     };
+    //Switches
+    var attackChosen = 0;
+    var playersTurn = true;
+    var hasAttacked = false;
     //Key handlersS
     var key = {
         _pressed: {},
@@ -43,7 +45,8 @@ function startGame(characterType) {
         RIGHT: 68, //D
         BATTLE: 69, //E
         ATTACK: 81, //Q
-        POWERUP: 82, //R
+        RANDOMATTACK: 82, //R
+        CONTINUE: 70, //F
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -55,13 +58,8 @@ function startGame(characterType) {
         }
     };
     //Other variables
+
     var lastTime = Date.now();
-    var w = window;
-      //Test code (does not work, but I want to try and get this method to work) //Create enemies when E is pressed
-                                    //var createEnemy = function () {
-                                    //    var enemy = new Character(300, 0, true);
-                                    //    return enemy;
-                                    //}
     var objective = {
         currentObjective: "",
         getObjective: function () {
@@ -77,11 +75,16 @@ function startGame(characterType) {
             ctx.fillText(this.currentObjective, 0, 0);
         }
     };
+    var healthBar = {
+        color: "black",
+        width: 200,
+        height: 50,
+    };
     //For multiple browsers Chrome, FireFox, Explorer
-    requestAnimationFrame = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.msRequestAnimationFrame;
+    requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
     //Event listeners
-    w.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
-    w.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
+    window.addEventListener("keydown", function (event) { key.onKeydown(event); }, false);
+    window.addEventListener("keyup", function (event) { key.onKeyup(event); }, false);
 
     //Change canvas width and height to whole screen
     canvas.width = window.innerWidth;
@@ -115,18 +118,13 @@ function startGame(characterType) {
                 player.inBattle = true;
             }
         }
-        if (player.inBattle) {
-            player.xPos = 200;
-            player.yPos = 560;
-            battleLoop();
-        }
         //Collision detection
         if (player.isMoving) {
-            if (player.xPos <= leftSide){
+            if (player.xPos <= leftSide) {
                 player.xPos = leftSide;
             }
-            if (player.xPos + player.width >= rightSide){
-                player.xPos = rightSide - player.width;
+            if (player.xPos + player.width >= canvas.width) {
+                player.xPos = canvas.width - player.width;
             }
             if (player.yPos <= 0) {
                 player.yPos = 0;
@@ -135,11 +133,16 @@ function startGame(characterType) {
                 player.yPos = canvas.height - player.height;
             }
         }
+        if (player.inBattle) {
+            player.xPos = 0;
+            player.yPos = 560;
+            battle.combatStart();
+        }
     }
     //Reszie canvas to broswer no matter what
     var resize = function () {
-        canvas.width = w.innerWidth;
-        canvas.height = w.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     //Drawing everything
     var render = function () {
@@ -169,93 +172,136 @@ function startGame(characterType) {
             }
         }
         if (player.inBattle) {
+                //Healthbar font
+                ctx.beginPath();
+                ctx.font = "bold 36px Helvetica";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.closePath();
+
+                //Actual health bar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.fillRect(150, 0, healthBar.width, healthBar.height);
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText(player.HP.toString(), 170, 0);
+                ctx.closePath();
+
+                //Enemy health bar font
+                ctx.beginPath();
+                ctx.font = "bold 36px Helvetica";
+                ctx.textAlign = "right";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText("Enemy: ", 600, 0);
+                ctx.closePath();
+
+                //Enemy health bar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.fillRect(620, 0, healthBar.width, healthBar.height);
+                ctx.fillStyle = healthBar.color;
+                ctx.fillText(enemy.HP.toString(), 700, 0);
+                ctx.closePath();
+
+                //Enemy
+                ctx.beginPath();
+                ctx.fillStyle = "brown";
+                ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+                ctx.closePath(); 
+
+        }
+        if (player.isAttacking) {
             ctx.beginPath();
-            ctx.fillStyle = "brown";
-            ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
+            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
             ctx.closePath();
         }
-        projectile.draw();
     }
-    //When player is in battle
-    var battleLoop = function () {
-        var playersTurn = true;
-        var powerUpUsed = false;
-        //Text to lead the player through battle i.e. "Which attack will you select?"
-        var battleGuide = {
-            currentGuide: "",
-            getGuide: function (currentGuide) {
-                if (playersTurn) {
-                    this.currentGuide = "Which attack will you perform this turn?";
+    //Battle Loop
+    var battle = {
+        battleOver: false,
+        combatTimer: null, //Time variable
+        combatStart: function () {
+            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
+        },
+        attack: function () {
+            if (playersTurn) {
+                player.isAttacking = true;
+                enemy.HP -= player.attackDamge;
+            }
+            else {
+                enemy.isAttacking = true;
+                player.HP -= enemy.attackDamge;
+            }
+        },
+        checkBattleResult: function () {
+            if (enemy.HP <= 0) {
+                console.log("You win!");
+                battle.battleOver = true;
+
+            }
+            else if (player.HP <= 0) {
+                console.log("You lose!");
+                battle.battleOver = true;
+            }
+            if (battle.battleOver) {
+                player.HP = 200;
+                enemy.HP = 200;
+                player.inBattle = false;
+            }
+        },
+        combatLogic: function () {
+            if (playersTurn) {
+                if (!hasAttacked) { //When you haven't attacked
+                    if (key.isDown(key.ATTACK)) {
+                        attackChosen = 1;
+                    }
+                    if (attackChosen === 0) {
+                        console.log("Which attack will you perform? Q for normal attack.");
+                    }
+                    else if (attackChosen === 1) {
+                        console.log("Perform normal attack? Press F to continue...");
+                    }
+                    if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
+                        if (attackChosen === 1) {
+                            clearTimeout(battle.combatTimer);
+                            battle.attack();
+                        }
+                        hasAttacked = true;
+                        battle.combatTimer = setTimeout(battle.combatLogic, 3000);
+                    }
                 }
-                return this.currentGuide;
-            },
-            drawGuide: function () {
-                
-                if (playersTurn) {
-                    ctx.font = "36px Helvetica";
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "top";
-                    ctx.strokeStyle = "black";
-                    ctx.fillStyle = "gold";
-                    ctx.fillText(this.currentGuide, 0, 0);
+                else {
+                    console.log("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
+                    battle.checkBattleResult();
+                    attackChosen = 0;
+                    hasAttacked = false;
+                    playersTurn = false;
                 }
             }
-        };
-        console.log(player.HP + " " + player.attackDamge + " " + enemy.HP + " " + enemy.attackDamge);
-        battleGuide.getGuide();
-        battleGuide.drawGuide(battleGuide.currentGuide);
-        //var powerUp = function (attackDamge) {
-        //    var empoweredAttack = 0;
-        //    empoweredAttack = attackDamge * 2;
+            else {
+                console.log("Enemy's turn! Press F to continue...");
 
-        //    return empoweredAttack;
-        //}
-        //var damageCalculations = function (playerHealth, enemyHealth, playerDamage, enemyDamge) {
-        //    if (playersTurn) {
-        //        enemyHealth -= playerDamage;
-        //    }
-        //    else {
-        //        playerHealth -= enemyDamage;
-        //    }
-        //}
-        //var block = function (playerDamage, enemyDamge) {
-        //    var damageBlocked = Math.floor(Math.random() * 10) + 1;;
-        //    if (playersTurn) {
-        //        playerDamage -= damageBlocked;
-        //    }
-        //    else {
-        //        enemyDamge -= damageBlocked
-        //    }
-        //}
-        
-        //while ((player.HP || enemy.HP) > 0) {
-        //    if (playersTurn) {
-        //        if (powerUpUsed) {
-        //            player.attackDamge = Math.floor(Math.random() * 30) + 10;
-        //            player.attackDamge = powerUp(player.attackDamge);
-        //            block(player.attackDamge, enemy.attackDamge );
-        //            damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //            playersTurn = false;
-        //        }
-        //        else {
-        //            if (key.isDown(key.ATTACK)) {
-        //                player.attackDamge = Math.floor(Math.random() * 30) + 10; //Random number 10-30
-        //                block(player.attackDamge, enemy.attackDamge);
-        //                damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //            }
-        //            else if (key.isDown(key.POWERUP)) {
-        //                powerUpUsed = true;
-        //                playersTurn = false;
-        //            }
-        //        }
-        //    }
-        //    else {
-        //        enemy.attackDamge = Math.floor(Math.random() * 50) + 10;
-        //        block(player.attackDamge, enemy.attackDamge);
-        //        damageCalculations(player.HP, enemy.HP, player.attackDamge, enemy.attackDamge);
-        //    }
-        //}
-    }
+                if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
+                    clearTimeout(battle.combatTimer);
+                    battle.attack();
+                    hasAttacked = true;
+                }
+                else {
+                    console.log("Enemy hit you for " + enemy.attackDamge + "! Press F to continue...");
+                }
+                if (key.isDown(key.CONTINUE) && hasAttacked){
+                    battle.checkBattleResult();
+                    hasAttacked = false;
+                    playersTurn = true;
+                }
+            }
+        }
+    };
     //Player walking around map
     var mainGameLoop = function () {
         var currentTime = Date.now();
@@ -265,6 +311,7 @@ function startGame(characterType) {
         render();
 
         lastTime = currentTime;
+
 
         //Animation frame does this again
         requestAnimationFrame(mainGameLoop);
