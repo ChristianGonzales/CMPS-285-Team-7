@@ -45,7 +45,7 @@ function startGame(characterType) {
         RIGHT: 68, //D
         BATTLE: 69, //E
         ATTACK: 81, //Q
-        RANDOMATTACK: 82, //R
+        HEAL: 82, //R
         CONTINUE: 70, //F
         isDown: function (keyCode) {
             return this._pressed[keyCode];
@@ -238,6 +238,14 @@ function startGame(characterType) {
                 player.HP -= enemy.attackDamge;
             }
         },
+        heal: function () {
+            if (playersTurn) {
+                player.HP += 20;
+            }
+            else {
+                enemy.HP += 20;
+            }
+        },
         checkBattleResult: function () {
             if (enemy.HP <= 0) {
                 console.log("You win!");
@@ -260,23 +268,38 @@ function startGame(characterType) {
                     if (key.isDown(key.ATTACK)) {
                         attackChosen = 1;
                     }
+                    if (key.isDown(key.HEAL)) {
+                        attackChosen = 2;
+                    }
                     if (attackChosen === 0) {
                         console.log("Which attack will you perform? Q for normal attack.");
                     }
                     else if (attackChosen === 1) {
                         console.log("Perform normal attack? Press F to continue...");
                     }
+                    else if (attackChosen === 2) {
+                        console.log("Perform heal? Press F to continue...");
+                    }
                     if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
                         if (attackChosen === 1) {
                             clearTimeout(battle.combatTimer);
                             battle.attack();
+                        }
+                        if (attackChosen === 2) {
+                            clearTimeout(battle.combatTimer);
+                            battle.heal();
                         }
                         hasAttacked = true;
                         battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     }
                 }
                 else {
-                    console.log("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
+                    if (attackChosen === 1) {
+                        console.log("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
+                    }
+                    else if (attackChosen === 2) {
+                        console.log("You healed 20 hit points!");
+                    }
                     battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
@@ -288,14 +311,26 @@ function startGame(characterType) {
 
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
                     clearTimeout(battle.combatTimer);
-                    battle.attack();
+                    attackChosen = Math.floor(Math.random() * 500) + 1;
+                    if ((attackChosen % 2) === 0) {
+                        battle.attack();
+                    }
+                    else {
+                        battle.heal();
+                    }
                     hasAttacked = true;
                 }
                 else {
-                    console.log("Enemy hit you for " + enemy.attackDamge + "! Press F to continue...");
+                    if (attackChosen === 1) {
+                        console.log("Enemy hit you for " + enemy.attackDamge + "! Press F to continue...");
+                    }
+                    else if (attackChosen === 2) {
+                        console.log("Enemy healed for 20 hit points!");
+                    }
                 }
                 if (key.isDown(key.CONTINUE) && hasAttacked){
                     battle.checkBattleResult();
+                    attackChosen = 0;
                     hasAttacked = false;
                     playersTurn = true;
                 }
