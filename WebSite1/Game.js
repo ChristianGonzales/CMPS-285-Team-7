@@ -1,5 +1,6 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
-function Character(xPos, yPos, isEnemy) {
+function Character(ctx, characterType, xPos, yPos, isEnemy) {
+    this.characterType = characterType;
     this.HP = 200;
     this.attackDamge = 15;
     this.width = 100;
@@ -11,6 +12,32 @@ function Character(xPos, yPos, isEnemy) {
     this.isMoving = false;
     this.inBattle = false;
     this.isAttacking = false;
+    this.drawCharacter = function (characterType) {
+        if (characterType == "knight") {
+            ctx.beginPath();
+            ctx.fillStyle = "navy";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "wizard") {
+            ctx.beginPath();
+            ctx.fillStyle = "purple";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "elf") {
+            ctx.beginPath();
+            ctx.fillStyle = "olive";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "enemy") {
+            ctx.beginPath();
+            ctx.fillStyle = "brown";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath(); 
+        }
+    }
 }
 
 function startGame(characterType) {
@@ -23,15 +50,8 @@ function startGame(characterType) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     //Game objects
-    var player = new Character(200, 560, false);
-    var enemy = new Character(650, 560, true);
-    var projectile = {
-        //projectileImage: new Image(),
-        //projectileReady: false,
-        color: "red",
-        width: 20,
-        height: 10
-    };
+    var player = new Character(ctx, characterType, 200, 560, false);
+    var enemy = new Character(ctx, "enemy", 650, 560, true);
     //Switches
     var attackChosen = 0;
     var playersTurn = true;
@@ -77,8 +97,62 @@ function startGame(characterType) {
     };
     var healthBar = {
         color: "black",
+        barColor: "red",
         width: 200,
         height: 50,
+        font: " bold 36px Helvetica ",
+        drawHealthBar: function (characterType) {
+            if (characterType == ("knight" || "wizard" || "elf")) {
+                //Font
+                ctx.beginPath();
+                ctx.font = this.font;
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = this.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.closePath();
+
+                //Actual healthbar
+                ctx.beginPath();
+                ctx.fillStyle = this.barColor;
+                ctx.fillRect(150, 0, this.width, this.height);
+                ctx.fillStyle = this.color;
+                ctx.fillText(player.HP.toString(), 170, 0);
+                ctx.closePath();
+            }
+            else if (characterType == "enemy") {
+                //Font
+                ctx.beginPath();
+                ctx.font = this.font;
+                ctx.textAlign = "right";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = this.color;
+                ctx.fillText("Enemy: ", 600, 0);
+                ctx.closePath();
+
+                //Actual health bar
+                ctx.beginPath();
+                ctx.fillStyle = this.barColor;
+                ctx.fillRect(620, 0, this.width, this.height);
+                ctx.fillStyle = this.color;
+                ctx.fillText(enemy.HP.toString(), 700, 0);
+                ctx.closePath();
+
+            }
+        }
+    };
+    var projectile = {
+        color: "red",
+        width: 20,
+        height: 10,
+        drawProjectile: function () {
+            ctx.beginPath();
+            ctx.fillStyle = this.color;
+            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
+            ctx.closePath();
+        }
     };
     //For multiple browsers Chrome, FireFox, Explorer
     requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -151,74 +225,15 @@ function startGame(characterType) {
             objective.currentObjective = objective.getObjective();
             objective.drawObjective(objective.currentObjective);
         }
-        if (!(Character.isEnemy)) {
-            if (characterType == 1) {
-                ctx.beginPath();
-                ctx.fillStyle = "navy";
-                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
-                ctx.closePath();
-            }
-            else if (characterType == 2) {
-                ctx.beginPath();
-                ctx.fillStyle = "purple";
-                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
-                ctx.closePath();
-            }
-            else {
-                ctx.beginPath();
-                ctx.fillStyle = "olive";
-                ctx.fillRect(player.xPos, player.yPos, player.width, player.height);
-                ctx.closePath();
-            }
-        }
+        player.drawCharacter(characterType);
+
         if (player.inBattle) {
-                //Healthbar font
-                ctx.beginPath();
-                ctx.font = "bold 36px Helvetica";
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = "black";
-                ctx.fillStyle = healthBar.color;
-                ctx.fillText("Player: ", 0, 0);
-                ctx.closePath();
-
-                //Actual health bar
-                ctx.beginPath();
-                ctx.fillStyle = "red";
-                ctx.fillRect(150, 0, healthBar.width, healthBar.height);
-                ctx.fillStyle = healthBar.color;
-                ctx.fillText(player.HP.toString(), 170, 0);
-                ctx.closePath();
-
-                //Enemy health bar font
-                ctx.beginPath();
-                ctx.font = "bold 36px Helvetica";
-                ctx.textAlign = "right";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = "black";
-                ctx.fillStyle = healthBar.color;
-                ctx.fillText("Enemy: ", 600, 0);
-                ctx.closePath();
-
-                //Enemy health bar
-                ctx.beginPath();
-                ctx.fillStyle = "red";
-                ctx.fillRect(620, 0, healthBar.width, healthBar.height);
-                ctx.fillStyle = healthBar.color;
-                ctx.fillText(enemy.HP.toString(), 700, 0);
-                ctx.closePath();
-
-                //Enemy
-                ctx.beginPath();
-                ctx.fillStyle = "brown";
-                ctx.fillRect(enemy.xPos, enemy.yPos, enemy.width, enemy.height);
-                ctx.closePath(); 
-
+            enemy.drawCharacter("enemy");
+            healthBar.drawHealthBar(characterType);
+            healthBar.drawHealthBar("enemy");
         }
         if (player.isAttacking) {
-            ctx.beginPath();
-            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
-            ctx.closePath();
+            projectile.drawProjectile();
         }
     }
     //Battle Loop
