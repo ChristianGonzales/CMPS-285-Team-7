@@ -52,6 +52,10 @@ function startGame(characterType) {
     //Game objects
     var player = new Character(ctx, characterType, 200, 560, false);
     var enemy = new Character(ctx, "enemy", 650, 560, true);
+    //Team based combat variables
+    var teamMate1;
+    var teamMate2;
+    var playerTeam = [];
     //Switches
     var attackChosen = 0;
     var playersTurn = true;
@@ -164,6 +168,25 @@ function startGame(characterType) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     document.body.appendChild(canvas); //Makes it to where the canvas is apart of the HTML body
+
+    //Create Team for combat
+    var createTeam = function (characterType) {
+        if (characterType == "knight") {
+            teamMate1 = new Character("wizard");
+            teamMate2 = new Character("elf");
+        }
+        else if (characterType == "wizard") {
+            teamMate1 = new Character("knight");
+            teamMate2 = new Character("elf");
+        }
+        else if (characterType == "elf") {
+            teamMate1 = new Character("wizard");
+            teamMate2 = new Character("knight");
+        }
+        playerTeam.push(player);
+        playerTeam.push(teamMate1);
+        playerTeam.push(teamMate2);
+    }
 
     //When everything gets redrawn on canvas
     var update = function () {
