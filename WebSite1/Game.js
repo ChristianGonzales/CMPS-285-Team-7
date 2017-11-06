@@ -50,8 +50,8 @@ function startGame(characterType) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     //Game objects
-    var player = new Character(ctx, characterType, 200, 560, false);
-    var enemy = new Character(ctx, "enemy", 650, 560, true);
+    var player = new Character(ctx, characterType, 200, 100, false);
+    var enemy = new Character(ctx, "enemy", 650, 100, true);
     //Team based combat variables
     var teamMate1;
     var teamMate2;
@@ -249,7 +249,7 @@ function startGame(characterType) {
             objective.drawObjective(objective.currentObjective);
         }
         player.drawCharacter(characterType);
-
+        enemy.drawCharacter("enemy")
         if (player.inBattle) {
             enemy.drawCharacter("enemy");
             healthBar.drawHealthBar(characterType);
