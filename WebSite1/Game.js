@@ -211,8 +211,8 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed;
                 player.isMoving = true;
             }
-            if (key.isDown(key.BATTLE)) {
-                player.inBattle = true;
+            if (player.xPos == (enemy.xPos - enemy.width)) {
+                player.inBattle = true
             }
         }
         //Collision detection
@@ -248,6 +248,7 @@ function startGame(characterType) {
             objective.currentObjective = objective.getObjective();
             objective.drawObjective(objective.currentObjective);
         }
+
         player.drawCharacter(characterType);
         enemy.drawCharacter("enemy")
         if (player.inBattle) {
