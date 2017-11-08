@@ -172,20 +172,21 @@ function startGame(characterType) {
     //Create Team for combat
     var createTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character("wizard");
-            teamMate2 = new Character("elf");
+            teamMate1 = new Character(ctx, "wizard", 100, 300, false);
+            teamMate2 = new Character(ctx, "elf", 100, 200, false);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character("knight");
-            teamMate2 = new Character("elf");
+            teamMate1 = new Character(ctx, "knight", 100, 300, false);
+            teamMate2 = new Character(ctx, "elf", 100, 200, false);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character("wizard");
-            teamMate2 = new Character("knight");
+            teamMate1 = new Character(ctx, "wizard", 100, 300, false);
+            teamMate2 = new Character(ctx, "knight", 100, 200, false);
         }
-        playerTeam.push(player);
-        playerTeam.push(teamMate1);
-        playerTeam.push(teamMate2);
+        //Adding character objects to array
+        playerTeam[0] = player;
+        playerTeam[1] = teamMate1;
+        playerTeam[2] = teamMate2;
     }
 
     //When everything gets redrawn on canvas
@@ -233,6 +234,7 @@ function startGame(characterType) {
         if (player.inBattle) {
             player.xPos = 0;
             player.yPos = 560;
+            createTeam(characterType);
             battle.combatStart();
         }
     }
@@ -252,7 +254,7 @@ function startGame(characterType) {
         enemy.drawCharacter("enemy")
         if (player.inBattle) {
             enemy.drawCharacter("enemy");
-            healthBar.drawHealthBar(characterType);
+            healthBar.drawHealthBar("knight");
             healthBar.drawHealthBar("enemy");
         }
         if (player.isAttacking) {
@@ -301,6 +303,7 @@ function startGame(characterType) {
             }
         },
         combatLogic: function () {
+            console.log(playerTeam);
             if (playersTurn) {
                 if (!hasAttacked) { //When you haven't attacked
                     if (key.isDown(key.ATTACK)) {
@@ -350,7 +353,7 @@ function startGame(characterType) {
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
                     clearTimeout(battle.combatTimer);
                     attackChosen = Math.floor(Math.random() * 500) + 1;
-                    if ((attackChosen % 2) === 0) {
+                    if ((attackChosen % 5) === 0) {
                         battle.attack();
                     }
                     else {
