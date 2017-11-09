@@ -37,7 +37,7 @@ function Character(ctx, characterType, xPos, yPos, isEnemy) {
             ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
             ctx.closePath(); 
         }
-        else if (characterType == "enemy2") {
+        else if (characterType == "enemy_damage") {
             ctx.beginPath();
             ctx.fillStyle = "yellow";
             ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
