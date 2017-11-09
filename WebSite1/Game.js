@@ -68,6 +68,9 @@ function startGame(characterType) {
     var teamMate1;
     var teamMate2;
     var playerTeam = [];
+    var enemy2;
+    var enemy3;
+    var enemyTeam = [];
     //Switches
     var attackChosen = 0;
     var playersTurn = true;
@@ -182,24 +185,38 @@ function startGame(characterType) {
     document.body.appendChild(canvas); //Makes it to where the canvas is apart of the HTML body
 
     //Create Team for combat
-    var createTeam = function (characterType) {
+    var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character("wizard");
-            teamMate2 = new Character("elf");
+            teamMate1 = new Character(ctx, "wizard", 50, 680, false);
+            teamMate2 = new Character(ctx, "elf", 50, 400, false);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character("knight");
-            teamMate2 = new Character("elf");
+            teamMate1 = new Character(ctx, "knight", 50, 680, false);
+            teamMate2 = new Character(ctx, "elf", 50, 400, false);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character("wizard");
-            teamMate2 = new Character("knight");
+            teamMate1 = new Character(ctx, "wizard", 50, 680, false);
+            teamMate2 = new Character(ctx, "knight", 50, 400, false);
         }
-        playerTeam.push(player);
-        playerTeam.push(teamMate1);
-        playerTeam.push(teamMate2);
+
+        //Adding character objects to array
+        playerTeam[0] = player;
+        playerTeam[1] = teamMate1;
+        playerTeam[2] = teamMate2;
     }
 
+    //Create team for enemy. (Had to make one for the enemy since I could not figure out how to implement in one method)
+    var createEnemyTeam = function (characterType) {
+        if (characterType == "enemy") {
+            enemy2 = new Character(ctx, "enemy", 50, 680, true);
+            enemy3 = new Character(ctx, "enemy", 50, 400, true);
+        }
+
+        //Add enemies into array
+        enemyTeam[0] = enemy;
+        enemyTeam[1] = enemy2;
+        enemyTeam[2] = enemy3;
+    }
     //When everything gets redrawn on canvas
     var update = function () {
         var rightSide = canvas.width;
@@ -243,8 +260,12 @@ function startGame(characterType) {
             }
         }
         if (player.inBattle) {
-            player.xPos = 0;
-            player.yPos = 560;
+            player.xPos = 50;
+            player.yPos = 540;
+            enemy.xPos = 650;
+            enemy.yPos = 540;
+            createPlayerTeam(player.characterType);
+            createEnemyTeam(enemy.characterType);
             battle.combatStart();
         }
     }
@@ -262,11 +283,21 @@ function startGame(characterType) {
         }
 
         player.drawCharacter(characterType);
-        enemy.drawCharacter("enemy")
+        enemy.drawCharacter(enemy.characterType);
         if (player.inBattle) {
-            enemy.drawCharacter("enemy");
+            //Draw player teammates
+            teamMate1.drawCharacter(teamMate1.characterType);
+            teamMate2.drawCharacter(teamMate2.characterType);
+
+            //Draw enemy teammates
+            enemy.drawCharacter(enemy.characterType);
+            //Currently not working as expected
+            //enemy2.drawCharacter("enemy");
+            //enemy3.drawCharacter("enemy");
+
+            //Draw healthbars
             healthBar.drawHealthBar(characterType);
-            healthBar.drawHealthBar("enemy");
+            healthBar.drawHealthBar(enemy.characterType);
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
@@ -363,7 +394,7 @@ function startGame(characterType) {
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
                     clearTimeout(battle.combatTimer);
                     attackChosen = Math.floor(Math.random() * 500) + 1;
-                    if ((attackChosen % 2) === 0) {
+                    if ((attackChosen % 5) === 0) {
                         battle.attack();
                     }
                     else {
