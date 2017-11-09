@@ -1,5 +1,5 @@
 ﻿//Inspired from: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
-function Character(ctx, characterType, xPos, yPos, isEnemy) {
+function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.characterType = characterType;
     this.HP = 200;
     this.attackDamge = 15;
@@ -9,6 +9,7 @@ function Character(ctx, characterType, xPos, yPos, isEnemy) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.isEnemy = isEnemy;
+    this.isTeamMate = isTeamMate;
     this.isMoving = false;
     this.inBattle = false;
     this.isAttacking = false;
@@ -50,8 +51,8 @@ function startGame(characterType) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     //Game objects
-    var player = new Character(ctx, characterType, 200, 100, false);
-    var enemy = new Character(ctx, "enemy", 650, 100, true);
+    var player = new Character(ctx, characterType, 200, 100, false, false);
+    var enemy = new Character(ctx, "enemy", 650, 100, true, false);
     //Team based combat variables
     var teamMate1;
     var teamMate2;
@@ -110,23 +111,45 @@ function startGame(characterType) {
         font: " bold 36px Helvetica ",
         drawHealthBar: function (characterType) {
             if (characterType == ("knight" || "wizard" || "elf")) {
-                //Font
-                ctx.beginPath();
-                ctx.font = this.font;
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = "black";
-                ctx.fillStyle = this.color;
-                ctx.fillText("Player: ", 0, 0);
-                ctx.closePath();
+                if (!Character.isTeamMate) {
+                    //Font
+                    ctx.beginPath();
+                    ctx.font = this.font;
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle = this.color;
+                    ctx.fillText("Player: ", 0, 0);
+                    ctx.closePath();
 
-                //Actual healthbar
-                ctx.beginPath();
-                ctx.fillStyle = this.barColor;
-                ctx.fillRect(150, 0, this.width, this.height);
-                ctx.fillStyle = this.color;
-                ctx.fillText(player.HP.toString(), 170, 0);
-                ctx.closePath();
+                    //Actual healthbar
+                    ctx.beginPath();
+                    ctx.fillStyle = this.barColor;
+                    ctx.fillRect(150, 0, this.width, this.height);
+                    ctx.fillStyle = this.color;
+                    ctx.fillText(player.HP.toString(), 170, 0);
+                    ctx.closePath();
+                }
+                else {
+                    console.log("here in healthbar else");
+                    //Font
+                    ctx.beginPath();
+                    ctx.font = this.font;
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle = this.color;
+                    ctx.fillText("Player: ", 0, 30);
+                    ctx.closePath();
+
+                    //Actual healthbar
+                    ctx.beginPath();
+                    ctx.fillStyle = this.barColor;
+                    ctx.fillRect(150, 30, this.width, this.height);
+                    ctx.fillStyle = this.color;
+                    ctx.fillText(player.HP.toString(), 170, 0);
+                    ctx.closePath();
+                }
             }
             else if (characterType == "enemy") {
                 //Font
@@ -175,16 +198,16 @@ function startGame(characterType) {
     //Create Team for combat
     var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character(ctx, "wizard", 50, 680, false);
+            teamMate1 = new Character(ctx, "wizard", 50, 680, false, true);
             teamMate2 = new Character(ctx, "elf", 50, 400, false);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character(ctx, "knight", 50, 680, false);
-            teamMate2 = new Character(ctx, "elf", 50, 400, false);
+            teamMate1 = new Character(ctx, "knight", 50, 680, false, true);
+            teamMate2 = new Character(ctx, "elf", 50, 400, false, true);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character(ctx, "wizard", 50, 680, false);
-            teamMate2 = new Character(ctx, "knight", 50, 400, false);
+            teamMate1 = new Character(ctx, "wizard", 50, 680, false, true);
+            teamMate2 = new Character(ctx, "knight", 50, 400, false, true);
         }
 
         //Adding character objects to array
@@ -196,8 +219,8 @@ function startGame(characterType) {
     //Create team for enemy. (Had to make one for the enemy since I could not figure out how to implement in one method)
     var createEnemyTeam = function (characterType) {
         if (characterType == "enemy") {
-            enemy2 = new Character(ctx, "enemy", 50, 680, true);
-            enemy3 = new Character(ctx, "enemy", 50, 400, true);
+            enemy2 = new Character(ctx, "enemy", 650, 680, true, true);
+            enemy3 = new Character(ctx, "enemy", 650, 400, true, true);
         }
 
         //Add enemies into array
@@ -247,6 +270,7 @@ function startGame(characterType) {
                 player.yPos = canvas.height - player.height;
             }
         }
+        //Battle settings
         if (player.inBattle) {
             player.xPos = 50;
             player.yPos = 540;
@@ -278,12 +302,12 @@ function startGame(characterType) {
 
             //Draw enemy teammates
             enemy.drawCharacter(enemy.characterType);
-            //Currently not working as expected
-            //enemy2.drawCharacter("enemy");
-            //enemy3.drawCharacter("enemy");
+            enemy2.drawCharacter(enemy2.characterType);
+            enemy3.drawCharacter(enemy3.characterType);
 
             //Draw healthbars
             healthBar.drawHealthBar(characterType);
+            healthBar.drawHealthBar(teamMate1.characterType);
             healthBar.drawHealthBar(enemy.characterType);
         }
         if (player.isAttacking) {
@@ -382,10 +406,10 @@ function startGame(characterType) {
                     clearTimeout(battle.combatTimer);
                     attackChosen = Math.floor(Math.random() * 500) + 1;
                     if ((attackChosen % 5) === 0) {
-                        battle.attack();
+                        battle.heal();
                     }
                     else {
-                        battle.heal();
+                        battle.attack();
                     }
                     hasAttacked = true;
                 }
