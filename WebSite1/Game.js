@@ -37,6 +37,18 @@ function Character(ctx, characterType, xPos, yPos, isEnemy) {
             ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
             ctx.closePath(); 
         }
+        else if (characterType == "enemy2") {
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "boss") {
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
     }
 }
 
