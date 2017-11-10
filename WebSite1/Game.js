@@ -51,8 +51,8 @@ function startGame(characterType) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     //Game objects
-    var player = new Character(ctx, characterType, 200, 100, false, false);
-    var enemy = new Character(ctx, "enemy", 650, 100, true, false);
+    var player = new Character(ctx, characterType, 200, (canvas.height / 2), false, false);
+    var enemy = new Character(ctx, "enemy", 650, (canvas.height / 2), true, false);
     //Team based combat variables
     var teamMate1;
     var teamMate2;
@@ -198,16 +198,16 @@ function startGame(characterType) {
     //Create Team for combat
     var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character(ctx, "wizard", 50, 680, false, true);
-            teamMate2 = new Character(ctx, "elf", 50, 400, false);
+            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.5), false, true);
+            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.45), false);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character(ctx, "knight", 50, 680, false, true);
-            teamMate2 = new Character(ctx, "elf", 50, 400, false, true);
+            teamMate1 = new Character(ctx, "knight", 50, (canvas.height / 2.5), false, true);
+            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.45), false, true);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character(ctx, "wizard", 50, 680, false, true);
-            teamMate2 = new Character(ctx, "knight", 50, 400, false, true);
+            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.5), false, true);
+            teamMate2 = new Character(ctx, "knight", 50, (canvas.height / 1.45), false, true);
         }
 
         //Adding character objects to array
@@ -219,8 +219,8 @@ function startGame(characterType) {
     //Create team for enemy. (Had to make one for the enemy since I could not figure out how to implement in one method)
     var createEnemyTeam = function (characterType) {
         if (characterType == "enemy") {
-            enemy2 = new Character(ctx, "enemy", 650, 680, true, true);
-            enemy3 = new Character(ctx, "enemy", 650, 400, true, true);
+            enemy2 = new Character(ctx, "enemy", 650, (canvas.height / 2.5), true, true);
+            enemy3 = new Character(ctx, "enemy", 650, (canvas.height / 1.45), true, true);
         }
 
         //Add enemies into array
@@ -306,7 +306,7 @@ function startGame(characterType) {
             enemy3.drawCharacter(enemy3.characterType);
 
             //Draw healthbars
-            healthBar.drawHealthBar(characterType);
+            healthBar.drawHealthBar(player.characterType);
             healthBar.drawHealthBar(teamMate1.characterType);
             healthBar.drawHealthBar(enemy.characterType);
         }
@@ -429,6 +429,9 @@ function startGame(characterType) {
                 }
             }
         }
+    };
+    var battleInterface = {
+        //Code for interface goes here
     };
     //Player walking around map
     var mainGameLoop = function () {
