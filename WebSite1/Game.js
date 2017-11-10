@@ -38,6 +38,18 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
             ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
             ctx.closePath(); 
         }
+        else if (characterType == "enemy_damage") {
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "boss") {
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
     }
 }
 
@@ -251,8 +263,8 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed;
                 player.isMoving = true;
             }
-            if (key.isDown(key.BATTLE)) {
-                player.inBattle = true;
+            if (player.xPos == (enemy.xPos - enemy.width)) {
+                player.inBattle = true
             }
         }
         //Collision detection
@@ -293,6 +305,7 @@ function startGame(characterType) {
             objective.currentObjective = objective.getObjective();
             objective.drawObjective(objective.currentObjective);
         }
+
         player.drawCharacter(characterType);
         enemy.drawCharacter(enemy.characterType);
         if (player.inBattle) {
