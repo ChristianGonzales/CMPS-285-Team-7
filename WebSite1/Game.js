@@ -120,7 +120,7 @@ function startGame(characterType) {
         barColor: "red",
         width: 200,
         height: 50,
-        font: " bold 36px Helvetica ",
+        font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
             if (characterType == ("knight" || "wizard" || "elf")) {
                 if (!Character.isTeamMate) {
@@ -322,6 +322,9 @@ function startGame(characterType) {
             healthBar.drawHealthBar(player.characterType);
             healthBar.drawHealthBar(teamMate1.characterType);
             healthBar.drawHealthBar(enemy.characterType);
+
+            //Draw battle interface
+            battleInterface.drawBattleInterface();
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
@@ -444,7 +447,25 @@ function startGame(characterType) {
         }
     };
     var battleInterface = {
-        //Code for interface goes here
+        width: canvas.width,
+        height: 80,
+        font: "36px Helvetica",
+        backgroundColor: "white",
+        fontColor: "black",
+        drawBattleInterface: function () {
+            //Text box
+            ctx.beginPath();
+            ctx.fillStyle = this.backgroundColor;
+            ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+            ctx.closePath();
+
+            //Text in box
+            ctx.beginPath();
+            ctx.fillStyle = this.fontColor;
+            ctx.textAlign = "left";
+            ctx.fillText("Hello World!", 10, (canvas.height - 120) );
+            ctx.closePath();
+        }
     };
     //Player walking around map
     var mainGameLoop = function () {
