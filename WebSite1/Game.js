@@ -98,7 +98,6 @@ function startGame(characterType) {
         }
     };
     //Other variables
-
     var lastTime = Date.now();
     var objective = {
         currentObjective: "",
@@ -380,15 +379,6 @@ function startGame(characterType) {
                     if (key.isDown(key.HEAL)) {
                         attackChosen = 2;
                     }
-                    if (attackChosen === 0) {
-                        console.log("Which attack will you perform? Q for normal attack.");
-                    }
-                    else if (attackChosen === 1) {
-                        console.log("Perform normal attack? Press F to continue...");
-                    }
-                    else if (attackChosen === 2) {
-                        console.log("Perform heal? Press F to continue...");
-                    }
                     if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
                         if (attackChosen === 1) {
                             clearTimeout(battle.combatTimer);
@@ -447,24 +437,105 @@ function startGame(characterType) {
         }
     };
     var battleInterface = {
+        interfaceTimer: null,
         width: canvas.width,
         height: 80,
         font: "36px Helvetica",
         backgroundColor: "white",
         fontColor: "black",
         drawBattleInterface: function () {
-            //Text box
-            ctx.beginPath();
-            ctx.fillStyle = this.backgroundColor;
-            ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-            ctx.closePath();
+            if (playersTurn) {
+                clearTimeout(battleInterface.interfaceTimer);
+                //Text box
+                ctx.beginPath();
+                ctx.fillStyle = this.backgroundColor;
+                ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+                ctx.closePath();
+                //Text in box
+                ctx.beginPath();
+                ctx.fillStyle = this.fontColor;
+                ctx.textAlign = "left";
+                ctx.fillText("Your turn! What attack will you perform? Q to attack, R to heal.", 10, (canvas.height - 120));
+                ctx.closePath();
+                battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
 
-            //Text in box
-            ctx.beginPath();
-            ctx.fillStyle = this.fontColor;
-            ctx.textAlign = "left";
-            ctx.fillText("Hello World!", 10, (canvas.height - 120) );
-            ctx.closePath();
+                if (attackChosen === 1) {
+                    clearTimeout(battleInterface.interfaceTimer);
+                    //Text box
+                    ctx.beginPath();
+                    ctx.fillStyle = this.backgroundColor;
+                    ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+                    ctx.closePath();
+                    //Text in box
+                    ctx.beginPath();
+                    ctx.fillStyle = this.fontColor;
+                    ctx.textAlign = "left";
+                    ctx.fillText("Perform normal attack? Press F to continue...", 10, (canvas.height - 120));
+                    ctx.closePath();
+                    battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                }
+                else if (attackChosen === 2) {
+                    clearTimeout(battleInterface.interfaceTimer);
+                    //Text box
+                    ctx.beginPath();
+                    ctx.fillStyle = this.backgroundColor;
+                    ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+                    ctx.closePath();
+                    //Text in box
+                    ctx.beginPath();
+                    ctx.fillStyle = this.fontColor;
+                    ctx.textAlign = "left";
+                    ctx.fillText("Perform heal? Press F to continue...", 10, (canvas.height - 120));
+                    ctx.closePath();
+                    battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                }
+
+                if (hasAttacked) {
+                    if (attackChosen === 1) {
+                        clearTimeout(battleInterface.interfaceTimer);
+                        //Text box
+                        ctx.beginPath();
+                        ctx.fillStyle = this.backgroundColor;
+                        ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+                        ctx.closePath();
+                        //Text in box
+                        ctx.beginPath();
+                        ctx.fillStyle = this.fontColor;
+                        ctx.textAlign = "left";
+                        ctx.fillText("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...", 10, (canvas.height - 120));
+                        ctx.closePath();
+                        battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                    }
+                    else if (attackChosen === 2) {
+                        clearTimeout(battleInterface.interfaceTimer);
+                        //Text box
+                        ctx.beginPath();
+                        ctx.fillStyle = this.backgroundColor;
+                        ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+                        ctx.closePath();
+                        //Text in box
+                        ctx.beginPath();
+                        ctx.fillStyle = this.fontColor;
+                        ctx.textAlign = "left";
+                        ctx.fillText("You healed 20 hit points!", 10, (canvas.height - 120));
+                        ctx.closePath();
+                        battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                    }
+                }
+            }
+
+            ////Text box
+            //ctx.beginPath();
+            //ctx.fillStyle = this.backgroundColor;
+            //ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+            //ctx.closePath();
+
+            ////Text in box
+            //ctx.beginPath();
+            //ctx.fillStyle = this.fontColor;
+            //ctx.textAlign = "left";
+            //ctx.fillText("Hello World!", 10, (canvas.height - 120) );
+            //ctx.closePath();
         }
     };
     //Player walking around map
