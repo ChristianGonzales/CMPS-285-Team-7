@@ -313,6 +313,7 @@ function startGame(characterType) {
             enemy.drawCharacter(enemy.characterType);
         }
         if ((player.Win)) {
+            player.drawCharacter(player.characterType)
             boss.drawCharacter(boss.characterType)
         }
         if (player.inBattle) {
@@ -467,7 +468,7 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed;
                 player.isMoving = true;
             }
-            if (player.xPos == (enemy.xPos - enemy.width)) {
+            if (player.xPos == (boss.xPos - boss.width)) {
                 player.inBattle = true
             }
         }
