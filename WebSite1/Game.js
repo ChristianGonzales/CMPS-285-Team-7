@@ -209,16 +209,16 @@ function startGame(characterType) {
     //Create Team for combat
     var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.5), false, true);
-            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.45), false);
+            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.7), false, true);
+            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.85), false);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character(ctx, "knight", 50, (canvas.height / 2.5), false, true);
-            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.45), false, true);
+            teamMate1 = new Character(ctx, "knight", 50, (canvas.height / 2.7), false, true);
+            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 1.85), false, true);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.5), false, true);
-            teamMate2 = new Character(ctx, "knight", 50, (canvas.height / 1.45), false, true);
+            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 2.7), false, true);
+            teamMate2 = new Character(ctx, "knight", 50, (canvas.height / 1.85), false, true);
         }
 
         //Adding character objects to array
@@ -230,8 +230,8 @@ function startGame(characterType) {
     //Create team for enemy. (Had to make one for the enemy since I could not figure out how to implement in one method)
     var createEnemyTeam = function (characterType) {
         if (characterType == "enemy") {
-            enemy2 = new Character(ctx, "enemy", 650, (canvas.height / 2.5), true, true);
-            enemy3 = new Character(ctx, "enemy", 650, (canvas.height / 1.45), true, true);
+            enemy2 = new Character(ctx, "enemy", 650, (canvas.height / 2.7), true, true);
+            enemy3 = new Character(ctx, "enemy", 650, (canvas.height / 1.85), true, true);
         }
 
         //Add enemies into array
@@ -383,22 +383,21 @@ function startGame(characterType) {
                         if (attackChosen === 1) {
                             clearTimeout(battle.combatTimer);
                             battle.attack();
+                            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
+
                         }
                         if (attackChosen === 2) {
                             clearTimeout(battle.combatTimer);
                             battle.heal();
+                            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                         }
                         hasAttacked = true;
                         battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     }
                 }
                 else {
-                    if (attackChosen === 1) {
-                        console.log("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...");
-                    }
-                    else if (attackChosen === 2) {
-                        console.log("You healed 20 hit points!");
-                    }
+                    clearTimeout(battle.combatTimer);
+                    battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
@@ -504,7 +503,7 @@ function startGame(characterType) {
                         ctx.textAlign = "left";
                         ctx.fillText("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...", 10, (canvas.height - 120));
                         ctx.closePath();
-                        battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                        setTimeout(battleInterface.drawBattleInterface, 3000);
                     }
                     else if (attackChosen === 2) {
                         clearTimeout(battleInterface.interfaceTimer);
@@ -519,23 +518,10 @@ function startGame(characterType) {
                         ctx.textAlign = "left";
                         ctx.fillText("You healed 20 hit points!", 10, (canvas.height - 120));
                         ctx.closePath();
-                        battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
+                        setTimeout(battleInterface.drawBattleInterface, 3000);
                     }
                 }
             }
-
-            ////Text box
-            //ctx.beginPath();
-            //ctx.fillStyle = this.backgroundColor;
-            //ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-            //ctx.closePath();
-
-            ////Text in box
-            //ctx.beginPath();
-            //ctx.fillStyle = this.fontColor;
-            //ctx.textAlign = "left";
-            //ctx.fillText("Hello World!", 10, (canvas.height - 120) );
-            //ctx.closePath();
         }
     };
     //Player walking around map
