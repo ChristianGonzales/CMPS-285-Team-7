@@ -12,6 +12,8 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.isTeamMate = isTeamMate;
     this.isMoving = false;
     this.inBattle = false;
+    this.Win = false
+    this.inBattle2 = false;
     this.isAttacking = false;
     this.drawCharacter = function (characterType) {
         if (characterType == "knight") {
@@ -46,8 +48,8 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
         }
         else if (characterType == "boss") {
             ctx.beginPath();
-            ctx.fillStyle = "red";
-            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.fillStyle = "green";
+            ctx.fillRect(this.xPos, this.yPos, this.width +50, this.height + 50);
             ctx.closePath();
         }
     }
@@ -57,7 +59,7 @@ function startGame(characterType) {
     //Hides the start screen once canvas gets created
     var startScreen = document.getElementById("startScreen");
     startScreen.style.display = "none";
-    
+
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
@@ -65,6 +67,7 @@ function startGame(characterType) {
     //Game objects
     var player = new Character(ctx, characterType, 200, (canvas.height / 2), false, false);
     var enemy = new Character(ctx, "enemy", 650, (canvas.height / 2), true, false);
+    var boss = new Character(ctx, "boss", 650, (canvas.height / 2), true, false);
     //Team based combat variables
     var teamMate1;
     var teamMate2;
@@ -245,7 +248,7 @@ function startGame(characterType) {
         var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();
-        if (!(player.inBattle)) { //Haults player movement after E press
+        if (!(player.inBattle) && !(player.Win)) { //Haults player movement after colliding with enemy
             if (key.isDown(key.UP)) {
                 player.yPos -= player.movementSpeed;
                 player.isMoving = true;
@@ -306,7 +309,13 @@ function startGame(characterType) {
         }
 
         player.drawCharacter(characterType);
-        enemy.drawCharacter(enemy.characterType);
+        if (!(player.Win)) {
+            enemy.drawCharacter(enemy.characterType);
+        }
+        if ((player.Win)) {
+            player.drawCharacter(player.characterType)
+            boss.drawCharacter(boss.characterType)
+        }
         if (player.inBattle) {
             //Draw player teammates
             teamMate1.drawCharacter(teamMate1.characterType);
@@ -368,6 +377,7 @@ function startGame(characterType) {
                 player.HP = 200;
                 enemy.HP = 200;
                 player.inBattle = false;
+                player.Win = true;
             }
         },
         combatLogic: function () {
@@ -426,7 +436,7 @@ function startGame(characterType) {
                         console.log("Enemy healed for 20 hit points!");
                     }
                 }
-                if (key.isDown(key.CONTINUE) && hasAttacked){
+                if (key.isDown(key.CONTINUE) && hasAttacked) {
                     battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
@@ -435,6 +445,48 @@ function startGame(characterType) {
             }
         }
     };
+    var update_2 = function () {
+        var rightSide = canvas.width;
+        var leftSide = canvas.width - canvas.width;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        resize();
+        if (player.Win) { //Haults player movement after colliding with enemy
+            if (key.isDown(key.UP)) {
+                player.yPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.LEFT)) {
+                player.xPos -= player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.DOWN)) {
+                player.yPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (key.isDown(key.RIGHT)) {
+                player.xPos += player.movementSpeed;
+                player.isMoving = true;
+            }
+            if (player.xPos == (boss.xPos - boss.width)) {
+                player.inBattle = true
+            }
+        }
+        //Collision detection
+        if (player.isMoving) {
+            if (player.xPos <= leftSide) {
+                player.xPos = leftSide;
+            }
+            if (player.xPos + player.width >= canvas.width) {
+                player.xPos = canvas.width - player.width;
+            }
+            if (player.yPos <= 0) {
+                player.yPos = 0;
+            }
+            if (player.yPos + player.height >= canvas.height) {
+                player.yPos = canvas.height - player.height;
+            }
+        }
+    }
     var battleInterface = {
         interfaceTimer: null,
         width: canvas.width,
