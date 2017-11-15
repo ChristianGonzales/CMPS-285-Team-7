@@ -67,7 +67,7 @@ function startGame(characterType) {
     //Game objects
     var player = new Character(ctx, characterType, 200, (canvas.height / 2), false, false);
     var enemy = new Character(ctx, "enemy", 650, (canvas.height / 2), true, false);
-    var boss = new Character(ctx, "boss", 650, (canvas.height / 2), true, false);
+    var boss = new Character(ctx, "boss", 500, (canvas.height / 4), true, false);
     //Team based combat variables
     var teamMate1;
     var teamMate2;
@@ -248,7 +248,7 @@ function startGame(characterType) {
         var leftSide = canvas.width - canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         resize();
-        if (!(player.inBattle) && !(player.Win)) { //Haults player movement after colliding with enemy
+        if (!(player.inBattle)) { //Haults player movement after colliding with enemy
             if (key.isDown(key.UP)) {
                 player.yPos -= player.movementSpeed;
                 player.isMoving = true;
@@ -265,8 +265,11 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed;
                 player.isMoving = true;
             }
-            if (player.xPos == (enemy.xPos - enemy.width)) {
+            if ((player.xPos == (enemy.xPos - enemy.width)) && !(player.Win)) {
                 player.inBattle = true
+            }
+            if ((player.xPos == (boss.xPos - enemy.width)) && player.Win) {
+                player.inBattle2 = true 
             }
         }
         //Collision detection
@@ -312,8 +315,7 @@ function startGame(characterType) {
         if (!(player.Win)) {
             enemy.drawCharacter(enemy.characterType);
         }
-        if ((player.Win)) {
-            player.drawCharacter(player.characterType)
+        if (player.Win && !(player.inBattle)) {
             boss.drawCharacter(boss.characterType)
         }
         if (player.inBattle) {
@@ -336,6 +338,24 @@ function startGame(characterType) {
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
+        }
+        if (player.inBattle2) {
+            //Draw player teammates
+            teamMate1.drawCharacter(teamMate1.characterType);
+            teamMate2.drawCharacter(teamMate2.characterType);
+
+            //Draw enemy teammates
+            boss.drawCharacter(boss.characterType);
+            enemy2.drawCharacter(enemy2.characterType);
+            enemy3.drawCharacter(enemy3.characterType);
+
+            //Draw healthbars
+            healthBar.drawHealthBar(player.characterType);
+            healthBar.drawHealthBar(teamMate1.characterType);
+            healthBar.drawHealthBar(boss.characterType);
+
+            //Draw battle interface
+            battleInterface.drawBattleInterface();
         }
     }
     //Battle Loop
@@ -445,48 +465,6 @@ function startGame(characterType) {
             }
         }
     };
-    var update_2 = function () {
-        var rightSide = canvas.width;
-        var leftSide = canvas.width - canvas.width;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        resize();
-        if (player.Win) { //Haults player movement after colliding with enemy
-            if (key.isDown(key.UP)) {
-                player.yPos -= player.movementSpeed;
-                player.isMoving = true;
-            }
-            if (key.isDown(key.LEFT)) {
-                player.xPos -= player.movementSpeed;
-                player.isMoving = true;
-            }
-            if (key.isDown(key.DOWN)) {
-                player.yPos += player.movementSpeed;
-                player.isMoving = true;
-            }
-            if (key.isDown(key.RIGHT)) {
-                player.xPos += player.movementSpeed;
-                player.isMoving = true;
-            }
-            if (player.xPos == (boss.xPos - boss.width)) {
-                player.inBattle = true
-            }
-        }
-        //Collision detection
-        if (player.isMoving) {
-            if (player.xPos <= leftSide) {
-                player.xPos = leftSide;
-            }
-            if (player.xPos + player.width >= canvas.width) {
-                player.xPos = canvas.width - player.width;
-            }
-            if (player.yPos <= 0) {
-                player.yPos = 0;
-            }
-            if (player.yPos + player.height >= canvas.height) {
-                player.yPos = canvas.height - player.height;
-            }
-        }
-    }
     var battleInterface = {
         interfaceTimer: null,
         width: canvas.width,
