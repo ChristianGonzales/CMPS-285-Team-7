@@ -313,7 +313,7 @@ function startGame(characterType) {
         if (player.winCount == 0) {
             enemy.drawCharacter(enemy.characterType);
         }
-        if ((player.winCount == 1) !(player.inBattle)) {
+        if ((player.winCount == 1) && !(player.inBattle)) {
             boss.drawCharacter(boss.characterType)
         }
         if (player.inBattle) {
@@ -335,9 +335,6 @@ function startGame(characterType) {
             healthBar.drawHealthBar(player.characterType);
             healthBar.drawHealthBar(teamMate1.characterType);
             healthBar.drawHealthBar(enemy.characterType);
-
-            //Draw battle interface
-            battleInterface.drawBattleInterface();
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
@@ -348,23 +345,32 @@ function startGame(characterType) {
         battleOver: false,
         combatTimer: null, //Time variable
         combatStart: function () {
-            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
+            battle.combatLogic();
         },
         attack: function () {
             if (playersTurn) {
+                battleInterface.interfaceText = "You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 player.isAttacking = true;
                 enemy.HP -= player.attackDamge;
             }
             else {
+                battleInterface.interfaceText = "Enemy hit the you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
+
                 enemy.isAttacking = true;
                 player.HP -= enemy.attackDamge;
             }
         },
         heal: function () {
             if (playersTurn) {
+                battleInterface.interfaceText = "You healed 20 hit points!";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 player.HP += 20;
             }
             else {
+                battleInterface.interfaceText = "Enemy healed 20 hit points!";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 enemy.HP += 20;
             }
         },
@@ -388,31 +394,30 @@ function startGame(characterType) {
         combatLogic: function () {
             if (playersTurn) {
                 if (!hasAttacked) { //When you haven't attacked
+                    battleInterface.interfaceText = "Your turn! What attack will you perform? Q to attack, R to heal."
+                    battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     if (key.isDown(key.ATTACK)) {
+                        battleInterface.interfaceText = "Perform normal attack? Press F to continue...";
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
                         attackChosen = 1;
                     }
                     if (key.isDown(key.HEAL)) {
+                        battleInterface.interfaceText = "Perform heal? Press F to continue...";
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
                         attackChosen = 2;
                     }
                     if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
                         if (attackChosen === 1) {
-                            clearTimeout(battle.combatTimer);
                             battle.attack();
-                            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
 
                         }
                         if (attackChosen === 2) {
-                            clearTimeout(battle.combatTimer);
                             battle.heal();
-                            battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                         }
                         hasAttacked = true;
-                        battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     }
                 }
                 else {
-                    clearTimeout(battle.combatTimer);
-                    battle.combatTimer = setTimeout(battle.combatLogic, 3000);
                     battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
@@ -420,10 +425,10 @@ function startGame(characterType) {
                 }
             }
             else {
-                console.log("Enemy's turn! Press F to continue...");
+                battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
 
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
-                    clearTimeout(battle.combatTimer);
                     attackChosen = Math.floor(Math.random() * 500) + 1;
                     if ((attackChosen % 5) === 0) {
                         battle.heal();
@@ -432,14 +437,6 @@ function startGame(characterType) {
                         battle.attack();
                     }
                     hasAttacked = true;
-                }
-                else {
-                    if (attackChosen === 1) {
-                        console.log("Enemy hit you for " + enemy.attackDamge + "! Press F to continue...");
-                    }
-                    else if (attackChosen === 2) {
-                        console.log("Enemy healed for 20 hit points!");
-                    }
                 }
                 if (key.isDown(key.CONTINUE) && hasAttacked) {
                     battle.checkBattleResult();
@@ -451,92 +448,25 @@ function startGame(characterType) {
         }
     };
     var battleInterface = {
-        interfaceTimer: null,
+        interfaceText: "",
         width: canvas.width,
         height: 80,
-        font: "36px Helvetica",
+        font: " bold 36px Helvetica",
         backgroundColor: "white",
         fontColor: "black",
-        drawBattleInterface: function () {
-            if (playersTurn) {
-                clearTimeout(battleInterface.interfaceTimer);
-                //Text box
-                ctx.beginPath();
-                ctx.fillStyle = this.backgroundColor;
-                ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-                ctx.closePath();
-                //Text in box
-                ctx.beginPath();
-                ctx.fillStyle = this.fontColor;
-                ctx.textAlign = "left";
-                ctx.fillText("Your turn! What attack will you perform? Q to attack, R to heal.", 10, (canvas.height - 120));
-                ctx.closePath();
-                battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
-
-                if (attackChosen === 1) {
-                    clearTimeout(battleInterface.interfaceTimer);
-                    //Text box
-                    ctx.beginPath();
-                    ctx.fillStyle = this.backgroundColor;
-                    ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-                    ctx.closePath();
-                    //Text in box
-                    ctx.beginPath();
-                    ctx.fillStyle = this.fontColor;
-                    ctx.textAlign = "left";
-                    ctx.fillText("Perform normal attack? Press F to continue...", 10, (canvas.height - 120));
-                    ctx.closePath();
-                    battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
-                }
-                else if (attackChosen === 2) {
-                    clearTimeout(battleInterface.interfaceTimer);
-                    //Text box
-                    ctx.beginPath();
-                    ctx.fillStyle = this.backgroundColor;
-                    ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-                    ctx.closePath();
-                    //Text in box
-                    ctx.beginPath();
-                    ctx.fillStyle = this.fontColor;
-                    ctx.textAlign = "left";
-                    ctx.fillText("Perform heal? Press F to continue...", 10, (canvas.height - 120));
-                    ctx.closePath();
-                    battleInterface.interfaceTimer = setTimeout(battleInterface.drawBattleInterface, 3000);
-                }
-
-                if (hasAttacked) {
-                    if (attackChosen === 1) {
-                        clearTimeout(battleInterface.interfaceTimer);
-                        //Text box
-                        ctx.beginPath();
-                        ctx.fillStyle = this.backgroundColor;
-                        ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-                        ctx.closePath();
-                        //Text in box
-                        ctx.beginPath();
-                        ctx.fillStyle = this.fontColor;
-                        ctx.textAlign = "left";
-                        ctx.fillText("You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...", 10, (canvas.height - 120));
-                        ctx.closePath();
-                        setTimeout(battleInterface.drawBattleInterface, 3000);
-                    }
-                    else if (attackChosen === 2) {
-                        clearTimeout(battleInterface.interfaceTimer);
-                        //Text box
-                        ctx.beginPath();
-                        ctx.fillStyle = this.backgroundColor;
-                        ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
-                        ctx.closePath();
-                        //Text in box
-                        ctx.beginPath();
-                        ctx.fillStyle = this.fontColor;
-                        ctx.textAlign = "left";
-                        ctx.fillText("You healed 20 hit points!", 10, (canvas.height - 120));
-                        ctx.closePath();
-                        setTimeout(battleInterface.drawBattleInterface, 3000);
-                    }
-                }
-            }
+        drawBattleInterface: function (interfaceText) {
+            //Text box
+            ctx.beginPath();
+            ctx.fillStyle = this.backgroundColor;
+            ctx.fillRect(0, (canvas.height - 120), this.width, this.height);
+            ctx.closePath();
+            //Text in box
+            ctx.beginPath();
+            ctx.fillStyle = this.fontColor;
+            ctx.font = this.font;
+            ctx.textAlign = "left";
+            ctx.fillText(this.interfaceText, 10, (canvas.height - 80));
+            ctx.closePath();
         }
     };
     //Player walking around map
