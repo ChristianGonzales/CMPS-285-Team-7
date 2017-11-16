@@ -65,7 +65,7 @@ function startGame(characterType) {
     canvas.height = window.innerHeight;
     //Game objects
     var player = new Character(ctx, characterType, 200, (canvas.height / 2), false, false);
-    var enemy = new Character(ctx, "enemy", 650, (canvas.height / 2), true, false);
+    var enemy = new Character(ctx, "enemy", 500, Math.random() * canvas.height, true, false);
     var boss = new Character(ctx, "boss", 500, (canvas.height / 4), true, false);
     //Team based combat variables
     var teamMate1;
