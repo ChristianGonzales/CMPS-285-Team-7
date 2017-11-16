@@ -65,7 +65,7 @@ function startGame(characterType) {
     canvas.height = window.innerHeight;
     //Game objects
     var player = new Character(ctx, characterType, 200, (canvas.height / 2), false, false);
-    var enemy = new Character(ctx, "enemy", 650, (canvas.height / 2), true, false);
+    var enemy = new Character(ctx, "enemy", 500, Math.random() * canvas.height, true, false);
     var boss = new Character(ctx, "boss", 500, (canvas.height / 4), true, false);
     //Team based combat variables
     var teamMate1;
@@ -196,6 +196,9 @@ function startGame(characterType) {
             ctx.closePath();
         }
     };
+    //Timeout Variables
+    var timeoutID;
+
     //For multiple browsers Chrome, FireFox, Explorer
     requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
     //Event listeners
@@ -340,6 +343,23 @@ function startGame(characterType) {
             projectile.drawProjectile();
         }
     }
+    //Waiting before doing something else function
+    function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function pauseBrowser(millis) {
+        var date = Date.now();
+        var curDate = null;
+        do {
+            curDate = Date.now();
+        } while (curDate - date < millis);
+    }
+    //Added a settimeout to put around stuff.
+    setTimeout(function () {
+
+    }, (1 * 1000));
+
     //Battle Loop
     var battle = {
         battleOver: false,
@@ -351,13 +371,15 @@ function startGame(characterType) {
             if (playersTurn) {
                 battleInterface.interfaceText = "You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                //pauseBrowser(500);
                 player.isAttacking = true;
                 enemy.HP -= player.attackDamge;
+                //pauseBrowser(1000);
             }
             else {
                 battleInterface.interfaceText = "Enemy hit the you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
-
+                //pauseBrowser(500);
                 enemy.isAttacking = true;
                 player.HP -= enemy.attackDamge;
             }
@@ -396,6 +418,7 @@ function startGame(characterType) {
         combatLogic: function () {
             if (playersTurn) {
                 if (!hasAttacked) { //When you haven't attacked
+                    pauseBrowser(400);
                     battleInterface.interfaceText = "Your turn! What attack will you perform? Q to attack, R to heal."
                     battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     if (key.isDown(key.ATTACK)) {
@@ -410,16 +433,20 @@ function startGame(characterType) {
                     }
                     if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
                         if (attackChosen === 1) {
+                            pauseBrowser(500);
                             battle.attack();
 
                         }
                         if (attackChosen === 2) {
+                            pauseBrowser(500);
                             battle.heal();
                         }
+                        //pauseBrowser(300);
                         hasAttacked = true;
                     }
                 }
                 else {
+                    pauseBrowser(500);
                     battle.checkBattleResult();
                     attackChosen = 0;
                     hasAttacked = false;
@@ -433,9 +460,11 @@ function startGame(characterType) {
                 if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
                     attackChosen = Math.floor(Math.random() * 500) + 1;
                     if ((attackChosen % 5) === 0) {
+                        pauseBrowser(500);
                         battle.heal();
                     }
                     else {
+                        pauseBrowser(500);
                         battle.attack();
                     }
                     hasAttacked = true;
