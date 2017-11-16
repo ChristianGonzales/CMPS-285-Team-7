@@ -13,7 +13,6 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.isTeamMate = isTeamMate;
     this.isMoving = false;
     this.inBattle = false;
-    this.Win = false
     this.isAttacking = false;
     this.drawCharacter = function (characterType) {
         if (characterType == "knight") {
@@ -264,10 +263,10 @@ function startGame(characterType) {
                 player.xPos += player.movementSpeed;
                 player.isMoving = true;
             }
-            if ((player.xPos == (enemy.xPos - enemy.width)) && !(player.Win)) {
+            if ((player.xPos == (enemy.xPos - enemy.width)) && (player.winCount == 0)) {
                 player.inBattle = true
             }
-            if ((player.xPos == (boss.xPos - enemy.width)) && player.Win) {
+            if ((player.xPos == (boss.xPos - enemy.width)) && (player.winCount == 1)) {
                 player.inBattle = true 
             }
         }
@@ -311,10 +310,10 @@ function startGame(characterType) {
         }
 
         player.drawCharacter(characterType);
-        if (!(player.Win)) {
+        if (player.winCount == 0) {
             enemy.drawCharacter(enemy.characterType);
         }
-        if (player.Win && !(player.inBattle)) {
+        if ((player.winCount == 1) !(player.inBattle)) {
             boss.drawCharacter(boss.characterType)
         }
         if (player.inBattle) {
@@ -384,7 +383,6 @@ function startGame(characterType) {
                 player.HP = 200;
                 enemy.HP = 200;
                 player.inBattle = false;
-                player.Win = true;
             }
         },
         combatLogic: function () {
