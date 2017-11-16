@@ -376,13 +376,15 @@ function startGame(characterType) {
         },
         checkBattleResult: function () {
             if (enemy.HP <= 0) {
-                console.log("You win!");
+                battleInterface.interfaceText = "You win!";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 player.winCount += 1;
                 battle.battleOver = true;
 
             }
             else if (player.HP <= 0) {
-                console.log("You lose!");
+                battleInterface.interfaceText = "You lose!";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 battle.battleOver = true;
             }
             if (battle.battleOver) {
