@@ -8,12 +8,12 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.movementSpeed = 5;
     this.xPos = xPos;
     this.yPos = yPos;
+    this.winCount = 0;
     this.isEnemy = isEnemy;
     this.isTeamMate = isTeamMate;
     this.isMoving = false;
     this.inBattle = false;
     this.Win = false
-    this.inBattle2 = false;
     this.isAttacking = false;
     this.drawCharacter = function (characterType) {
         if (characterType == "knight") {
@@ -268,7 +268,7 @@ function startGame(characterType) {
                 player.inBattle = true
             }
             if ((player.xPos == (boss.xPos - enemy.width)) && player.Win) {
-                player.inBattle2 = true 
+                player.inBattle = true 
             }
         }
         //Collision detection
@@ -323,7 +323,12 @@ function startGame(characterType) {
             teamMate2.drawCharacter(teamMate2.characterType);
 
             //Draw enemy teammates
-            enemy.drawCharacter(enemy.characterType);
+            if (player.winCount == 0) {
+                enemy.drawCharacter(enemy.characterType);
+            }
+            else if (player.winCount == 1) {
+                boss.drawCharacter(boss.characterType);
+            }           
             enemy2.drawCharacter(enemy2.characterType);
             enemy3.drawCharacter(enemy3.characterType);
 
@@ -337,24 +342,6 @@ function startGame(characterType) {
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
-        }
-        if (player.inBattle2) {
-            //Draw player teammates
-            teamMate1.drawCharacter(teamMate1.characterType);
-            teamMate2.drawCharacter(teamMate2.characterType);
-
-            //Draw enemy teammates
-            boss.drawCharacter(boss.characterType);
-            enemy2.drawCharacter(enemy2.characterType);
-            enemy3.drawCharacter(enemy3.characterType);
-
-            //Draw healthbars
-            healthBar.drawHealthBar(player.characterType);
-            healthBar.drawHealthBar(teamMate1.characterType);
-            healthBar.drawHealthBar(boss.characterType);
-
-            //Draw battle interface
-            battleInterface.drawBattleInterface();
         }
     }
     //Battle Loop
@@ -385,6 +372,7 @@ function startGame(characterType) {
         checkBattleResult: function () {
             if (enemy.HP <= 0) {
                 console.log("You win!");
+                player.winCount += 1;
                 battle.battleOver = true;
 
             }
