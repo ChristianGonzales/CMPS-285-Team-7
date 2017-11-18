@@ -369,30 +369,19 @@ function startGame(characterType) {
         },
         attack: function () {
             if (playersTurn) {
-                battleInterface.interfaceText = "You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
-                battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                //pauseBrowser(500);
                 player.isAttacking = true;
                 enemy.HP -= player.attackDamge;
-                //pauseBrowser(1000);
             }
             else {
-                battleInterface.interfaceText = "Enemy hit the you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
-                battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                //pauseBrowser(500);
                 enemy.isAttacking = true;
                 player.HP -= enemy.attackDamge;
             }
         },
         heal: function () {
             if (playersTurn) {
-                battleInterface.interfaceText = "You healed 20 hit points!";
-                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 player.HP += 20;
             }
             else {
-                battleInterface.interfaceText = "Enemy healed 20 hit points!";
-                battleInterface.drawBattleInterface(battleInterface.interfaceText);
                 enemy.HP += 20;
             }
         },
@@ -418,62 +407,73 @@ function startGame(characterType) {
         combatLogic: function () {
             if (playersTurn) {
                 if (!hasAttacked) { //When you haven't attacked
-                    pauseBrowser(400);
                     battleInterface.interfaceText = "Your turn! What attack will you perform? Q to attack, R to heal."
                     battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     if (key.isDown(key.ATTACK)) {
-                        battleInterface.interfaceText = "Perform normal attack? Press F to continue...";
-                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
                         attackChosen = 1;
                     }
                     if (key.isDown(key.HEAL)) {
-                        battleInterface.interfaceText = "Perform heal? Press F to continue...";
-                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
                         attackChosen = 2;
                     }
-                    if (key.isDown(key.CONTINUE) && !(attackChosen === 0)) {
+                    if (!(attackChosen === 0)) {
                         if (attackChosen === 1) {
-                            pauseBrowser(500);
                             battle.attack();
-
                         }
                         if (attackChosen === 2) {
-                            pauseBrowser(500);
                             battle.heal();
                         }
-                        //pauseBrowser(300);
                         hasAttacked = true;
                     }
                 }
                 else {
-                    pauseBrowser(500);
-                    battle.checkBattleResult();
-                    attackChosen = 0;
-                    hasAttacked = false;
-                    playersTurn = false;
+                    if (attackChosen === 1) {
+                        battleInterface.interfaceText = "You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                    }
+                    else if (attackChosen === 2) {
+                        battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                    }
+                    if (key.isDown(key.CONTINUE)) {
+                        pauseBrowser(500);
+                        battle.checkBattleResult();
+                        attackChosen = 0;
+                        hasAttacked = false;
+                        playersTurn = false;
+                    }
                 }
             }
             else {
                 battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
-
-                if ((key.isDown(key.CONTINUE) && !(hasAttacked))) {
-                    attackChosen = Math.floor(Math.random() * 500) + 1;
+                attackChosen = Math.floor(Math.random() * 500) + 1;
+                if ((key.isDown(key.CONTINUE)) && !(hasAttacked)) {
                     if ((attackChosen % 5) === 0) {
-                        pauseBrowser(500);
                         battle.heal();
                     }
                     else {
-                        pauseBrowser(500);
                         battle.attack();
                     }
                     hasAttacked = true;
                 }
-                if (key.isDown(key.CONTINUE) && hasAttacked) {
-                    battle.checkBattleResult();
-                    attackChosen = 0;
-                    hasAttacked = false;
-                    playersTurn = true;
+                else {
+                    if (attackChosen === 1) {
+                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue..."
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                        pauseBrowser(1000);
+                    }
+                    else if (attackChosen === 2) {
+                        battleInterface.interfaceText = "Enemy healed 20 hit points! Press 'F' to continue..."
+                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                        pauseBrowser(1000);
+                    }
+                    if (key.isDown(key.CONTINUE)) {
+                        pauseBrowser(500);
+                        battle.checkBattleResult();
+                        attackChosen = 0;
+                        hasAttacked = false;
+                        playersTurn = true;
+                    }
                 }
             }
         }
