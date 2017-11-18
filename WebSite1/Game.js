@@ -120,7 +120,7 @@ function startGame(characterType) {
         color: "black",
         barColor: "red",
         width: 200,
-        height: 50,
+        height: 40,
         font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
             if (characterType = ("knight" || "wizard" || "elf")) {
@@ -193,16 +193,16 @@ function startGame(characterType) {
     //Create Team for combat
     var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
-            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 3), false, true);
-            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 6), false, true);
+            teamMate1 = new Character(ctx, "wizard", 400, 235, false, true);
+            teamMate2 = new Character(ctx, "elf", 400, 385, false, true);
         }
         else if (characterType == "wizard") {
-            teamMate1 = new Character(ctx, "knight", 50, (canvas.height / 3), false, true);
-            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 6), false, true);
+            teamMate1 = new Character(ctx, "knight", 400, 235, false, true);
+            teamMate2 = new Character(ctx, "elf", 400, 385, false, true);
         }
         else if (characterType == "elf") {
-            teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 3), false, true);
-            teamMate2 = new Character(ctx, "knight", 50, (canvas.height / 6), false, true);
+            teamMate1 = new Character(ctx, "wizard", 400, 235, false, true);
+            teamMate2 = new Character(ctx, "knight", 400, 385, false, true);
         }
 
         //Adding character objects to array
@@ -214,8 +214,8 @@ function startGame(characterType) {
     //Create team for enemy. (Had to make one for the enemy since I could not figure out how to implement in one method)
     var createEnemyTeam = function (characterType) {
         if (characterType == "enemy") {
-            enemy2 = new Character(ctx, "enemy", 650, (canvas.height / 3), true, true);
-            enemy3 = new Character(ctx, "enemy", 650, (canvas.height / 6), true, true);
+            enemy2 = new Character(ctx, "enemy", 750, 235, true, true);
+            enemy3 = new Character(ctx, "enemy", 750, 385, true, true);
         }
 
         //Add enemies into array
@@ -270,10 +270,10 @@ function startGame(characterType) {
         }
         //Battle settings
         if (player.inBattle) {
-            player.xPos = 50;
-            player.yPos = 540;
-            enemy.xPos = 650;
-            enemy.yPos = 540;
+            player.xPos = 400;
+            player.yPos = 85;
+            enemy.xPos = 750;
+            enemy.yPos = 85;
             createPlayerTeam(player.characterType);
             createEnemyTeam(enemy.characterType);
             battle.combatStart();
