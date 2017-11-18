@@ -123,8 +123,7 @@ function startGame(characterType) {
         height: 50,
         font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
-            if (characterType == ("knight" || "wizard" || "elf")) {
-                if (!Character.isTeamMate) {
+            if (characterType = ("knight" || "wizard" || "elf")) {
                     //Font & healthbar
                     ctx.beginPath();
                     ctx.font = this.font;
@@ -143,12 +142,8 @@ function startGame(characterType) {
                     ctx.fillStyle = "white";
                     ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
                     ctx.closePath();
-                }
                 
-            }
-
-            else if (characterType = "enemy") {
-                //Font & health bar
+                //enemy
                 ctx.beginPath();
                 ctx.font = this.font;
                 ctx.textAlign = "right";
@@ -199,7 +194,7 @@ function startGame(characterType) {
     var createPlayerTeam = function (characterType) {
         if (characterType == "knight") {
             teamMate1 = new Character(ctx, "wizard", 50, (canvas.height / 3), false, true);
-            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 6), false);
+            teamMate2 = new Character(ctx, "elf", 50, (canvas.height / 6), false, true);
         }
         else if (characterType == "wizard") {
             teamMate1 = new Character(ctx, "knight", 50, (canvas.height / 3), false, true);
