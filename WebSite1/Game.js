@@ -118,53 +118,112 @@ function startGame(characterType) {
     };
     var healthBar = {
         color: "black",
-        barColor: "red",
+        barText: "white",
+        knightColor: "navy",
+        wizardColor: "purple",
+        elfColor: "olive",
+        enemyColor: "red",
         width: 200,
         height: 40,
         font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
-            if (characterType = ("knight" || "wizard" || "elf")) {
-                    //Font & healthbar
-                    ctx.beginPath();
-                    ctx.font = this.font;
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "top";
-                    ctx.strokeStyle = "black";
-                    ctx.fillStyle = this.color;
-                    ctx.fillText("Player: ", 0, 0);
-                    ctx.fillRect(130, 0, this.width, this.height);
-                    ctx.fillStyle = this.barColor;
-                    ctx.fillRect(130, 0, player.HP, this.height);
-                    ctx.font = this.font;
-                    ctx.textAlign = "middle";
-                    ctx.textBaseline = "top";
-                    ctx.strokeStyle = "white";
-                    ctx.fillStyle = "white";
-                    ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
-                    ctx.closePath();
-                
-                //enemy
+            if (characterType == "knight") {
+                //knight
                 ctx.beginPath();
-                ctx.font = this.font;
-                ctx.textAlign = "right";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = "black";
-                ctx.fillStyle = this.color;
-                ctx.fillText("Enemy: ", 700, 0);
-                ctx.fillRect(705, 0, this.width, this.height);
-                ctx.fillStyle = this.barColor;
-                ctx.fillRect(705, 0, enemy.HP, this.height);
                 ctx.font = this.font;
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
-                ctx.strokeStyle = "white";
-                ctx.fillStyle = "white";
-                ctx.fillText(enemy.HP.toString(), 670 + this.width / 2, 0);
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.fillRect(130, 0, this.width, this.height);
+                ctx.fillStyle = this.knightColor;
+                ctx.fillRect(130, 0, player.HP, this.height);
+                ctx.font = this.font;
+                ctx.textAlign = "middle";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = this.barText;
+                ctx.fillStyle = this.barText;
+                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
+                ctx.closePath();
+            }
+            else if (characterType == "wizard") {
+                //wizard
+                ctx.beginPath();
+                ctx.font = this.font;
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.fillRect(130, 0, this.width, this.height);
+                ctx.fillStyle = this.wizardColor;
+                ctx.fillRect(130, 0, player.HP, this.height);
+                ctx.font = this.font;
+                ctx.textAlign = "middle";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = this.barText;
+                ctx.fillStyle = this.barText;
+                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
+                ctx.closePath();
+            }
+            else if (characterType == "elf") {
+                //elf
+                ctx.beginPath();
+                ctx.font = this.font;
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.fillText("Player: ", 0, 0);
+                ctx.fillRect(130, 0, this.width, this.height);
+                ctx.fillStyle = this.elfColor;
+                ctx.fillRect(130, 0, player.HP, this.height);
+                ctx.font = this.font;
+                ctx.textAlign = "middle";
+                ctx.textBaseline = "top";
+                ctx.strokeStyle = this.barText;
+                ctx.fillStyle = this.barText;
+                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
                 ctx.closePath();
             }
         }
     };
-
+    var enemyHealthBar = {
+        color: "black",
+        barText: "white",
+        enemyColor: "red",
+        width: 200,
+        height: 40,
+        font: " bold 36px Helvetica",
+        drawHealthBar: function (enemy) {
+            ctx.beginPath();
+            ctx.font = this.font;
+            ctx.textAlign = "right";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = this.color;
+            ctx.fillStyle = this.color;
+            ctx.fillText("Enemy 1: ", 1050, 85);
+            ctx.fillText("Enemy 2: ", 1050, 235);
+            ctx.fillText("Enemy 3: ", 1050, 385);
+            ctx.fillRect(880, 135, this.width, this.height);
+            ctx.fillRect(880, 285, this.width, this.height);
+            ctx.fillRect(880, 435, this.width, this.height);
+            ctx.fillStyle = this.enemyColor;
+            ctx.fillRect(880, 135, enemy.HP, this.height);
+            ctx.fillRect(880, 285, enemy.HP, this.height);
+            ctx.fillRect(880, 435, enemy.HP, this.height);
+            ctx.font = this.font;
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = this.barText;
+            ctx.fillStyle = this.barText;
+            ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 135);
+            ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 285);
+            ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 435);
+            ctx.closePath();
+        }
+    };
     var projectile = {
         color: "red",
         width: 20,
@@ -315,9 +374,8 @@ function startGame(characterType) {
             enemy3.drawCharacter(enemy3.characterType);
 
             //Draw healthbars
-            healthBar.drawHealthBar(player.characterType);
-            healthBar.drawHealthBar(teamMate1.characterType);
-            healthBar.drawHealthBar(enemy.characterType);
+            healthBar.drawHealthBar(characterType);
+            enemyHealthBar.drawHealthBar(enemy);
         }
         if (player.isAttacking) {
             projectile.drawProjectile();
