@@ -484,7 +484,7 @@ function startGame(characterType) {
             else {
                 battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                attackChosen = Math.floor(Math.random() * 500) + 1;
+                attackChosen = Math.floor(Math.random() * 100) + 1;
                 if ((key.isDown(key.CONTINUE)) && !(hasAttacked)) {
                     if ((attackChosen % 5) === 0) {
                         battle.heal();
@@ -492,6 +492,7 @@ function startGame(characterType) {
                     else {
                         battle.attack();
                     }
+                    pauseBrowser(500);
                     hasAttacked = true;
                 }
                 else {
