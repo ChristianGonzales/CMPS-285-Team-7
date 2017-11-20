@@ -502,12 +502,12 @@ function startGame(characterType) {
                     if (attackChosen === 1) {
                         battleInterface.interfaceText = "Enemy healed for 20 health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                        pauseBrowser(3000);
+                        //pauseBrowser(3000);
                     }
                     else if (attackChosen === 2) {
                         battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                        pauseBrowser(3000);
+                        //pauseBrowser(3000);
                     }
                     if (key.isDown(key.CONTINUE)) {
                         pauseBrowser(3000);
