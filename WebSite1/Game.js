@@ -128,65 +128,53 @@ function startGame(characterType) {
         font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
             if (characterType == "knight") {
-                //knight
-                ctx.beginPath();
-                ctx.font = this.font;
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.color;
-                ctx.fillStyle = this.color;
-                ctx.fillText("Player: ", 0, 0);
-                ctx.fillRect(130, 0, this.width, this.height);
-                ctx.fillStyle = this.knightColor;
-                ctx.fillRect(130, 0, player.HP, this.height);
-                ctx.font = this.font;
-                ctx.textAlign = "middle";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.barText;
-                ctx.fillStyle = this.barText;
-                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
-                ctx.closePath();
+                teamMateOneName = "Wizard:";
+                teamMateTwoName = "Elf:";
+                playerColor = "navy";
+                teamMateOneColor = "purple";
+                teamMateTwoColor = "olive";
             }
             else if (characterType == "wizard") {
-                //wizard
-                ctx.beginPath();
-                ctx.font = this.font;
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.color;
-                ctx.fillStyle = this.color;
-                ctx.fillText("Player: ", 0, 0);
-                ctx.fillRect(130, 0, this.width, this.height);
-                ctx.fillStyle = this.wizardColor;
-                ctx.fillRect(130, 0, player.HP, this.height);
-                ctx.font = this.font;
-                ctx.textAlign = "middle";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.barText;
-                ctx.fillStyle = this.barText;
-                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
-                ctx.closePath();
+                teamMateOneName = "Knight:";
+                teamMateTwoName = "Elf:";
+                playerColor = "purple";
+                teamMateOneColor = "navy";
+                teamMateTwoColor = "olive";
             }
             else if (characterType == "elf") {
-                //elf
-                ctx.beginPath();
-                ctx.font = this.font;
-                ctx.textAlign = "left";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.color;
-                ctx.fillStyle = this.color;
-                ctx.fillText("Player: ", 0, 0);
-                ctx.fillRect(130, 0, this.width, this.height);
-                ctx.fillStyle = this.elfColor;
-                ctx.fillRect(130, 0, player.HP, this.height);
-                ctx.font = this.font;
-                ctx.textAlign = "middle";
-                ctx.textBaseline = "top";
-                ctx.strokeStyle = this.barText;
-                ctx.fillStyle = this.barText;
-                ctx.fillText(player.HP.toString(), 95 + this.width / 2, 0);
-                ctx.closePath();
+                teamMateOneName = "Wizard:";
+                teamMateTwoName = "Knight:";
+                playerColor = "olive";
+                teamMateOneColor = "purple";
+                teamMateTwoColor = "navy";
             }
+			ctx.beginPath();
+            ctx.font = this.font;
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = this.color;
+            ctx.fillStyle = this.color;
+            ctx.fillText("Player: ", 170, 85);
+            ctx.fillText(teamMateOneName, 170, 235);
+            ctx.fillText(teamMateTwoName, 170, 385);
+            ctx.fillRect(170, 135, this.width, this.height);
+            ctx.fillRect(170, 285, this.width, this.height);
+            ctx.fillRect(170, 435, this.width, this.height);
+            ctx.fillStyle = playerColor;
+            ctx.fillRect(170, 135, player.HP, this.height);
+            ctx.fillStyle = teamMateOneColor;
+            ctx.fillRect(170, 285, player.HP, this.height);
+            ctx.fillStyle = teamMateTwoColor;
+            ctx.fillRect(170, 435, player.HP, this.height);
+            ctx.font = this.font;
+            ctx.textAlign = "middle";
+            ctx.textBaseline = "top";
+            ctx.strokeStyle = this.barText;
+            ctx.fillStyle = this.barText;
+            ctx.fillText(player.HP.toString(), 140 + this.width / 2, 135);     //abc
+            ctx.fillText(player.HP.toString(), 140 + this.width / 2, 285);     //abc
+            ctx.fillText(player.HP.toString(), 140 + this.width / 2, 435);     //abc
+            ctx.closePath();
         }
     };
     var enemyHealthBar = {
@@ -481,34 +469,30 @@ function startGame(characterType) {
                     }
                 }
             }
-
-            if (!playersTurn) {
-                if (!hasAttacked) {
-                    battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
-                    battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                    attackChosen = Math.floor(Math.random() * 100) + 1;
-                    if ((key.isDown(key.CONTINUE)) && !(hasAttacked)) {
-                        if ((attackChosen % 5) === 0) {
-                            battle.heal();
-                        }
-                        else {
-                            battle.attack();
-                        }
-                        pauseBrowser(500);
-                        hasAttacked = true;
+            else {
+                battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                attackChosen = Math.floor(Math.random() * 100) + 1;
+                if ((key.isDown(key.CONTINUE)) && !(hasAttacked)) {
+                    if ((attackChosen % 5) === 0) {
+                        battle.heal();
                     }
+                    else {
+                        battle.attack();
+                    }
+                    pauseBrowser(500);
+                    hasAttacked = true;
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue..."
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue..."; 
+                        battleInterface.interfaceText = "Enemy healed 20 hit points! Press 'F' to continue..."
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     if (key.isDown(key.CONTINUE)) {
-                        pauseBrowser(3000);
                         battle.checkBattleResult();
                         attackChosen = 0;
                         hasAttacked = false;
