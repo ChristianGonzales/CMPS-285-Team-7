@@ -445,14 +445,16 @@ function startGame(characterType) {
         combatLogic: function () {
             if (playersTurn) {
                 if (!hasAttacked) { //When you haven't attacked
-                    battleInterface.interfaceText = "Your turn! What attack will you perform? Q to attack, R to heal."
+                    battleInterface.interfaceText = "Your turn! What attack will you perform? Q to attack, R to heal.";
                     battleInterface.drawBattleInterface(battleInterface.interfaceText);
+
                     if (key.isDown(key.ATTACK)) {
                         attackChosen = 1;
                     }
                     if (key.isDown(key.HEAL)) {
                         attackChosen = 2;
                     }
+
                     if (!(attackChosen === 0)) {
                         if (attackChosen === 1) {
                             battle.attack();
@@ -472,6 +474,7 @@ function startGame(characterType) {
                         battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
+
                     if (key.isDown(key.CONTINUE)) {
                         pauseBrowser(500);
                         battle.checkBattleResult();
@@ -481,30 +484,39 @@ function startGame(characterType) {
                     }
                 }
             }
-            else {
-                battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
-                battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                attackChosen = Math.floor(Math.random() * 100) + 1;
-                if ((key.isDown(key.CONTINUE)) && !(hasAttacked)) {
-                    if ((attackChosen % 5) === 0) {
-                        battle.heal();
+
+            if (!playersTurn) {
+                if (!hasAttacked) {
+                    battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
+                    battleInterface.drawBattleInterface(battleInterface.interfaceText);
+
+                    //Random number for attack chosen
+                    attackChosen = Math.floor(Math.random() * 100) + 1;
+
+                    if (key.isDown(key.CONTINUE) && !(hasAttacked)) {
+                        if ((attackChosen % 5) === 0) {
+                            battle.heal();
+                            attackChosen = 1;
+                        }
+                        else {
+                            battle.attack();
+                            attackChosen = 2;
+                        }
+                        hasAttacked = true;
                     }
-                    else {
-                        battle.attack();
-                    }
-                    pauseBrowser(500);
-                    hasAttacked = true;
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue..."
+                        battleInterface.interfaceText = "Enemy healed for 20 health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Enemy healed 20 hit points! Press 'F' to continue..."
+                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
+
                     if (key.isDown(key.CONTINUE)) {
+                        pauseBrowser(3000);
                         battle.checkBattleResult();
                         attackChosen = 0;
                         hasAttacked = false;
