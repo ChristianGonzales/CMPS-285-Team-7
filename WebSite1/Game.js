@@ -402,45 +402,66 @@ function startGame(characterType) {
         },
         block: function (damage) {
             damageDone = damage;
-            damageReduction = Math.floor(Math.random() * 10) + 1;
+            damageReduction = Math.floor(Math.random() * 100) + 1;
 
-            switch (damageReduction) {
-                case 1: damageDone = damage - (damage * .10);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 2: damageDone = damage - (damage * .20);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 3: damageDone = damage - (damage * .30);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 4: damageDone = damage - (damage * .40);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 5: damageDone = damage - (damage * .50);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 6: damageDone = damage - (damage * .60);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 7: damageDone = damage - (damage * .70);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 8: damageDone = damage - (damage * .80);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 9: damageDone = damage - (damage * .90);
-                    damageDone = Math.round(damageDone);
-                    break;
-                case 10: damageDone = damage - (damage * 1.00);
-                    break;
+            if (damageReduction <= 25) {
+                damageDone = damage - (damage * .10);
+                damageDone = Math.round(damageDone);
+                return damageDone;
             }
+
+            else if (damageReduction <= 35 && damageReduction >= 26) {
+                damageDone = damage - (damage * .20);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 45 && damageReduction >= 36) {
+                damageDone = damage - (damage * .30);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 55 && damageReduction >= 46) {
+                damageDone = damage - (damage * .40);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 65 && damageReduction >= 56) {
+                damageDone = damage - (damage * .50);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 75 && damageReduction >= 66) {
+                damageDone = damage - (damage * .60);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 85 && damageReduction >= 76) {
+                damageDone = damage - (damage * .70);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 90 && damageReduction >= 86) {
+                damageDone = damage - (damage * .80);
+                damageDone = Math.round(damageDone);
+            }
+
+            else if (damageReduction <= 96 && damageReduction >= 91) {
+                damageDone = damage - (damage * .90);
+                damageDone = Math.round(damageDone);
+            }
+
+            else {
+                damageDone = damage - (damage * 1.00);
+                damageDone = Math.round(damageDone);
+            }
+
             return damageDone;
         },
         attack: function (attacker, target) {
             if (playersTurn) {
                 player.isAttacking = true;
                 battle.block(attacker.attackDamge);
+                console.log(damageReduction);
                 target.HP -= damageDone;
             }
             else {
