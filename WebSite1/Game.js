@@ -103,6 +103,9 @@ function startGame(characterType) {
         }
     };
     //Other variables
+    var healthHealed = 0;
+    var damageDone = 0;
+    var damageReduction = 0;
     var enemySelector = 0;
     var lastTime = Date.now();
     var objective = {
@@ -167,9 +170,9 @@ function startGame(characterType) {
             ctx.fillStyle = playerColor;
             ctx.fillRect(170, 135, player.HP, this.height);
             ctx.fillStyle = teamMateOneColor;
-            ctx.fillRect(170, 285, player.HP, this.height);
+            ctx.fillRect(170, 285, teamMate1.HP, this.height);
             ctx.fillStyle = teamMateTwoColor;
-            ctx.fillRect(170, 435, player.HP, this.height);
+            ctx.fillRect(170, 435, teamMate2.HP, this.height);
             ctx.font = this.font;
             ctx.textAlign = "middle";
             ctx.textBaseline = "top";
@@ -390,49 +393,6 @@ function startGame(characterType) {
 
     }, (1 * 1000));
 
-    //Block/Dodge Chance and such
-    function armorResistance(armor) {
-        var dodgeChance = ((Math.random() * armor) + 1);
-        return dodgeChance;
-    }
-    //damageReduction do the method like this damageReduction(20,armorResistance(10))
-    function damageReduction(damage, reduction) {
-        var damageDone
-        switch (reduction) {
-            case 1: damageDone = damage - (damage * .10);
-                damageDone = Math.round(damageDone);
-                break;
-            case 2: damageDone = damage - (damage * .20);
-                damageDone = Math.round(damageDone);
-                break;
-            case 3: damageDone = damage - (damage * .30);
-                damageDone = Math.round(damageDone);
-                break;
-            case 4: damageDone = damage - (damage * .40);
-                damageDone = Math.round(damageDone);
-                break;
-            case 5: damageDone = damage - (damage * .50);
-                damageDone = Math.round(damageDone);
-                break;
-            case 6: damageDone = damage - (damage * .60);
-                damageDone = Math.round(damageDone);
-                break;
-            case 7: damageDone = damage - (damage * .70);
-                damageDone = Math.round(damageDone);
-                break;
-            case 8: damageDone = damage - (damage * .80);
-                damageDone = Math.round(damageDone);
-                break;
-            case 9: damageDone = damage - (damage * .90);
-                damageDone = Math.round(damageDone);
-                break;
-            case 10: damageDone = damage - (damage * 1.00);
-                //damageDone = Math.round(damageDone);
-                break;
-        }
-        return damageDone;//Returns the damage done after calculations
-    }
-
     //Battle Loop
     var battle = {
         battleOver: false,
@@ -440,27 +400,67 @@ function startGame(characterType) {
         combatStart: function () {
             battle.combatLogic();
         },
+        block: function (damage) {
+            damageDone = damage;
+            damageReduction = Math.floor(Math.random() * 10) + 1;
+
+            switch (damageReduction) {
+                case 1: damageDone = damage - (damage * .10);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 2: damageDone = damage - (damage * .20);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 3: damageDone = damage - (damage * .30);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 4: damageDone = damage - (damage * .40);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 5: damageDone = damage - (damage * .50);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 6: damageDone = damage - (damage * .60);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 7: damageDone = damage - (damage * .70);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 8: damageDone = damage - (damage * .80);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 9: damageDone = damage - (damage * .90);
+                    damageDone = Math.round(damageDone);
+                    break;
+                case 10: damageDone = damage - (damage * 1.00);
+                    break;
+            }
+            return damageDone;
+        },
         attack: function (attacker, target) {
-            console.log(target);
             if (playersTurn) {
                 player.isAttacking = true;
-                target.HP -= attacker.attackDamge;
+                battle.block(attacker.attackDamge);
+                target.HP -= damageDone;
             }
             else {
                 enemy.isAttacking = true;
-                target.HP -= attacker.attackDamge;
+                battle.block(attacker.attackDamge)
+                target.HP -= damageDone;
             }
         },
         heal: function (target) {
             if (playersTurn) {
-                target.HP += 20;
+                target.HP += 15;
+                healthHealed = 15;
 
                 if (target.HP > 300) {
                     target.HP = 300;
                 }
             }
             else {
-                target.HP += 20;
+                target.HP += 15;
+                healthHealed = 15;
 
                 if (target.HP > 300) {
                     target.HP = 300;
@@ -511,11 +511,11 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "You hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy blocked " + (player.attackDamge - damageDone) + ". You did " + damageDone + " Damage, Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.interfaceText = "You healed " + healthHealed + " hit points! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
 
@@ -551,11 +551,11 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy healed for 20 health! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy healed for " + healthHealed + " health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
+                        battleInterface.interfaceText = "You blocked " + (enemy.attackDamge - damageDone) + ". Enemy did " + damageDone + " Damage, Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
 
