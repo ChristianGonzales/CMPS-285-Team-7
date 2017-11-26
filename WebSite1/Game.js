@@ -13,7 +13,6 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.isTeamMate = isTeamMate;
     this.isMoving = false;
     this.inBattle = false;
-    this.isAttacking = false;
     this.drawCharacter = function (characterType) {
         if (characterType == "knight") {
             ctx.beginPath();
@@ -219,17 +218,6 @@ function startGame(characterType) {
             ctx.closePath();
         }
     };
-    var projectile = {
-        color: "red",
-        width: 20,
-        height: 10,
-        drawProjectile: function () {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
-            ctx.closePath();
-        }
-    };
     //Timeout Variables
     var timeoutID;
 
@@ -372,9 +360,6 @@ function startGame(characterType) {
             healthBar.drawHealthBar(characterType);
             enemyHealthBar.drawHealthBar(enemy);
         }
-        if (player.isAttacking) {
-            projectile.drawProjectile();
-        }
     }
     //Waiting before doing something else function
     function wait(ms) {
@@ -459,13 +444,11 @@ function startGame(characterType) {
         },
         attack: function (attacker, target) {
             if (playersTurn) {
-                player.isAttacking = true;
                 battle.block(attacker.attackDamge);
                 console.log(damageReduction);
                 target.HP -= damageDone;
             }
             else {
-                enemy.isAttacking = true;
                 battle.block(attacker.attackDamge)
                 target.HP -= damageDone;
             }
