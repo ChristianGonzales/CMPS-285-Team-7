@@ -9,10 +9,48 @@ function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.winCount = 0;
-    ctx.fillStyle = "green";
-    ctx.fillRect(this.xPos, this.yPos, this.width + 50, this.height + 50);
-    ctx.closePath();
-}
+    this.isEnemy = isEnemy;
+    this.isTeamMate = isTeamMate;
+    this.isMoving = false;
+    this.inBattle = false;
+    this.isAttacking = false;
+    this.drawCharacter = function (characterType) {
+        if (characterType == "knight") {
+            ctx.beginPath();
+            ctx.fillStyle = "navy";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "wizard") {
+            ctx.beginPath();
+            ctx.fillStyle = "purple";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "elf") {
+            ctx.beginPath();
+            ctx.fillStyle = "olive";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "enemy") {
+            ctx.beginPath();
+            ctx.fillStyle = "brown";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "enemy_damage") {
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
+            ctx.closePath();
+        }
+        else if (characterType == "boss") {
+            ctx.beginPath();
+            ctx.fillStyle = "green";
+            ctx.fillRect(this.xPos, this.yPos, this.width + 50, this.height + 50);
+            ctx.closePath();
+        }
     }
 }
 
