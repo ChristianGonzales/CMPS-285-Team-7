@@ -89,6 +89,9 @@ function startGame(characterType) {
         ATTACK: 81, //Q
         HEAL: 82, //R
         CONTINUE: 70, //F
+        ONE: 49, //1
+        TWO: 50, //2
+        THREE: 51, //3
         isDown: function (keyCode) {
             return this._pressed[keyCode];
         },
@@ -172,8 +175,8 @@ function startGame(characterType) {
             ctx.strokeStyle = this.barText;
             ctx.fillStyle = this.barText;
             ctx.fillText(player.HP.toString(), 140 + this.width / 2, 135);     //abc
-            ctx.fillText(player.HP.toString(), 140 + this.width / 2, 285);     //abc
-            ctx.fillText(player.HP.toString(), 140 + this.width / 2, 435);     //abc
+            ctx.fillText(teamMate1.HP.toString(), 140 + this.width / 2, 285);     //abc
+            ctx.fillText(teamMate2.HP.toString(), 140 + this.width / 2, 435);     //abc
             ctx.closePath();
         }
     };
@@ -199,16 +202,16 @@ function startGame(characterType) {
             ctx.fillRect(880, 435, this.width, this.height);
             ctx.fillStyle = this.enemyColor;
             ctx.fillRect(880, 135, enemy.HP, this.height);
-            ctx.fillRect(880, 285, enemy.HP, this.height);
-            ctx.fillRect(880, 435, enemy.HP, this.height);
+            ctx.fillRect(880, 285, enemy2.HP, this.height);
+            ctx.fillRect(880, 435, enemy3.HP, this.height);
             ctx.font = this.font;
             ctx.textAlign = "left";
             ctx.textBaseline = "top";
             ctx.strokeStyle = this.barText;
             ctx.fillStyle = this.barText;
             ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 135);
-            ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 285);
-            ctx.fillText(enemy.HP.toString(), 840 + this.width / 2, 435);
+            ctx.fillText(enemy2.HP.toString(), 840 + this.width / 2, 285);
+            ctx.fillText(enemy3.HP.toString(), 840 + this.width / 2, 435);
             ctx.closePath();
         }
     };
@@ -393,22 +396,34 @@ function startGame(characterType) {
         combatStart: function () {
             battle.combatLogic();
         },
-        attack: function () {
+        attack: function (attacker, target) {
             if (playersTurn) {
                 player.isAttacking = true;
-                enemy.HP -= player.attackDamge;
+                target.HP -= attacker.attackDamge;
             }
             else {
                 enemy.isAttacking = true;
-                player.HP -= enemy.attackDamge;
+                target.HP -= attacker.attackDamge;
             }
         },
-        heal: function () {
+        heal: function (target) {
             if (playersTurn) {
-                player.HP += 20;
+                if (target.HP > 300) {
+                    target.HP = 300;
+                }
+                else {
+                    target.HP += 20;
+                }
             }
             else {
-                enemy.HP += 20;
+                if (target.HP > 300) {
+                    battleInterface.interfaceText = "Enemy has reached max health!";
+                    battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                    target.HP = 300;
+                }
+                else {
+                    target.HP += 20;
+                }
             }
         },
         checkBattleResult: function () {
@@ -448,12 +463,28 @@ function startGame(characterType) {
                             if (attackChosen === 1) {
                                 battleInterface.interfaceText = "Select the enemy you wish to attack. (1, 2, or 3)";
                                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                                battle.attack();
+                                if (key.isDown(key.ONE)) {
+                                    battle.attack(playerTeam[i], enemy);
+                                }
+                                else if (key.isDown(key.TWO)) {
+                                    battle.attack(playerTeam[i], enemy2);
+                                }
+                                else if (key.isDown(key.THREE)) {
+                                    battle.attack(playerTeam[i], enemy3);
+                                }
                             }
                             if (attackChosen === 2) {
                                 battleInterface.interfaceText = "Select the ally you wish to attack. (1, 2, or 3)";
                                 battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                                battle.heal();
+                                if (key.isDown(key.ONE)) {
+                                    battle.heal(player);
+                                }
+                                else if (key.isDown(key.TWO)) {
+                                    battle.heal(teamMate1);
+                                }
+                                else if (key.isDown(key.THREE)) {
+                                    battle.heal(teamMate2);
+                                }
                             }
                             hasAttacked = true;
                         }
@@ -464,8 +495,14 @@ function startGame(characterType) {
                             battleInterface.drawBattleInterface(battleInterface.interfaceText);
                         }
                         else if (attackChosen === 2) {
-                            battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
-                            battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                            if (playerTeam[i].HP == 300) {
+                                battleInterface.interfaceText = "You are at max health!";
+                                battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                            }
+                            else {
+                                battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
+                                battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                            }
                         }
 
                         if (key.isDown(key.CONTINUE)) {
@@ -478,7 +515,7 @@ function startGame(characterType) {
                 }
                 playersTurn = false;
             }
-
+            //Enemy's turn. I think to make the logic in here work we have to make the this part of the code mimic the above code. At least I think so'
             if (!playersTurn) {
                 if (!hasAttacked) {
                     battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
