@@ -103,6 +103,7 @@ function startGame(characterType) {
         }
     };
     //Other variables
+    var enemySelector = 0;
     var lastTime = Date.now();
     var objective = {
         currentObjective: "",
@@ -517,44 +518,70 @@ function startGame(characterType) {
             }
             //Enemy's turn. I think to make the logic in here work we have to make the this part of the code mimic the above code. At least I think so'
             if (!playersTurn) {
-                if (!hasAttacked) {
-                    battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
-                    battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                battleInterface.interfaceText = "Enemy's turn! Press F to continue...";
+                battleInterface.drawBattleInterface(battleInterface.interfaceText);
 
-                    //Random number for attack chosen
-                    attackChosen = Math.floor(Math.random() * 100) + 1;
+                for (i = 0; i < enemyTeam.length; i++) {
+                    if (!hasAttacked) {
+                        //Random number for attack chosen
+                        attackChosen = Math.floor(Math.random() * 100) + 1;
 
-                    if (key.isDown(key.CONTINUE) && !(hasAttacked)) {
-                        if ((attackChosen % 5) === 0) {
-                            battle.heal();
-                            attackChosen = 1;
+                        if (key.isDown(key.CONTINUE) && !(hasAttacked)) {
+                            if ((attackChosen % 5) === 0) {
+                                enemySelector = Math.floor(Math.random() * 3) + 1;
+                                attackChosen = 1;
+                            }
+                            else {
+                                enemySelector = Math.floor(Math.random() * 3) + 1;
+                                attackChosen = 2;
+                            }
                         }
-                        else {
-                            battle.attack();
-                            attackChosen = 2;
+
+                        if (attackChosen === 1) {
+                            if (enemySelector === 1) {
+                                battle.heal(enemy);
+                            }
+                            else if (enemySelector === 2) {
+                                battle.heal(enemy2);
+                            }
+                            else if (enemySelector === 3) {
+                                battle.heal(enemy3);
+                            }
+                        }
+                        else if (attackChosen === 2) {
+                            if (enemySelector === 1) {
+                                battle.attack(player);
+                            }
+                            else if (enemySelector === 2) {
+                                battle.attack(teamMate1);
+                            }
+                            else if (enemySelector === 3) {
+                                battle.attack(teamMate2);
+                            }
                         }
                         hasAttacked = true;
                     }
-                }
-                else {
-                    if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy healed for 20 health! Press 'F' to continue...";
-                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                    }
-                    else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
-                        battleInterface.drawBattleInterface(battleInterface.interfaceText);
-                    }
+                    else {
+                        if (attackChosen === 1) {
+                            battleInterface.interfaceText = "Enemy healed for 20 health! Press 'F' to continue...";
+                            battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                        }
+                        else if (attackChosen === 2) {
+                            battleInterface.interfaceText = "Enemy hit you for " + enemy.attackDamge + " damage! Press 'F' to continue...";
+                            battleInterface.drawBattleInterface(battleInterface.interfaceText);
+                        }
 
-                    if (key.isDown(key.CONTINUE)) {
-                        pauseBrowser(2000);
-                        battle.checkBattleResult();
-                        attackChosen = 0;
-                        hasAttacked = false;
-                        playersTurn = true;
-                    }
-                }
-            }
+                        if (key.isDown(key.CONTINUE)) {
+                            pauseBrowser(2000);
+                            battle.checkBattleResult();
+                            enemySelector = 0;
+                            attackChosen = 0;
+                            hasAttacked = false;
+                        }
+                    } //End of else for !hasAttacked
+                }//End of for loop
+                playersTurn = true;
+            } //End of if(!playersTurn)
         }
     };
     var battleInterface = {
