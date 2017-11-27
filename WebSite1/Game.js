@@ -222,17 +222,6 @@ function startGame(characterType) {
             ctx.closePath();
         }
     };
-    /*var projectile = {
-   //     color: "red",
-        width: 20,
-        height: 10,
-        drawProjectile: function () {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
-            ctx.closePath();
-        }
-    };*/
     //Timeout Variables
     var timeoutID;
 
@@ -375,9 +364,6 @@ function startGame(characterType) {
             healthBar.drawHealthBar(characterType);
             enemyHealthBar.drawHealthBar(enemy);
         }
-        if (player.isAttacking) {
-            projectile.drawProjectile();
-        }
     }
     //Waiting before doing something else function
     function wait(ms) {
@@ -449,11 +435,9 @@ function startGame(characterType) {
         attack: function (attacker, target) {
             console.log(target);
             if (playersTurn) {
-                player.isAttacking = true;
                 target.HP -= attacker.attackDamge;
             }
             else {
-                enemy.isAttacking = true;
                 target.HP -= attacker.attackDamge;
             }
         },
