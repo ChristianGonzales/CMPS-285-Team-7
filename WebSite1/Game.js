@@ -2,6 +2,7 @@
 function Character(ctx, characterType, xPos, yPos, isEnemy, isTeamMate) {
     this.characterType = characterType;
     this.HP = 200;
+	this.rem = 0;
     this.attackDamge = 15;
     this.width = 100;
     this.height = 100;
@@ -137,22 +138,22 @@ function startGame(characterType) {
         font: " bold 36px Helvetica",
         drawHealthBar: function (characterType) {
             if (characterType == "knight") {
-                teamMateOneName = "Wizard:";
-                teamMateTwoName = "Elf:";
+                teamMateOneName = "Wizard";
+                teamMateTwoName = "Elf";
                 playerColor = "navy";
                 teamMateOneColor = "purple";
                 teamMateTwoColor = "olive";
             }
             else if (characterType == "wizard") {
-                teamMateOneName = "Knight:";
-                teamMateTwoName = "Elf:";
+                teamMateOneName = "Knight";
+                teamMateTwoName = "Elf";
                 playerColor = "purple";
                 teamMateOneColor = "navy";
                 teamMateTwoColor = "olive";
             }
             else if (characterType == "elf") {
-                teamMateOneName = "Wizard:";
-                teamMateTwoName = "Knight:";
+                teamMateOneName = "Wizard";
+                teamMateTwoName = "Knight";
                 playerColor = "olive";
                 teamMateOneColor = "purple";
                 teamMateTwoColor = "navy";
@@ -172,9 +173,9 @@ function startGame(characterType) {
             ctx.fillStyle = playerColor;
             ctx.fillRect(170, 135, player.HP, this.height);
             ctx.fillStyle = teamMateOneColor;
-            ctx.fillRect(170, 285, player.HP, this.height);
+            ctx.fillRect(170, 285, teamMate1.HP, this.height);
             ctx.fillStyle = teamMateTwoColor;
-            ctx.fillRect(170, 435, player.HP, this.height);
+            ctx.fillRect(170, 435, teamMate2.HP, this.height);
             ctx.font = this.font;
             ctx.textAlign = "middle";
             ctx.textBaseline = "top";
@@ -200,9 +201,9 @@ function startGame(characterType) {
             ctx.textBaseline = "top";
             ctx.strokeStyle = this.color;
             ctx.fillStyle = this.color;
-            ctx.fillText("Enemy 1: ", 1050, 85);
-            ctx.fillText("Enemy 2: ", 1050, 235);
-            ctx.fillText("Enemy 3: ", 1050, 385);
+            ctx.fillText("Enemy 1 ", 1050, 85);
+            ctx.fillText("Enemy 2 ", 1050, 235);
+            ctx.fillText("Enemy 3 ", 1050, 385);
             ctx.fillRect(880, 135, this.width, this.height);
             ctx.fillRect(880, 285, this.width, this.height);
             ctx.fillRect(880, 435, this.width, this.height);
@@ -221,8 +222,8 @@ function startGame(characterType) {
             ctx.closePath();
         }
     };
-    var projectile = {
-        color: "red",
+    /*var projectile = {
+   //     color: "red",
         width: 20,
         height: 10,
         drawProjectile: function () {
@@ -231,7 +232,7 @@ function startGame(characterType) {
             ctx.fillRect((player.xPos + player.width), (player.yPos + (player.height / 2)), projectile.width, projectile.height);
             ctx.closePath();
         }
-    };
+    };*/
     //Timeout Variables
     var timeoutID;
 
@@ -460,18 +461,26 @@ function startGame(characterType) {
             if (playersTurn) {
                 target.HP += 20;
 
-                if (target.HP > 300) {
-                    target.HP = 300;
+                if (target.HP > 200) {
+					target.rem = 20 - (target.HP - 200);
+                    target.HP = 200;
                 }
+				else {
+					target.rem = 20;
+				}
             }
             else {
                 target.HP += 20;
 
-                if (target.HP > 300) {
-                    target.HP = 300;
+                if (target.HP > 200) {
+					target.rem = 20 - (target.HP - 200);
+                    target.HP = 200;
                 }
+				else {
+					target.rem = 20;
+				}
             }
-        },
+			},
         checkBattleResult: function () {
             if (enemy.HP <= 0) {
                 battleInterface.interfaceText = "You win!";
@@ -520,7 +529,7 @@ function startGame(characterType) {
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "You healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.interfaceText = "You healed " + player.rem + " hit points! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
 
@@ -536,7 +545,7 @@ function startGame(characterType) {
             }
             if (teamMate1sturn) {
                 if (!hasAttacked) { //When you haven't attacked
-                    battleInterface.interfaceText = " Ally 1's turn! What attack will you perform? Q to attack, R to heal.";
+                    battleInterface.interfaceText = teamMateOneName + "'s turn! What attack will you perform? Q to attack, R to heal.";
                     battleInterface.drawBattleInterface(battleInterface.interfaceText);
 
                     if (key.isDown(key.ATTACK)) {
@@ -558,11 +567,11 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Ally 1 hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
+                        battleInterface.interfaceText = teamMateOneName + " hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Ally 1 healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.interfaceText = teamMateOneName +" healed " + player.rem +" hit points! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
 
@@ -578,7 +587,7 @@ function startGame(characterType) {
             }
             if (teamMate2sturn) {
                 if (!hasAttacked) { //When you haven't attacked
-                    battleInterface.interfaceText = "Ally 2's turn! What attack will you perform? Q to attack, R to heal.";
+                    battleInterface.interfaceText = teamMateTwoName +"'s turn! What attack will you perform? Q to attack, R to heal.";
                     battleInterface.drawBattleInterface(battleInterface.interfaceText);
 
                     if (key.isDown(key.ATTACK)) {
@@ -600,11 +609,11 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Ally 2 hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
+                        battleInterface.interfaceText = teamMateOneName +" hit the enemy for " + player.attackDamge + " damage! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
-                        battleInterface.interfaceText = "Ally 2 healed 20 hit points! Press 'F' to continue...";
+                        battleInterface.interfaceText = teamMateOneName +" healed " + player.rem + " hit points! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
 
@@ -640,7 +649,7 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy 1 healed for 20 health! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy 1 healed for " + enemy.rem + " health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
@@ -680,7 +689,7 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy 2 healed for 20 health! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy 2 healed for " + enemy.rem + " health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
@@ -720,7 +729,7 @@ function startGame(characterType) {
                 }
                 else {
                     if (attackChosen === 1) {
-                        battleInterface.interfaceText = "Enemy 3 healed for 20 health! Press 'F' to continue...";
+                        battleInterface.interfaceText = "Enemy 3 healed for " + enemy.rem + " health! Press 'F' to continue...";
                         battleInterface.drawBattleInterface(battleInterface.interfaceText);
                     }
                     else if (attackChosen === 2) {
