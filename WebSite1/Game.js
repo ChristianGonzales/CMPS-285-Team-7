@@ -590,10 +590,10 @@ function startGame(characterType) {
 
                     if (!(attackChosen === 0)) {
                         if (attackChosen === 1) {
-                            battle.attack(player, enemy);
+                            battle.attack(teamMate1, enemy2);
                         }
                         if (attackChosen === 2) {
-                            battle.heal(player);
+                            battle.heal(teamMate1);
                         }
                         hasAttacked = true;
                     }
@@ -632,10 +632,10 @@ function startGame(characterType) {
 
                     if (!(attackChosen === 0)) {
                         if (attackChosen === 1) {
-                            battle.attack(player, enemy);
+                            battle.attack(teamMate2, enemy3);
                         }
                         if (attackChosen === 2) {
-                            battle.heal(player);
+                            battle.heal(teamMate2);
                         }
                         hasAttacked = true;
                     }
@@ -710,11 +710,11 @@ function startGame(characterType) {
 
                     if (key.isDown(key.CONTINUE) && !(hasAttacked)) {
                         if ((attackChosen % 5) === 0) {
-                            battle.heal(enemy);
+                            battle.heal(enemy2);
                             attackChosen = 1;
                         }
                         else {
-                            battle.attack(enemy, player);
+                            battle.attack(enemy2, teamMate1);
                             attackChosen = 2;
                         }
                         hasAttacked = true;
@@ -750,11 +750,11 @@ function startGame(characterType) {
 
                     if (key.isDown(key.CONTINUE) && !(hasAttacked)) {
                         if ((attackChosen % 5) === 0) {
-                            battle.heal(enemy);
+                            battle.heal(enemy3);
                             attackChosen = 1;
                         }
                         else {
-                            battle.attack(enemy, player);
+                            battle.attack(enemy3, teamMate2);
                             attackChosen = 2;
                         }
                         hasAttacked = true;
